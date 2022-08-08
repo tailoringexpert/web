@@ -1,0 +1,157 @@
+<div>
+    <v-overlay :value="wait">
+        <v-progress-circular indeterminate size="64"></v-progress-circular>
+    </v-overlay>
+
+    <v-stepper v-model="e1">
+        <v-stepper-header>
+            <v-stepper-step
+                    step="1"
+                    :complete="e1 > 1"
+            >{{$route.params.id}}
+            </v-stepper-step>
+            <v-divider></v-divider>
+            <v-stepper-step
+                    step="2"
+                    :complete="e1 > 2 && screeningSheet != undefined"
+            >{{$tc('screeningsheet')}}
+            </v-stepper-step
+            >
+            <v-divider></v-divider>
+            <v-stepper-step
+                    step="3"
+                    :complete="e1 > 3 && selektionsVektorParameter != undefined"
+            >Zusammenfassung
+            </v-stepper-step
+            >
+        </v-stepper-header>
+
+        <v-stepper-items>
+
+            <v-stepper-content step="1">
+                <v-container>
+                    <v-row>
+                        {{$tc('screeningsheet')}}
+                        <v-icon @click="onOpenScreeningSheetDatei">mdi-file-pdf-outline</v-icon>
+                    </v-row>
+                    <v-row>
+                        <v-tabs centered icons-and-text>
+                            <v-tabs-slider></v-tabs-slider>
+
+                            <v-tab>{{$tc('screeningsheet_parameter')}}</v-tab>
+                            <v-tab>{{$tc('berechneter_selektionsvektor')}}</v-tab>
+
+                            <v-tab-item>
+                                <v-data-table
+                                        :headers="screeningSheetParameterHeader"
+                                        :items="quellScreeningSheet.parameters"
+                                        class="elevation-1"
+                                >
+                                </v-data-table>
+                            </v-tab-item>
+
+                            <v-tab-item>
+                                <v-data-table
+                                        :headers="selektionsVektorHeader"
+                                        :items="quellSelektionsVektorParameter"
+                                        class="elevation-1"
+                                >
+                                </v-data-table>
+                            </v-tab-item>
+                        </v-tabs>
+                    </v-row>
+                    <v-row>
+                        <v-col>
+                            <v-card-actions>
+                                <v-btn color="primary" @click="onCancelProjektKopieren">{{$tc('abbrechen')}}</v-btn>
+                                <v-spacer></v-spacer>
+                                <v-btn color="primary" @click="e1 = 2">{{$tc('weiter')}}</v-btn>
+                            </v-card-actions>
+                        </v-col>
+                    </v-row>
+                </v-container>
+            </v-stepper-content>
+
+            <v-stepper-content step="2">
+                <v-container>
+                    <v-row no-gutters justify="center" align="center">
+                        <v-col cols="8">
+                            <v-file-input
+                                    show-size
+                                    label="File input"
+                                    @change="onSelectScreeningSheet"
+                            >
+                            </v-file-input>
+                        </v-col>
+
+                        <v-col cols="4" class="pl-2">
+                            <v-btn
+                                    color="success"
+                                    dark
+                                    small
+                                    @click="onUploadScreeningSheet"
+                            >Upload
+                                <v-icon right dark>mdi-cloud-upload</v-icon>
+                            </v-btn>
+                        </v-col>
+                    </v-row>
+
+                    <v-row>
+                        <v-col>
+                            <v-data-table
+                                    :headers="screeningSheetParameterHeader"
+                                    :items="screeningSheet.parameters"
+                                    class="elevation-1"
+                            >
+                            </v-data-table>
+                        </v-col>
+                    </v-row>
+
+                    <v-row>
+                        <v-col>
+                            <v-card-actions>
+                                <v-btn color="primary" @click="e1 = 1">{{$tc('zurueck')}}</v-btn>
+                                <v-spacer></v-spacer>
+                                <v-btn color="primary" @click="e1 = 3; onZusammenfassung()">{{$tc('weiter')}}</v-btn>
+                            </v-card-actions>
+                        </v-col>
+                    </v-row>
+                </v-container>
+            </v-stepper-content>
+
+            <v-stepper-content step="3">
+                <v-container>
+                    <v-row>
+                        <v-col col="1">{{$tc('projekt')}}</v-col>
+                        <v-col>{{projekt}}</v-col>
+                    </v-row>
+                    <v-row>
+                        <v-col>
+                            <v-data-table
+                                    :headers="selektionsVektorParameterGegenueberstellungHeader"
+                                    :items="selektionsVektorParameterGegenueberstellung"
+                                    class="elevation-1"
+                            >
+                            </v-data-table>
+
+                        </v-col>
+                    </v-row>
+
+                    <v-row>
+                        <v-col>
+                            <v-card-actions>
+                                <v-btn @click="e1 = 2">{{$tc('zurueck')}}</v-btn>
+                                <v-spacer></v-spacer>
+                                <v-btn color="primary" @click="onCreateProjektKopie"
+                                >{{$tc('projektkopie_erstellen')}}
+                                </v-btn>
+                            </v-card-actions>
+                        </v-col>
+                    </v-row>
+                </v-container>
+            </v-stepper-content>
+
+
+        </v-stepper-items>
+    </v-stepper>
+</div>

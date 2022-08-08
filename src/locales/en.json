@@ -1,0 +1,142 @@
+{
+  "ja": "Yes",
+  "nein": "No",
+  "projekt": "Project | Projects",
+  "neues_projekt": "New project",
+  "kopiere_projekt": "Project copy",
+  "name": "Name",
+  "erstellt_am": "Created at",
+  "katalog": "Catalog",
+  "aktion": "Action | Actions",
+  "tailoring": "Tailoring | Tailorings",
+  "neues_tailoring": "New tailoring",
+  "tailoring_anlegen": "Create tailoring",
+  "phase": "Phase | Phases",
+  "screeningsheet": "ScreeningSheet",
+  "selektionsvektor": "Selectionvector",
+  "selektionsvektor_gegenueberstellung": "Selectionvector comparsion",
+  "berechneter_selektionsvektor": "Calculated selectionvector",
+  "screeningsheet_parameter": "ScreeningSheet parameters",
+  "angewendeter_selektionsvektor": "Applied selectionvector",
+  "download_dokumente": "Download documents",
+  "zusammenfassung": "Summary",
+  "weiter": "Next",
+  "zurueck": "Back",
+  "abbrechen": "Cancel",
+  "schliessen": "Close",
+  "datei_auswaehlen": "Please select a file!",
+  "projekt_anlegen": "Create project",
+  "anforderungskatalog": "Requirements",
+  "geaendert": "changed",
+  "upload": "Upload",
+  "anforderung_bearbeiten": {
+    "titel": "Edit requirement",
+    "abbrechen": "Cancel",
+    "speichern": "Save"
+  },
+  "tailoring_loeschen": {
+    "title": "Delete tailoring",
+    "text": "Shall tailoring be deleted?"
+  },
+  "kapitel_selektion": {
+    "titel": "Information",
+    "text": "No chapter selected. <br>Please select chapter first.",
+    "ok": "OK"
+  },
+  "dokument_download": {
+    "titel": "Download documents",
+    "zeichnungen": "Document signments",
+    "bereich": "Bereich",
+    "zeichnungsstatus": "State",
+    "unterzeichner": "User",
+    "download": "Download",
+    "katalog": "Catalog",
+    "json": "JSON",
+    "anwendbar": "Applicable",
+    "status": {
+      "fehlerfrei": "",
+      "fehler": ""
+    }
+  },
+  "dokument_loeschen": {
+    "title": "Delete document",
+    "text": "Shall document be deleted?"
+  },
+  "dokument_zeichnung": {
+    "status": {
+      "fehlerfrei": "Value applied"
+    }
+  },
+  "dokument_upload": {
+    "titel": "Upload documents",
+    "dokument": "Document",
+    "checksumme": "Checksum"
+  },
+  "projekt_loeschen": {
+    "titel": "Delete project",
+    "text": "Shall project be deleted?"
+  },
+  "tailoring_name_aendern": {
+    "titel": "Change tailoring name",
+    "ok": "OK",
+    "status": {
+      "fehlerfrei": "Name changed sucessfully",
+      "fehler": "Name could not be changed"
+    }
+  },
+  "anforderung_importieren": {
+    "titel": "Import tailored requirements",
+    "status": {
+      "fehlerfrei": "Requirements changed"
+    }
+  },
+  "tooltip": {
+    "anforderungen_bearbeiten": "Edit requirements",
+    "selektionsvektor_oeffnen": "Open selectionvector",
+    "screeningsheet_oeffnen": "Open screeningsheet",
+    "dokumente_erzeugen": "Create documents",
+    "dokumente_verwalten": "Attachments",
+    "tailoring_loeschen": "Delete tailoring",
+    "projekt_bearbeiten": "Edit project",
+    "projekt_kopieren": "Copy project",
+    "projekt_loeschen": "Delete project",
+    "anforderung_bearbeiten": "Edit requirement",
+    "anforderung_erstellen": "Create new requirement after",
+    "auswahl_aendern": "Change applicabilty",
+    "tailoring_vergleichen": "Show tailoring diffs",
+    "anforderungen_importieren": "Import tailored requirements",
+    "katalogdefinition_oeffnen": "Open base catalogue document",
+    "dokument_loeschen": "Delete document",
+    "dokument_download" : "Download",
+    "katalog_download_json": "Download JSON",
+    "katalog_download_pdf": "Download PDF"
+  },
+  "projektkopie_erstellen": "Create project copy",
+  "gueltig_von": "Valid from",
+  "gueltig_bis": "Valid until",
+  "alle_selektieren": "Select all",
+  "alle_deselektieren": "Deselect all",
+  "wert": "Value | Values",
+  "produktsicherung": "Produktsicherung",
+  "qualitaetssicherung": "Qualitätssicherung",
+  "planetaryProtection": "Planetenschutz",
+  "eee": "EEE Komponenten",
+  "pmmp": "PMMP",
+  "zuverlaessigkeit": "Zuverlässigkeit",
+  "safety": "Safety",
+  "software": "Software",
+  "spaceDebris": "Weltraummüll",
+  "cybersecurity": "Cyber- und Datensicherheit",
+  "A": "Produktsicherung",
+  "Q": "Qualitätssicherung",
+  "M": "Maintainability",
+  "E": "EEE Komponenten",
+  "P": "PMMP",
+  "R": "Zuverlässigkeit",
+  "S": "Safety",
+  "W": "Software",
+  "C": "Cyber- und Datensicherheit",
+  "J": "Space Debris",
+  "F": "Planetary Protection",
+  "B": "Bodensegment"
+}

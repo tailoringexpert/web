@@ -1,0 +1,376 @@
+<v-container fluid>
+    <v-overlay :value="wait">
+        <v-progress-circular indeterminate size="64"></v-progress-circular>
+    </v-overlay>
+
+    <v-dialog v-model="openScreeningSheet" max-width="75%" justify="center">
+        <v-card elevation="2">
+            <v-card-title>{{$tc('screeningsheet')}}
+                <v-icon @click="onOpenScreeningSheetDatei()">mdi-file-pdf-box</v-icon>
+            </v-card-title>
+            <v-card-text justify="center">
+                <v-tabs centered icons-and-text>
+                    <v-tabs-slider></v-tabs-slider>
+
+                    <v-tab>{{$tc('screeningsheet_parameter')}}</v-tab>
+                    <v-tab>{{$tc('berechneter_selektionsvektor')}}</v-tab>
+
+                    <v-tab-item>
+                        <v-data-table
+                                :headers="screeningSheetParameterHeader"
+                                :items="screeningSheet.parameters"
+                                class="elevation-1">
+                        </v-data-table>
+                    </v-tab-item>
+
+                    <v-tab-item>
+                        <v-data-table
+                                :headers="selektionsVektorHeader"
+                                :items="selektionsVektorParameter"
+                                class="elevation-1">
+                        </v-data-table>
+                    </v-tab-item>
+                </v-tabs>
+            </v-card-text>
+            <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn outlined rounded text @click="openScreeningSheet=false">{{$tc('schliessen')}}</v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
+
+    <v-dialog v-model="openSelektionsVektor" max-width="75%">
+        <v-card elevation="2">
+            <v-card-title>{{$tc('angewendeter_selektionsvektor')}}</v-card-title>
+            <v-card-text>
+                <v-data-table
+                        :headers="selektionsVektorHeader"
+                        :items="selektionsVektorParameter"
+                        class="elevation-1">
+                </v-data-table>
+            </v-card-text>
+            <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn outlined rounded text @click="openSelektionsVektor=false">{{$tc('schliessen')}}</v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
+
+    <v-dialog v-model="openDokumentGenerierung" max-width="75%" justify="center">
+        <v-card elevation="2">
+            <v-card-title>{{$tc('dokument_download.titel')}}</v-card-title>
+            <v-card-text justify="center">
+                <v-data-table :items="dokumentZeichnungen"
+                              :headers="dokumentZeichnungenHeader"
+                              class="elevation-1">
+                    <template v-slot:item="{ item }">
+                        <tr @dblclick="onEditDokumentZeichnung(item)">
+                            <td>{{ item.bereich }}</td>
+                            <td>{{ item.unterzeichner }}</td>
+                            <td class="text-xs-right">{{ item.status }}</td>
+                            <td class="text-xs-right">
+                                <v-simple-checkbox
+                                        label=""
+                                        v-model="item.anwendbar"
+                                        disabled>
+                                </v-simple-checkbox>
+                            </td>
+                            <td>
+                                <v-icon small class="mr-2" @click="onEditDokumentZeichnung(item)">
+                                    mdi-pencil
+                                </v-icon>
+                            </td>
+                        </tr>
+                    </template>
+
+                    <template v-slot:top>
+                        <v-dialog v-model="editDokumentZeichnung" max-width="500px">
+                            <v-card>
+                                <v-card-title>
+                                    <span class="headline">{{dokumentZeichnung.bereich}}</span>
+                                </v-card-title>
+
+                                <v-card-text>
+                                    <v-container>
+                                        <v-row>
+                                            <v-col cols="12" sm="6" md="4">
+                                                <v-text-field v-model="dokumentZeichnung.unterzeichner"
+                                                              label="Name">
+                                                </v-text-field>
+                                            </v-col>
+                                            <v-col cols="12" sm="6" md="4">
+                                                <v-text-field v-model="dokumentZeichnung.status"
+                                                              label="Status">
+                                                </v-text-field>
+                                            </v-col>
+
+                                            <v-col cols="12" sm="6" md="4">
+                                                <v-checkbox v-model="dokumentZeichnung.anwendbar"
+                                                            label="anwendbar">
+                                                </v-checkbox>
+                                            </v-col>
+                                        </v-row>
+                                    </v-container>
+                                </v-card-text>
+
+                                <v-card-actions>
+                                    <v-spacer></v-spacer>
+                                    <v-btn color="blue darken-1" text @click="onCloseDokumentZeichnung">
+                                        Cancel
+                                    </v-btn>
+                                    <v-btn color="blue darken-1" text @click="onSaveDokumentZeichnung">
+                                        Save
+                                    </v-btn>
+                                </v-card-actions>
+                            </v-card>
+                        </v-dialog>
+                    </template>
+
+                </v-data-table>
+
+            </v-card-text>
+            <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn outlined rounded text @click="onCreateKatalog">
+                    {{$tc('dokument_download.katalog')}}
+                </v-btn>
+                <v-btn outlined rounded text @click="onCreateDokuments">
+                    {{$tc('dokument_download.download')}}
+                </v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
+
+    <v-dialog v-model="openDokumente" max-width="75%" justify="center">
+        <v-card elevation="2">
+            <v-card-title>{{$tc('dokument_download.titel')}}</v-card-title>
+            <v-card-text justify="center">
+                <v-row no-gutters justify="center" align="center">
+                    <v-col cols="8">
+                        <v-file-input
+                                ref="uploadFile"
+                                show-size
+                                label="File input"
+                                @change="onSelectUploadDatei">
+                        </v-file-input>
+                    </v-col>
+
+                    <v-col cols="4" class="pl-2">
+                        <v-btn
+                                color="success"
+                                dark
+                                small
+                                @click="onUploadDokument">
+                            {{$tc('upload')}}
+                            <v-icon right dark>mdi-cloud-upload</v-icon>
+                        </v-btn>
+                    </v-col>
+                </v-row>
+                <v-data-table :items="dokumente"
+                              :headers="dokumenteHeader"
+                              class="elevation-1">
+                    <template v-slot:item.name="{ item }">
+                        <span @click.self="onDownloadDokument(item)">{{item.name}}</span>
+                    </template>
+                    <template v-slot:item.actions="{ item }">
+                        <v-tooltip bottom>
+                            <template v-slot:activator="{ on, attrs }">
+                                <v-icon small class="mr-2" v-on="on" v-bind="attrs"
+                                        @click="onDownloadDokument(item)">mdi-download-circle
+                                </v-icon>
+                            </template>
+                            <span>{{$tc('tooltip.dokument_download')}}</span>
+                        </v-tooltip>
+                        <v-tooltip bottom>
+                            <template v-slot:activator="{ on, attrs }">
+                                <v-icon small class="mr-2" v-on="on" v-bind="attrs"
+                                        @click="onDeleteDokument(item)">mdi-delete
+                                </v-icon>
+                            </template>
+                            <span>{{$tc('tooltip.dokument_loeschen')}}</span>
+                        </v-tooltip>
+                    </template>
+                </v-data-table>
+            </v-card-text>
+            <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn outlined rounded text @click="openDokumente=false">{{$tc('schliessen')}}</v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
+
+    <v-dialog v-model="openImport" max-width="75%" justify="center">
+        <v-card elevation="2">
+            <v-card-title>{{$tc('anforderung_importieren.titel')}}</v-card-title>
+            <v-card-text justify="center">
+                <v-row no-gutters justify="center" align="center">
+                    <v-col cols="8">
+                        <v-file-input
+                                ref="uploadFile"
+                                show-size
+                                label="File input"
+                                accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                                @change="onSelectUploadDatei">
+                        </v-file-input>
+                    </v-col>
+
+                    <v-col cols="4" class="pl-2">
+                        <v-btn
+                                color="success"
+                                dark
+                                small
+                                @click="onImportAnforderungen">
+                            {{$tc('upload')}}
+                            <v-icon right dark>mdi-cloud-upload</v-icon>
+                        </v-btn>
+                    </v-col>
+                </v-row>
+            </v-card-text>
+            <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn outlined rounded text @click="openDokumente=false">{{$tc('schliessen')}}</v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
+
+    <v-row>
+        <v-col cols="1">{{$tc('projekt')}}</v-col>
+        <v-col>{{projekt.name}}
+            <v-tooltip bottom>
+                <template v-slot:activator="{ on, attrs }">
+                    <v-icon small class="mr-2" v-on="on" v-bind="attrs"
+                            @click="onOpenScreeningSheet(projekt._links.screeningsheet.href)">
+                        mdi-card-account-details
+                    </v-icon>
+                </template>
+                <span>{{$tc('tooltip.screeningsheet_oeffnen')}}</span>
+            </v-tooltip>
+        </v-col>
+    </v-row>
+    <v-row>
+        <v-col>
+            <v-data-table :items="projekt.tailorings"
+                          :headers="headers"
+                          :items-per-page="20"
+                          class="elevation-1">
+                <template v-slot:top>
+                    <v-toolbar flat color="white">
+                        <v-toolbar-title>{{$tc('tailoring', 2)}}</v-toolbar-title>
+                        <v-divider class="mx-4" inset vertical></v-divider>
+                        <v-btn
+                                color="primary"
+                                dark
+                                class="mb-2"
+                                @click="onNewTailoring()"
+                        >{{$tc('neues_tailoring')}}
+                        </v-btn>
+                    </v-toolbar>
+                </template>
+
+                <template v-slot:item.name="{ item }">
+                    <v-edit-dialog :return-value.sync="item.name"
+                                   large
+                                   persistent
+                                   @open="onOpenTailoringName(item)"
+                                   @save="onSaveTailoringName(item)"
+                                   @cancel="onCancelTailoringName">
+                        <div>{{ item.name }}</div>
+                        <template v-slot:input>
+                            <v-text-field
+                                    v-model="item.name"
+                                    label="Edit"
+                                    single-line
+                                    counter
+                                    autofocus>
+                            </v-text-field>
+                        </template>
+                    </v-edit-dialog>
+                </template>
+
+                <template v-slot:item.katalogVersion="{ item }">
+                    <span @click="onDownloadKatalogDefinition(item)">{{item.katalogVersion}}</span>
+                </template>
+
+                <template v-slot:item.actions="{ item }">
+                    <v-tooltip bottom>
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-icon small class="mr-2" v-on="on" v-bind="attrs"
+                                    @click="onEditTailoringKatalog(item)">mdi-pencil
+                            </v-icon>
+                        </template>
+                        <span>{{$tc('tooltip.anforderungen_bearbeiten')}}</span>
+                    </v-tooltip>
+                    <v-tooltip bottom>
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-icon small class="mr-2" v-on="on" v-bind="attrs"
+                                    @click="onViewTailoringVergleich(item._links.vergleich.href)">mdi-vector-difference
+                            </v-icon>
+                        </template>
+                        <span>{{$tc('tooltip.tailoring_vergleichen')}}</span>
+                    </v-tooltip>
+
+                    <v-tooltip bottom>
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-icon small class="mr-2" v-on="on" v-bind="attrs"
+                                    @click="onOpenScreeningSheet(item._links.screeningsheet.href)">
+                                mdi-card-account-details
+                            </v-icon>
+                        </template>
+                        <span>{{$tc('tooltip.screeningsheet_oeffnen')}}</span>
+                    </v-tooltip>
+                    <v-tooltip bottom>
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-icon small class="mr-2" v-on="on" v-bind="attrs"
+                                    @click="onOpenSelektionsVektor(item._links.selektionsvektor.href)">
+                                mdi-head-check-outline
+                            </v-icon>
+                        </template>
+                        <span>{{$tc('tooltip.selektionsvektor_oeffnen')}}</span>
+                    </v-tooltip>
+                    <v-tooltip bottom>
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-icon small class="mr-2" v-on="on" v-bind="attrs"
+                                    @click="onOpenDokumentGenerierung(item)">
+                                mdi-file-document-edit-outline
+                            </v-icon>
+                        </template>
+                        <span>{{$tc('tooltip.dokumente_erzeugen')}}</span>
+                    </v-tooltip>
+                    <v-tooltip bottom>
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-icon small class="mr-2" v-on="on" v-bind="attrs"
+                                    @click="onOpenDokumente(item)">mdi-paperclip
+                            </v-icon>
+                        </template>
+                        <span>{{$tc('tooltip.dokumente_verwalten')}}</span>
+                    </v-tooltip>
+                    <v-tooltip bottom>
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-icon small class="mr-2" v-on="on" v-bind="attrs"
+                                    @click="onOpenImport(item)">mdi-microsoft-excel
+                            </v-icon>
+                        </template>
+                        <span>{{$tc('tooltip.anforderungen_importieren')}}</span>
+                    </v-tooltip>
+
+                    <v-tooltip bottom>
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-icon small class="mr-2" v-on="on" v-bind="attrs"
+                                    @click="onDeleteTailoring(item)">
+                                mdi-delete
+                            </v-icon>
+                        </template>
+                        <span>{{$tc('tooltip.tailoring_loeschen')}}</span>
+                    </v-tooltip>
+                </template>
+            </v-data-table>
+
+            <v-snackbar v-model="snack" :timeout="3000" :color="snackColor">
+                {{ snackText }}
+                <template v-slot:action="{ attrs }">
+                    <v-btn v-bind="attrs" text @click="snack = false">{{$tc('schliessen')}}</v-btn>
+                </template>
+            </v-snackbar>
+        </v-col>
+    </v-row>
+</v-container>
