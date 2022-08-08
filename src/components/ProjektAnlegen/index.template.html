@@ -1,0 +1,211 @@
+<div>
+    <v-overlay :value="wait">
+        <v-progress-circular indeterminate size="64"></v-progress-circular>
+    </v-overlay>
+
+    <v-stepper v-model="e1">
+        <v-stepper-header>
+            <v-stepper-step step="1" :complete="e1 > 1 && katalog!= undefined">
+                {{$tc('katalog')}}
+            </v-stepper-step>
+            <v-divider></v-divider>
+            <v-stepper-step step="2" :complete="e1 > 2 && screeningSheet != undefined">
+                {{$tc('screeningsheet')}}
+            </v-stepper-step>
+            <v-divider></v-divider>
+            <v-stepper-step step="3" :complete="e1 > 3 && selektionsVektorParameter != undefined">
+                {{$tc('selektionsvektor')}}
+            </v-stepper-step>
+            <v-divider></v-divider>
+            <v-stepper-step step="4">
+                {{$tc('zusammenfassung')}}
+            </v-stepper-step>
+        </v-stepper-header>
+
+        <v-stepper-items>
+            <v-stepper-content step="1">
+                <v-container>
+                    <v-row no-gutters justify="center" align="center">
+                        <v-select v-model="katalog"
+                                  :items="kataloge"
+                                  item-text="version"
+                                  item-value="projekt"
+                                  label="Version auswählen">
+                        </v-select>
+                    </v-row>
+                    <v-row>
+                        <v-textarea
+                                clearable
+                                counter
+                                clear-icon="mdi-close-circle"
+                                label="Text">
+                        </v-textarea>
+                    </v-row>
+                    <v-row>
+                        <v-col>
+                            <v-card-actions>
+                                <v-spacer></v-spacer>
+                                <v-btn color="primary" @click="e1 = 2">{{$tc('weiter')}}</v-btn>
+                            </v-card-actions>
+                        </v-col>
+                    </v-row>
+                </v-container>
+            </v-stepper-content>
+
+            <v-stepper-content step="2">
+                <v-container>
+                    <v-row no-gutters justify="center" align="center">
+                        <v-col cols="8">
+                            <v-file-input
+                                    show-size
+                                    label="File input"
+                                    accept="application/pdf"
+                                    @change="onSelectScreeningSheet">
+                            </v-file-input>
+                        </v-col>
+
+                        <v-col cols="4" class="pl-2">
+                            <v-btn
+                                    color="success"
+                                    dark
+                                    small
+                                    @click="onUploadScreeningSheet"
+                            >Upload
+                                <v-icon right dark>mdi-cloud-upload</v-icon>
+                            </v-btn>
+                        </v-col>
+                    </v-row>
+
+                    <v-row>
+                        <v-col>
+                            <v-data-table
+                                    :headers="screeningSheetParameterHeader"
+                                    :items="screeningSheet.parameters"
+                                    class="elevation-1"
+                            >
+                            </v-data-table>
+                        </v-col>
+                    </v-row>
+
+                    <v-row>
+                        <v-col>
+                            <v-card-actions>
+                                <v-btn @click="e1 = 1">
+                                    {{$tc('zurueck')}}
+                                </v-btn>
+                                <v-spacer></v-spacer>
+                                <v-btn color="primary" @click="e1 = 3">
+                                    {{$tc('weiter')}}
+                                </v-btn>
+                            </v-card-actions>
+                        </v-col>
+                    </v-row>
+                </v-container>
+            </v-stepper-content>
+
+            <v-stepper-content step="3">
+                <v-container>
+                    <v-row>
+                        <v-col col="1">{{$tc('projekt')}}</v-col>
+                        <v-col>{{projekt}}</v-col>
+                    </v-row>
+                    <v-row cols="12">
+                        <v-col>
+                            <v-data-table
+                                    :headers="selektionsVektorHeader"
+                                    :items="selektionsVektorParameter"
+                                    class="elevation-1"
+                            >
+
+                                <template v-slot:header.wert="{ header }">
+                                    <v-select dense v-model="profil" full-width :items="profile" item-text="name" return-object label="Profil" @change="onSelectSelektionsVektorProfil"/>
+                                </template>
+
+                                <template v-slot:item.wert="props">
+                                    <v-edit-dialog
+                                            :return-value.sync="props.item.wert"
+                                            large
+                                            persistent
+                                            @save="onSaveSelektionsVektorBearbeitung"
+                                            @cancel="onCancelSelektionsVektorBearbeitung"
+                                    >
+                                        <div>{{ props.item.wert }}</div>
+                                        <template v-slot:input>
+                                            <div class="mt-4 title">{{ props.item.label }}</div>
+                                            <v-text-field
+                                                    v-model="props.item.wert"
+                                                    label="Edit"
+                                                    single-line
+                                                    counter
+                                                    autofocus
+                                            ></v-text-field>
+                                        </template>
+                                    </v-edit-dialog>
+                                </template>
+                            </v-data-table>
+
+                            <v-snackbar v-model="snack" :timeout="3000" :color="snackColor">
+                                {{ snackText }}
+                                <template v-slot:action="{ attrs }">
+                                    <v-btn v-bind="attrs" text @click="snack = false"
+                                    >Close
+                                    </v-btn
+                                    >
+                                </template>
+                            </v-snackbar>
+                        </v-col>
+                    </v-row>
+
+                    <v-row>
+                        <v-col>
+                            <v-card-actions>
+                                <v-btn @click="e1 = 2">
+                                    {{$tc('zurueck')}}
+                                </v-btn>
+                                <v-spacer></v-spacer>
+                                <v-btn color="primary" @click="e1 = 4; onZusammenfassung()">
+                                    {{$tc('weiter')}}
+                                </v-btn>
+                            </v-card-actions>
+                        </v-col>
+                    </v-row>
+                </v-container>
+            </v-stepper-content>
+
+            <v-stepper-content step="4">
+                <v-container>
+                    <v-row>
+                        <v-col col="1">{{$tc('projekt')}}</v-col>
+                        <v-col>{{projekt}}</v-col>
+                    </v-row>
+                    <v-row>
+                        <v-col>
+                            <v-card>
+                                <v-card-title>
+                                    {{$tc('selektionsvektor_gegenueberstellung')}}
+                                </v-card-title>
+                                <v-data-table
+                                        :headers="selektionsVektorParameterGegenueberstellungHeader"
+                                        :items="selektionsVektorParameterGegenueberstellung"
+                                        class="elevation-1"
+                                >
+                                </v-data-table>
+                            </v-card>
+                        </v-col>
+                    </v-row>
+                    <v-row>
+                        <v-col>
+                            <v-card-actions>
+                                <v-btn @click="e1 = 3">
+                                    {{$tc('zurueck')}}
+                                </v-btn>
+                                <v-spacer></v-spacer>
+                                <v-btn color="primary" @click="onCreateProject">{{$tc('projekt_anlegen')}}</v-btn>
+                            </v-card-actions>
+                        </v-col>
+                    </v-row>
+                </v-container>
+            </v-stepper-content>
+        </v-stepper-items>
+    </v-stepper>
+</div>
