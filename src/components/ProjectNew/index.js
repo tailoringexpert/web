@@ -8,20 +8,19 @@ export const data = {
 
             e1: 1,
             message: "",
-            kataloge: [],
-            katalog: undefined,
+            catalogs: [],
+            catalog: undefined,
             screeningSheetParameterHeader: [
                 {
                     text: this.$tc('name'),
                     align: 'start',
                     sortable: true,
-                    value: 'bezeichnung',
+                    value: 'label',
                 },
                 {
-                    text: this.$tc('wert'),
-                    value: 'action',
+                    text: this.$tc('value'),
                     sortable: true,
-                    value: 'wert',
+                    value: 'value',
                 },
             ],
             screeningSheetParameter: [],
@@ -30,28 +29,27 @@ export const data = {
                 parameters: []
             },
 
-            projekt: '',
-            profil: '',
-            selektionsVektorHeader: [
+            project: '',
+            profile: '',
+            selectionVectorHeader: [
                 {
                     text: this.$tc('name'),
                     align: 'start',
                     sortable: true,
                     value: 'label',
                     width: '50%',
-
                 },
                 {
-                    text: this.$tc('wert'),
-                    value: 'wert',
+                    text: this.$tc('value'),
+                    value: 'value',
                     sortable: false,
                     width: '50%',
                 },
             ],
-            selektionsVektorParameter: [],
-            selektionsVektorParameterGegenueberstellung: [],
+            selectionVectorParameter: [],
+            selectionVectorParameterComparison: [],
 
-            selektionsVektorParameterGegenueberstellungHeader: [
+            selectionVectorParameterComparisonHeader: [
                    {
                        text: this.$tc('name'),
                        align: 'start',
@@ -59,26 +57,24 @@ export const data = {
                        value: 'label',
                    },
                    {
-                       text: this.$tc('berechneter_selektionsvektor'),
-                       value: 'action',
-                       value: 'berechnet',
+                       text: this.$tc('selectionvector_calculated'),
+                       value: 'calculated',
                    },
                   {
-                      text: this.$tc('angewendeter_selektionsvektor'),
-                      value: 'action',
-                      value: 'angepasst',
+                      text: this.$tc('selectionvector_applied'),
+                      value: 'modified',
                   },
                ],
         }
     },
     methods: {
-        onSelectScreeningSheet : function(screeningSheetDatei) {
+        onScreeningSheetSelect : function(screeningSheetDatei) {
             this.screeningSheetDatei = screeningSheetDatei;
 
         },
-        onUploadScreeningSheet: function() {
+        onScreeningSheetUpload: function() {
             if (!this.screeningSheetDatei) {
-                this.message = this.$tc('datei_auswaehlen');
+                this.message = this.$tc('file_select');
                 return;
             }
             this.message = "";
@@ -93,22 +89,21 @@ export const data = {
 
                     // merken für nächstem Wizzard Schritt
                     this.screeningSheet = response.body;
-                    this.selektionsVektor = this.screeningSheet.selektionsVektor;
+                    this.selectionVector = this.screeningSheet.selectionVector;
 
                     // konvertieren für genrische Darstellung in Tabelle
-                    for (var name in this.screeningSheet.selektionsVektor.levels) {
-                        this.selektionsVektorParameter.push({
+                    for (var name in this.screeningSheet.selectionVector.levels) {
+                        this.selectionVectorParameter.push({
                             label: this.$t(name),
                             name: name,
-                            wert: this.screeningSheet.selektionsVektor.levels[name]
+                            value: this.screeningSheet.selectionVector.levels[name]
                         });
                     }
-                    this.selektionsVektorParameter.sort((a, b) => (a.label > b.label) ? 1 : -1)
-
+                    this.selectionVectorParameter.sort((a, b) => (a.label > b.label) ? 1 : -1)
 
                     for (let i = 0; i < this.screeningSheet.parameters.length; i++) {
-                        if (this.screeningSheet.parameters[i].bezeichnung == 'Kuerzel') {
-                            this.projekt = this.screeningSheet.parameters[i].wert;
+                        if (this.screeningSheet.parameters[i].label == 'Kuerzel') {
+                            this.project = this.screeningSheet.parameters[i].value;
                             break;
                         }
                     }
@@ -119,70 +114,72 @@ export const data = {
                     console.log("error");
                   });
         },
-        onSelectSelektionsVektorProfil: function() {
-            this.selektionsVektorParameter = [];
-            for (var name in this.profil.levels) {
-                this.selektionsVektorParameter.push({
+
+        onSelectionVectorProfileSelect: function() {
+            this.selectionVectorParameter = [];
+            for (var name in this.profile.levels) {
+                this.selectionVectorParameter.push({
                     label: this.$t(name),
                     name: name,
-                    wert: this.profil.levels[name]
+                    value: this.profile.levels[name]
                 });
             }
-            this.selektionsVektorParameter.sort((a, b) => (a.label > b.label) ? 1 : -1)
-
+            this.selectionVectorParameter.sort((a, b) => (a.label > b.label) ? 1 : -1)
         },
-        onSaveSelektionsVektorBearbeitung: function() {
+        onSelectionVectorEditSave: function() {
             this.snack = true;
             this.snackColor = 'success';
             this.snackText = 'Wert übernommen';
 
         },
-        onCancelSelektionsVektorBearbeitung: function() {
+        onSelectionVectorEditCancel: function() {
             this.snack = true;
             this.snackColor = 'error';
             this.snackText = 'Wert nicht aktualisiert';
         },
-        onZusammenfassung: function() {
-            this.selektionsVektorParameterGegenueberstellung = [];
-            var benutzerSelektionsVektor = this.buildSelektionsVektor(this.selektionsVektorParameter);
 
-            for (var name in this.screeningSheet.selektionsVektor.levels) {
-                this.selektionsVektorParameterGegenueberstellung.push(
+        onSummary: function() {
+            this.selectionVectorParameterComparison = [];
+            var modifiedSelectionVector = this.buildSelectionVector(this.selectionVectorParameter);
+
+            for (var name in this.screeningSheet.selectionVector.levels) {
+                this.selectionVectorParameterComparison.push(
                     {
                         name: name,
                         label: this.$t(name),
-                        berechnet: this.screeningSheet.selektionsVektor.levels[name],
-                        angepasst: Number(benutzerSelektionsVektor[name])
+                        calculated: this.screeningSheet.selectionVector.levels[name],
+                        modified: Number(modifiedSelectionVector[name])
                     }
                 );
             }
-            this.selektionsVektorParameterGegenueberstellung.sort((a, b) => (a.label > b.label) ? 1 : -1)
+            this.selectionVectorParameterComparison.sort((a, b) => (a.label > b.label) ? 1 : -1)
 
         },
-        onCreateProject: function() {
+        onProjectCreate: function() {
             this.wait = true;
 
             var levels = {};
-            for (var i in this.selektionsVektorParameter) {
-                levels[this.selektionsVektorParameter[i].name]=  this.selektionsVektorParameter[i].wert;
+            for (var i in this.selectionVectorParameter) {
+                levels[this.selectionVectorParameter[i].name]=  this.selectionVectorParameter[i].value;
             }
             var requestParameter = {};
             requestParameter.screeningSheet = this.screeningSheet;
 
-            var selektionsVektor = {};
-            selektionsVektor.levels = levels;
-            requestParameter.selektionsVektor = selektionsVektor;
+            var selectionVector = {};
+            selectionVector.levels = levels;
+            requestParameter.selectionVector = selectionVector;
 
-            this.$http.post(this.katalog, JSON.stringify(requestParameter), {emulateJSON: true} )
+console.log( this.project);
+            this.$http.post(this.catalog, JSON.stringify(requestParameter), {emulateJSON: true} )
                 .then(
                     response => {
                         this.wait = false;
                         this.$router.push(
                             {
-                                name: 'projekt',
+                                name: 'project',
                                 params:
                                 {
-                                    id: this.projekt,
+                                    id: this.project,
                                     self: response.headers.get('Location')
                                 }
                             }
@@ -195,44 +192,41 @@ export const data = {
                     }
                 );
         },
-        buildSelektionsVektor: function(parameter) {
-
-            var selektionsVektor = {};
+        buildSelectionVector: function(parameter) {
+            var selectionVector = {};
             for (var i in parameter) {
-                selektionsVektor[parameter[i].name] = parameter[i].wert;
+                selectionVector[parameter[i].name] = parameter[i].value;
             }
-            return selektionsVektor;
+            return selectionVector;
         },
-    },
-    watch: {
     },
     computed: {
-        profile: function() {
-            return this.$store.state.selektionsvektoren;
-        },
+        profiles: function() {
+            return this.$store.state.selectionvectors;
+        }
     },
     created: function() {
         this.wait = true;
 
         this.$store.commit('breadcrumbs', [
-            { text: this.$tc('projekt', 2),  disabled: false, exact: true, to: { name: 'projekte' } },
-            { text: this.$tc('neues_projekt'), disabled: true }
+            { text: this.$tc('project', 2),  disabled: false, exact: true, to: { name: 'projects' } },
+            { text: this.$tc('project_new'), disabled: true }
         ]);
 
-        this.$http.get(this.$store.state.links['katalog'].href).then(
+        this.$http.get(this.$store.state.links['catalog'].href).then(
             response => {
-                this.kataloge = [];
-                for (let i = 0; i<response.body._embedded.katalogVersionResourceList.length; i++) {
-                    var item = response.body._embedded.katalogVersionResourceList[i];
-                    var links = response.body._embedded.katalogVersionResourceList[i]._links;
-                    this.kataloge.push({
+                this.catalogs = [];
+                for (let i = 0; i<response.body._embedded.baseCatalogs.length; i++) {
+                    var item = response.body._embedded.baseCatalogs[i];
+                    var links = response.body._embedded.baseCatalogs[i]._links;
+                    this.catalogs.push({
                         version: item.version,
                         standard: item.standard,
-                        projekt: links.projekt.href
+                        project: links.project.href
                     });
 
                     if(item.standard) {
-                        this.katalog = links.self.href;
+                        this.catalog = links.self.href;
                     }
                 }
                 this.wait = false;

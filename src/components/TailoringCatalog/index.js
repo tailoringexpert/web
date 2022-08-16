@@ -48,27 +48,24 @@ export const data = {
                         value: 'name',
                     },
                 ],
-                urls: {},
-                links: [],
                 item: null,
                 wait: false,
-                edit: false,
+                isEdit: false,
                 enabled: true,
                 selection: [],
-                kapitel: null,
+                chapter: null,
                 selection: [
                   {
-                    anforderungen: []
+                    requirements: []
                   }
                 ],
 
-                unterkapitel: [],
-                anforderungen: [],
-                anforderung: null,
-                anforderungRequest: null,
-                katalog: {
+                requirements: [],
+                requirement: null,
+                requirementRequest: null,
+                catalog: {
                   toc:{
-                    kapitel: []
+                    chapters: []
                   }
                 },
 
@@ -79,81 +76,74 @@ export const data = {
             };
         },
         methods: {
-            onLoadKatalog : function() {
-                this.wait = true;
-
-                this.$http.get(this.$route.params.self.href).then(
-                    response => {
-                        this.katalog = response.body;
-                        this.wait = false;
-                    },
-                    response => {
-                        console.log(response);
-                    }
-                );
-            },
-            onSelectKapitel : function(kapitel) {
-                this.kapitel = kapitel[0];
-                this.anforderungen = this.kapitel.anforderungen;
-
-                this.breadcrumbs = [];
-                this._kapitelPfad.forEach(node => this.breadcrumbs.push({ text: node.nummer + ' ' + node.name, disabled: true}));
+            onChapterSelect : function(chapters) {
+                this.chapter = chapters[0];
+                if (chapters.length > 0) {
+                    this.requirements = this.chapter.requirements;
+                    this.breadcrumbs = [];
+                    this._chapterPath.forEach(node => this.breadcrumbs.push({ text: node.number + ' ' + node.name, disabled: true}));
+                }
             },
 
-            onEditAnforderung : function(anforderung) {
-               this.anforderung=anforderung;
-               this.anforderungRequest = this.onSaveEditAnforderung;
-               this.editor.setContent(this.anforderung.text);
-               this.edit=true;
-            },
-            onNewAnforderung: function(anforderung) {
-                this.anforderungRequest = this.onSaveNewAnforderung;
-                this.anforderung = new Object();
-                this.anforderung._links = anforderung._links;
+            onRequirementNew: function(requirement) {
+                this.requirementRequest = this.onRequirementNewSave;
+                this.requirement = new Object();
                 this.editor.setContent(null);
-                this.edit=true;
+                this.isEdit = true;
             },
-            onCancelEdit: function() {
-              this.edit = false;
-            },
-            onSaveEditAnforderung: function(text) {
-                this.$http.put(this.anforderung._links.text.href, text, {emulateJSON: true}).then(
-                    response =>  this.handleAnforderungResponse(this.anforderung, response.body),
+            onRequirementNewSave: function(text) {
+                this.$http.post(this.requirement._links.self.href, text, {emulateJSON: true}).then(
                     response => {
-                        this.edit = false;
-                    }
-                );
-            },
-            onSaveNewAnforderung: function(text) {
-                this.$http.post(this.anforderung._links.self.href, text, {emulateJSON: true}).then(
-                    response => {
-                        this.loadKapitel(this.kapitel);
+                        this.loadChapter(this.chapter);
                     },
                     response => {
                         console.log(response);
-                        this.edit = false;
+                        this.isEdit = false;
                     }
                 );
             },
-            onSaveAnforderung : function() {
-                this.anforderungRequest.call(this, this.editor.getHTML());
+            onRequirementEdit : function(requirement) {
+               this.requirementRequest = this.onRequirementEditSave;
+               this.requirement = requirement;
+               this.editor.setContent(this.requirement.text);
+               this.isEdit = true;
             },
-            onHandleAusgewaehlt : function(anforderung) {
-                this.$http.put(anforderung._links.ausgewaehlt.href).then(
-                    response => this.handleAnforderungResponse(anforderung, response.body),
+            onRequirementEditSave: function(text) {
+                this.$http.put(this.requirement._links.text.href, text, {emulateJSON: true}).then(
+                    response =>  this.handleRequirementResponse(this.requirement, response.body),
                     response => {
-                        this.edit = false;
+                        this.isEdit = false;
                     }
                 );
             },
-            onHandleGruppeAusgewaehlt: function(gruppe, state) {
-                if (this.kapitel != null ) {
+
+            onRequirementSave : function() {
+                this.requirementRequest.call(this, this.editor.getHTML());
+            },
+
+            onEditCancel: function() {
+              this.isEdit = false;
+            },
+
+
+            onRequirementSelect : function(requirement) {
+                this.$http.put(requirement._links.selected.href).then(
+                    response => this.handleRequirementResponse(requirement, response.body),
+                    response => {
+                        this.isEdit = false;
+                    }
+                );
+            },
+            
+            onChapterRequirementsSelect: function(chapter, state) {
+                if (this.chapter != null ) {
                     this.wait = true;
-                    this.$http.put(this.kapitel._links.selektion.href.replace("{ausgewaehlt}", state)).then(
+                    this.$http.put(this.chapter._links.selection.href.replace("{selected}", state)).then(
                         response => {
-                            this.kapitel.kapitel= response.body.kapitel;
-                            this.kapitel.anforderungen = response.body.anforderungen;
-                            this.anforderungen = this.kapitel.anforderungen;
+                            this.chapter.chapters = response.body.chapters;
+                            this.chapter.requirements = response.body.requirements;
+                            this.requirements = this.chapter.requirements;
+                            this.selection[0] = this.chapter;
                             this.wait = false;
                         },
                         response => {
@@ -163,40 +153,42 @@ export const data = {
                     );
                 } else {
                     this.$confirm(
-                        this.$tc('kapitel_selektion.text'),
+                        this.$tc('chapter_selection.text'),
                         {
-                            title: this.$tc('kapitel_selektion.titel'),
+                            title: this.$tc('chapter_selection.title'),
                             buttonFalseText: null,
-                            buttonTrueText:  this.$tc('kapitel_selektion.ok')
+                            buttonTrueText:  this.$tc('chapter_selection.ok')
                         }
                     );
                 }
             },
-            handleAnforderungResponse: function (anforderung, responseBody) {
-                anforderung.text = responseBody.text;
-                anforderung.ausgewaehlt = responseBody.ausgewaehlt;
-                anforderung.geaendert = responseBody.geaendert;
-                anforderung._links = responseBody._links;
+            handleRequirementResponse: function (requirement, responseBody) {
+                requirement.text = responseBody.text;
+                requirement.selected = responseBody.selected;
+                requirement.changed = responseBody.changed;
+                requirement._links = responseBody._links;
 
-                this.anforderung = null;
-                this.edit = false;
+                this.requirement = null;
+                this.isEdit = false;
                 this.wait = false;
             },
-            loadKapitel: function(kapitel) {
-                this.$http.get(kapitel._links.self.href).then(
+            
+            loadChapter: function(chapter) {
+                this.$http.get(chapter._links.self.href).then(
                     response => {
-                         this.kapitel.kapitel= response.body.kapitel;
-                         this.kapitel.anforderungen = response.body.anforderungen;
-                         this.anforderungen = this.kapitel.anforderungen;
-                         this.selection[0] = this.kapitel;
+                         this.chapter.chapters= response.body.chapter;
+                         this.chapter.requirements = response.body.requirements;
+                         this.requirements = this.chapter.requirements;
+                         this.selection[0] = this.chapter;
                          //this.$refs.tree.updateAll(true);
-                         this.edit = false;
+                         this.isEdit = false;
                     },
                     response => {
                         console.log(repsonse);
                     }
                 );
             },
+
             handleSearch: function (val) {
                 if (val) {
                     if (!this.allOpened) {
@@ -218,10 +210,10 @@ export const data = {
             },
         },
         computed: {
-            _alleKapitel: function () {
+            _allChapters: function () {
                 const replaceChildren = (obj,parent) => {
                     const clone = Object.assign({},obj);
-                    delete clone.kapitel;
+                    delete clone.chapters;
                     if (parent) {
                         clone.parent = parent;
                     }
@@ -231,45 +223,56 @@ export const data = {
                 const addItems = (arr,parent) => {
                     const items = arr.reduce((acc,x)=>{
                         acc.push(replaceChildren(x,parent));
-                        if (x.kapitel) {
-                            acc.push(addItems(x.kapitel, x.kapitelName))
+                        if (x.chapters) {
+                            acc.push(addItems(x.chapters, x.chapterName))
                         }
                         return acc
                     },[]);
                     return items.flat()
                 };
 
-                return addItems(this.katalog.toc.kapitel).reduce((acc,x)=>{
-                    acc[x.kapitelName]=x;
+                return addItems(this.catalog.toc.chapters).reduce((acc,x)=>{
+                    acc[x.chapterName]=x;
                     return acc;
                 },{});
             },
-            _kapitelPfad: function() {
+            _chapterPath: function() {
                 const proxy = {};
-                var  addParents = (x, all) => {
-                    const parentId = this._alleKapitel[x.kapitelName].parent;
+                var addParents = (x, all) => {
+                    const parentId = this._allChapters[x.chapterName].parent;
                     if (parentId) {
                         if (all) {
-                            addParents(this._alleKapitel[parentId]);
+                            addParents(this._allChapters[parentId]);
                         }
-                        proxy[parentId] = this._alleKapitel[parentId]
+                        proxy[parentId] = this._allChapters[parentId]
                     }
                 };
 
-                addParents(this.kapitel, this.allParentNodes);
-                proxy[this.kapitel.kapitel] = this.kapitel;
+                addParents(this.chapter, this.allParentNodes);
+                proxy[this.chapter.chapters] = this.chapter;
                 return Object.values(proxy);
             }
         },
         watch: {
         },
         created: function() {
+            this.wait = true;
+
             this.$store.commit('breadcrumbs', [
-                { text: this.$tc('projekt', 2),  disabled: false, exact: true, to: { name: 'projekte' } },
-                { text: this.$route.params.id, disabled: false, exact: true,  to: { name: 'projekt', params: { id: this.$route.params.id, self: this.$route.params.previous} } },
+                { text: this.$tc('project', 2),  disabled: false, exact: true, to: { name: 'projects' } },
+                { text: this.$route.params.id, disabled: false, exact: true,  to: { name: 'project', params: { id: this.$route.params.id, self: this.$route.params.previous} } },
                 { text: this.$route.params.phase, disabled: true},
             ]);
-            this.onLoadKatalog();
+
+            this.$http.get(this.$route.params.self.href).then(
+                response => {
+                    this.catalog = response.body;
+                    this.wait = false;
+                },
+                response => {
+                    console.log(response);
+                }
+            );
         },
         mounted() {
             this.editor = new Editor(

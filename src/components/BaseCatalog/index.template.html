@@ -3,7 +3,6 @@
         <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
 
-
     <v-container>
         <v-row no-gutters justify="center" align="center">
             <v-col cols="8">
@@ -11,7 +10,7 @@
                         show-size
                         label="File input"
                         accept="application/json"
-                        @change="onSelectKatalog">
+                        @change="onFileSelect">
                 </v-file-input>
             </v-col>
 
@@ -20,7 +19,7 @@
                         color="success"
                         dark
                         small
-                        @click="onUploadKatalog">
+                        @click="onFileUpload">
                     {{$tc('upload')}}
                     <v-icon right dark>mdi-cloud-upload</v-icon>
                 </v-btn>
@@ -28,7 +27,7 @@
         </v-row>
 
 
-        <v-data-table :items="kataloge"
+        <v-data-table :items="catalogs"
                       :headers="headers"
                       :items-per-page="20"
                       class="elevation-1">

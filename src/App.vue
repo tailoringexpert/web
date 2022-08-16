@@ -1,7 +1,7 @@
 <template>
     <v-app>
         <v-app-bar app>
-                <router-link to="/projekt">
+                <router-link to="/project">
                     <v-img src="logo.png" max-width="36" max-heigt="36" ></v-img>
                 </router-link>
                 <v-spacer></v-spacer>

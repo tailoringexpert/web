@@ -1,122 +1,128 @@
 {
-  "ja": "Yes",
-  "nein": "No",
-  "projekt": "Project | Projects",
-  "neues_projekt": "New project",
-  "kopiere_projekt": "Project copy",
+  "yes": "Yes",
+  "no": "No",
+  "project": "Project | Projects",
+  "project_new": "New project",
+  "project_create": "Create project",
+  "project_copy": "Project copy",
   "name": "Name",
-  "erstellt_am": "Created at",
-  "katalog": "Catalog",
-  "aktion": "Action | Actions",
+  "created_at": "Created at",
+  "catalog": "Catalog",
+  "action": "Action | Actions",
   "tailoring": "Tailoring | Tailorings",
-  "neues_tailoring": "New tailoring",
-  "tailoring_anlegen": "Create tailoring",
+  "tailoring_new": "New tailoring",
+  "create_tailoring": "Create tailoring",
   "phase": "Phase | Phases",
   "screeningsheet": "ScreeningSheet",
-  "selektionsvektor": "Selectionvector",
-  "selektionsvektor_gegenueberstellung": "Selectionvector comparsion",
-  "berechneter_selektionsvektor": "Calculated selectionvector",
+  "selectionvector": "Selectionvector",
+  "selectionvector_comparison": "Selectionvector comparison",
+  "selectionvector_calculated": "Calculated selectionvector",
+  "selectionvector_applied": "Applied selectionvector",
   "screeningsheet_parameter": "ScreeningSheet parameters",
-  "angewendeter_selektionsvektor": "Applied selectionvector",
-  "download_dokumente": "Download documents",
-  "zusammenfassung": "Summary",
-  "weiter": "Next",
-  "zurueck": "Back",
-  "abbrechen": "Cancel",
-  "schliessen": "Close",
-  "datei_auswaehlen": "Please select a file!",
-  "projekt_anlegen": "Create project",
-  "anforderungskatalog": "Requirements",
-  "geaendert": "changed",
+  "documents_download": "Download documents",
+  "summary": "Summary",
+  "next": "Next",
+  "back": "Back",
+  "cancel": "Cancel",
+  "close": "Close",
+  "save": "Save",
+  "file_select": "Please select a file!",
+  "validFrom": "Valid from",
+  "validUntil": "Valid until",
+
+  "requirements": "Requirements",
+  "changed": "changed",
   "upload": "Upload",
-  "anforderung_bearbeiten": {
-    "titel": "Edit requirement",
-    "abbrechen": "Cancel",
-    "speichern": "Save"
+  "requirement_edit": {
+    "title": "Edit requirement",
+    "cancel": "Cancel",
+    "save": "Save"
   },
-  "tailoring_loeschen": {
+  "tailoring_delete": {
     "title": "Delete tailoring",
     "text": "Shall tailoring be deleted?"
   },
-  "kapitel_selektion": {
-    "titel": "Information",
+  "chapter_selection": {
+    "title": "Information",
     "text": "No chapter selected. <br>Please select chapter first.",
     "ok": "OK"
   },
-  "dokument_download": {
-    "titel": "Download documents",
-    "zeichnungen": "Document signments",
-    "bereich": "Bereich",
-    "zeichnungsstatus": "State",
-    "unterzeichner": "User",
+  "documents": {
+    "title": "Download documents",
+    "signatures": "Document signments",
+    "faculty": "Bereich",
+    "signature_state": "State",
+    "signee": "User",
     "download": "Download",
-    "katalog": "Catalog",
+    "catalog": "Catalog",
     "json": "JSON",
-    "anwendbar": "Applicable",
-    "status": {
-      "fehlerfrei": "",
-      "fehler": ""
+    "applicable": "Applicable",
+    "state": {
+      "success": "",
+      "error": ""
     }
   },
-  "dokument_loeschen": {
-    "title": "Delete document",
-    "text": "Shall document be deleted?"
-  },
+
   "dokument_zeichnung": {
     "status": {
       "fehlerfrei": "Value applied"
     }
   },
-  "dokument_upload": {
-    "titel": "Upload documents",
-    "dokument": "Document",
-    "checksumme": "Checksum"
+  "attachment" :{
+    "title": "Upload documents",
+    "file": "File",
+    "checksum": "Checksum"
   },
-  "projekt_loeschen": {
-    "titel": "Delete project",
+  "attachment_delete": {
+    "title": "Delete attachment",
+    "text": "Shall attachment be deleted?"
+  },
+
+  "project_delete": {
+    "title": "Delete project",
     "text": "Shall project be deleted?"
   },
-  "tailoring_name_aendern": {
-    "titel": "Change tailoring name",
+  "tailoring_changename": {
+    "title": "Change tailoring name",
     "ok": "OK",
-    "status": {
-      "fehlerfrei": "Name changed sucessfully",
-      "fehler": "Name could not be changed"
+    "state": {
+      "success": "Name changed sucessfully",
+      "error": "Name could not be changed"
     }
   },
-  "anforderung_importieren": {
-    "titel": "Import tailored requirements",
-    "status": {
-      "fehlerfrei": "Requirements changed"
+  "requirement_import": {
+    "title": "Import tailored requirements",
+    "state": {
+      "success": "Requirements changed",
+      "error": "Requirements could not be imported"
     }
   },
   "tooltip": {
-    "anforderungen_bearbeiten": "Edit requirements",
-    "selektionsvektor_oeffnen": "Open selectionvector",
-    "screeningsheet_oeffnen": "Open screeningsheet",
-    "dokumente_erzeugen": "Create documents",
-    "dokumente_verwalten": "Attachments",
-    "tailoring_loeschen": "Delete tailoring",
-    "projekt_bearbeiten": "Edit project",
-    "projekt_kopieren": "Copy project",
-    "projekt_loeschen": "Delete project",
-    "anforderung_bearbeiten": "Edit requirement",
-    "anforderung_erstellen": "Create new requirement after",
-    "auswahl_aendern": "Change applicabilty",
-    "tailoring_vergleichen": "Show tailoring diffs",
-    "anforderungen_importieren": "Import tailored requirements",
+    "requirements_edit": "Edit requirements",
+    "selectionvector_open": "Open selectionvector",
+    "screeningsheet_open": "Open screeningsheet",
+    "document_open": "Create documents",
+    "attachment_open": "Attachments",
+    "attachment_download" : "Download",
+    "attachment_delete": "Delete attachment",
+    "tailoring_delete": "Delete tailoring",
+    "project_edit": "Edit project",
+    "project_copy": "Copy project",
+    "project_delete": "Delete project",
+    "requirement_edit": "Edit requirement",
+    "requirement_create": "Create new requirement after",
+    "applicabilty_change": "Change applicabilty",
+    "tailoring_compare": "Show tailoring diffs",
+    "requirement_import": "Import tailored requirements",
     "katalogdefinition_oeffnen": "Open base catalogue document",
-    "dokument_loeschen": "Delete document",
-    "dokument_download" : "Download",
     "katalog_download_json": "Download JSON",
     "katalog_download_pdf": "Download PDF"
   },
-  "projektkopie_erstellen": "Create project copy",
-  "gueltig_von": "Valid from",
-  "gueltig_bis": "Valid until",
-  "alle_selektieren": "Select all",
-  "alle_deselektieren": "Deselect all",
-  "wert": "Value | Values",
+  "projectcopy_create": "Create project copy",
+
+  "select_all": "Select all",
+  "deselect_all": "Deselect all",
+  "value": "Value | Values",
   "produktsicherung": "Produktsicherung",
   "qualitaetssicherung": "Qualitätssicherung",
   "planetaryProtection": "Planetenschutz",

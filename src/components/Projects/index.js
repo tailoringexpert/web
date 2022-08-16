@@ -10,56 +10,56 @@ export const data = {
 					align: 'start',
 				},
 				{
-					text: this.$tc('erstellt_am'),
-					value: 'erstellungsZeitpunkt',
+					text: this.$tc('created_at'),
+					value: 'creationTimestamp',
 					sortable: true,
 				},
 				{
-					text: this.$tc('katalog'),
-					value: 'katalogVersion',
+					text: this.$tc('catalog'),
+					value: 'catalogVersion',
 					sortable: true,
 					align: 'start',
 				},
 				{
-					text: this.$tc('aktion', 2),
+					text: this.$tc('action', 2),
 					value: 'actions',
 					sortable: false
 				},
 			],
-			projekte: []
+			projects: []
 		};
 	},
 
 	methods: {
 		onNewProject: function() {
 			this.$router.push({
-			    name: 'projektanlegen'
+			    name: 'projectnew'
             });
 		},
-		onEditProjekt: function(projekt) {
+		onEditProject: function(project) {
 			this.$router.push({
-                name: 'projekt',
+                name: 'project',
 				params: {
-				    id: projekt.name,
-					self: projekt.self
+				    id: project.name,
+					self: project.self
                 }
             });
 		},
-		onDeleteProjekt: function(projekt) {
+		onDeleteProject: function(project) {
 		    this.$confirm(
-		        this.$tc('projekt_loeschen.text'),{
-    		        buttonFalseText: this.$tc('nein'),
-    		        buttonTrueText: this.$tc('ja'),
+		        this.$tc('project_delete.text'),{
+    		        buttonFalseText: this.$tc('no'),
+    		        buttonTrueText: this.$tc('yes'),
 	    	        color: "warning",
-		            title: this.$tc('projekt_loeschen.titel')
+		            title: this.$tc('project_delete.title')
 		        }).then(
   		            confirmed => {
   		                if ( confirmed ) {
   		      	            this.wait = true;
-                            this.$http.delete(projekt.self).then(
+                            this.$http.delete(project.self).then(
                                 response => {
                                     this.wait = false;
-                                    this.onLoadProjekte();
+                                    this.onLoadProjects();
                                 },
                                 response => {
                                     console.log("error: " + response);
@@ -70,22 +70,22 @@ export const data = {
                    }
                );
 		},
-		onLoadProjekte : function() {
+		onLoadProjects : function() {
 			this.wait = true;
 
-			this.$http.get(this.$store.state.links['projekt'].href).then(
+			this.$http.get(this.$store.state.links['project'].href).then(
 				response => {
-				    this.projekte = [];
+				    this.projects = [];
 
 					if (response.body._embedded != undefined) {
-						for (let i = 0; i < response.body._embedded.projektInformationResourceList.length; i++) {
-							var item = response.body._embedded.projektInformationResourceList[i];
-							var links = response.body._embedded.projektInformationResourceList[i]._links;
-							this.projekte.push(
+						for (let i = 0; i < response.body._embedded.projects.length; i++) {
+							var item = response.body._embedded.projects[i];
+							var links = response.body._embedded.projects[i]._links;
+							this.projects.push(
 								{
 									name: item.name,
-									erstellungsZeitpunkt: item.erstellungsZeitpunkt,
-									katalogVersion: item.katalogVersion,
+									creationTimestamp: item.creationTimestamp,
+									catalogVersion: item.catalogVersion,
 									self: links.self.href,
 									screeningsheet: links.screeningsheet.href
 								}
@@ -100,25 +100,21 @@ export const data = {
 				}
 			);
 		},
-		onCopyProjekt: function(projekt){
+		onCopyProject: function(project){
             this.$router.push({
-                name: 'projektkopieren',
+                name: 'projectcopy',
             	params: {
-            	    id: projekt.name,
-            		self: projekt.self,
-            		screeningsheet: projekt.screeningsheet
+            	    id: project.name,
+            		self: project.self,
+            		screeningsheet: project.screeningsheet
                 }
             });
         },
 	},
-	computed: {
-	},
-	watch: {
-	},
 	created: function() {
-		this.onLoadProjekte();
+		this.onLoadProjects();
 		this.$store.commit('breadcrumbs', [
-		    { text:  this.$tc('projekt', 2),  disabled: false, exact: true, to: { name: 'projekte' } }
+		    { text:  this.$tc('project', 2),  disabled: false, exact: true, to: { name: 'projects' } }
 		]);
 	},
 }
