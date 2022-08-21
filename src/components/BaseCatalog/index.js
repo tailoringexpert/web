@@ -7,55 +7,53 @@ export const data = {
             snack: false,
             snackColor: '',
             snackText: '',
-            katalogLink: undefined,
+            catalogLink: undefined,
             headers: [
                 {
-                    text: this.$tc('katalog'),
+                    text: this.$tc('catalog'),
                     sortable: true,
                     value: 'version',
                 },
                 {
-                    text: this.$tc('gueltig_von'),
+                    text: this.$tc('validFrom'),
                     sortable: true,
-                    value: 'gueltigAb',
+                    value: 'validFrom',
                 },
                 {
-                    text: this.$tc('gueltig_bis'),
+                    text: this.$tc('validUntil'),
                     sortable: true,
-                    value: 'gueltigBis',
+                    value: 'validUntil',
                 },
                 {
-                    text: this.$tc('aktion', 2),
+                    text: this.$tc('action', 2),
                     value: 'actions',
                     sortable: false
                 },
             ],
-            kataloge: [],
-            katalogDatei: undefined,
+            catalogs: [],
+            file: undefined,
         }
     },
     methods: {
-        onSelectKatalog : function(katalogDatei) {
-            this.katalogDatei = katalogDatei;
-            console.log("select: " + this.katalogDatei);
-
+        onFileSelect : function(file) {
+            this.file = file;
         },
 
-        onUploadKatalog: function() {
-            if (!this.katalogDatei) {
-                this.message = this.$tc('datei_auswaehlen');
+        onFileUpload: function() {
+            if (!this.file) {
+                this.message = this.$tc('file_select');
                 return;
             }
             this.message = "";
 
             let data = new FormData();
-            data.append("datei", this.katalogDatei);
+            data.append("datei", this.file);
 
             const reader = new FileReader();
             reader.onload = e =>  {
                 this.wait = true;
 
-                this.$http.post(this.$store.state.links.katalog.href, e.target.result, {emulateJSON: true} )
+                this.$http.post(this.$store.state.links.catalog.href, e.target.result, {emulateJSON: true} )
                 .then(
                     response => {
                         this.wait = false;
@@ -67,7 +65,7 @@ export const data = {
                     }
                 );
             }
-            reader.readAsText(this.katalogDatei);
+            reader.readAsText(this.file);
         },
         onDownloadPdf: function(item) {
             this.onDownload(item.links.pdf.href);
@@ -94,20 +92,20 @@ export const data = {
            );
         },
 
-        loadKataloge: function() {
+        loadCatalogs: function() {
             this.wait = true;
-            this.$http.get(this.katalogLink).then(
+            this.$http.get(this.catalogLink).then(
                 response => {
-                    this.kataloge = [];
-                    for (let i = 0; i<response.body._embedded.katalogVersionResourceList.length; i++) {
-                        var item = response.body._embedded.katalogVersionResourceList[i];
+                    this.catalogs = [];
+                    for (let i = 0; i<response.body._embedded.baseCatalogs.length; i++) {
+                        var item = response.body._embedded.baseCatalogs[i];
                         Vue.$log.info(item);
                         var links = item._links;
 
-                        this.kataloge.push({
+                        this.catalogs.push({
                             version: item.version,
-                            gueltigAb: new Date(item.gueltigAb).toLocaleDateString(),
-                            gueltigBis: "",
+                            validFrom: new Date(item.gueltigAb).toLocaleDateString(),
+                            validUntil: "",
                             links: links,
                         });
                     }
@@ -123,26 +121,21 @@ export const data = {
     watch: {
     },
     computed: {
-
-//        kataloge2: function() {
-//        console.log(this.$store.state.kataloge);
-//            return this.$store.state.kataloge;
-//        },
     },
     created() {
         this.wait = true;
 
         this.$store.commit('breadcrumbs', [
-            { text: this.$tc('projekt', 2),  disabled: false, exact: true, to: { name: 'projekte' } },
-            { text: this.$tc('neues_projekt'), disabled: true }
+            { text: this.$tc('project', 2),  disabled: false, exact: true, to: { name: 'projects' } },
+            { text: this.$tc('catalog'), disabled: true }
         ]);
 
         var origin = window.location.origin + "/api";
         this.$http.get(origin)
             .then(
                 response => {
-                    this.katalogLink = response.body._links['katalog'].href;
-                    this.loadKataloge();
+                    this.catalogLink = response.body._links['catalog'].href;
+                    this.loadCatalogs();
                     this.wait = false;
                 },
                 response => {

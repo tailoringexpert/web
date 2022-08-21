@@ -9,50 +9,50 @@ export const data = {
                     text: this.$tc('name'),
                     align: 'start',
                     sortable: true,
-                    value: 'bezeichnung',
+                    value: 'label',
                 },
                 {
-                    text: this.$tc('wert'),
-                    value: 'action',
+                    text: this.$tc('value'),
                     sortable: true,
-                    value: 'wert',
+                    value: 'value',
                 },
             ],
 
-            quellScreeningSheet: {},
-            quellSelektionsVektorParameter: [],
-            quellScreeningSheetDownload: null,
+            srcScreeningSheet: {},
+            srcSelectionVectorParameter: [],
+            srcScreeningSheetDownload: null,
 
-            screeningSheetDatei: undefined,
+            screeningSheetFile: undefined,
             screeningSheet: {
                 parameters: []
             },
 
-            projekt: '',
-            selektionsVektorHeader: [
+            project: '',
+            selectionVectorHeader: [
                 {
-                    text: 'Name',
+                    text: this.$tc('name'),
                     align: 'start',
                     sortable: true,
                     value: 'label',
+                    width: '50%',
                 },
                 {
-                    text: 'Wert',
-                    value: 'action',
-                    sortable: true,
-                    value: 'wert',
+                    text: this.$tc('value'),
+                    value: 'value',
+                    sortable: false,
+                    width: '50%',
                 },
             ],
-            selektionsVektorParameter: [],
-            selektionsVektorParameterGegenueberstellung: [],
+            selectionVectorParameter: [],
+            selectionVectorParameterComparison: [],
         }
     },
     methods: {
-        onCancelProjektKopieren: function() {
+        onProjectCopyCancel: function() {
         },
-        onOpenScreeningSheetDatei: function() {
+        onScreeningSheetFileOpen: function() {
             this.wait = true;
-            this.$http.get(this.quellScreeningSheetDownload, {responseType: 'arraybuffer'}).then(
+            this.$http.get(this.srcScreeningSheetDownload, {responseType: 'arraybuffer'}).then(
                 response => {
                     const blob = new Blob([response.body], { type: response.headers.get('Content-Type') });
                     const link = document.createElement('a');
@@ -68,19 +68,18 @@ export const data = {
                 }
            );
         },
-        onSelectScreeningSheet : function(screeningSheetDatei) {
-            this.screeningSheetDatei = screeningSheetDatei;
-
+        onScreeningSheetSelect : function(screeningSheetFile) {
+            this.screeningSheetFile = screeningSheetFile;
         },
-        onUploadScreeningSheet: function() {
-            if (!this.screeningSheetDatei) {
-                this.message = this.$tc('datei_auswaehlen');
+        onScreeningSheetUpload: function() {
+            if (!this.screeningSheetFile) {
+                this.message = this.$tc('file_select');
                 return;
             }
             this.message = "";
 
             let data = new FormData();
-            data.append("datei", this.screeningSheetDatei);
+            data.append("datei", this.screeningSheetFile);
 
             this.$http.post(this.$store.state.links['screeningsheet'].href, data, {emulateJSON: true} ).then(
                 response => {
@@ -88,21 +87,21 @@ export const data = {
 
                     // merken für nächstem Wizzard Schritt
                     this.screeningSheet = response.body;
-                    this.selektionsVektor = this.screeningSheet.selektionsVektor;
+                    this.selectionVector = this.screeningSheet.selectionVector;
 
                     // konvertieren für genrische Darstellung in Tabelle
-                    for (var name in this.screeningSheet.selektionsVektor.levels) {
-                        this.selektionsVektorParameter.push({
+                    for (var name in this.screeningSheet.selectionVector.levels) {
+                        this.selectionVectorParameter.push({
                             label: this.$t(name),
                             name: name,
-                            wert: this.screeningSheet.selektionsVektor.levels[name]
-                       });
+                            value: this.screeningSheet.selectionVector.levels[name]
+                        });
                     }
-                    this.selektionsVektorParameter.sort((a, b) => (a.label > b.label) ? 1 : -1)
+                    this.selectionVectorParameter.sort((a, b) => (a.label > b.label) ? 1 : -1)
 
                     for (let i = 0; i < this.screeningSheet.parameters.length; i++) {
                         if (this.screeningSheet.parameters[i].bezeichnung == 'Kuerzel') {
-                            this.projekt = this.screeningSheet.parameters[i].wert;
+                            this.project = this.screeningSheet.parameters[i].wert;
                             break;
                         }
                     }
@@ -112,22 +111,24 @@ export const data = {
                 }
             );
         },
-        onZusammenfassung: function() {
-            this.selektionsVektorParameterGegenueberstellung = [];
-            for (var name in this.screeningSheet.selektionsVektor.levels) {
-                this.selektionsVektorParameterGegenueberstellung.push(
+        onSummary: function() {
+            this.selectionVectorParameterComparison = [];
+            var modifiedSelectionVector = this.buildSelectionVector(this.selectionVectorParameter);
+
+            for (var name in this.screeningSheet.selectionVector.levels) {
+                this.selectionVectorParameterComparison.push(
                     {
                         name: name,
                         label: this.$tc(name),
-                        quell: Number(this.quellScreeningSheet.selektionsVektor.levels[name]),
-                        aktuell: Number(this.screeningSheet.selektionsVektor.levels[name])
+                        src: Number(this.srcScreeningSheet.selectionVector.levels[name]),
+                        target: Number(this.screeningSheet.selectionVector.levels[name])
                     }
                 );
             }
-            this.selektionsVektorParameterGegenueberstellung.sort((a, b) => (a.label > b.label) ? 1 : -1)
+            this.selectionVectorParameterComparison.sort((a, b) => (a.label > b.label) ? 1 : -1)
 
         },
-        onCreateProjektKopie: function() {
+        onProjectCopyCreate: function() {
             this.wait = true;
 
             let data = new FormData();
@@ -138,10 +139,10 @@ export const data = {
                     this.wait = false;
                     this.$router.push(
                         {
-                            name: 'projekt',
+                            name: 'project',
                             params:
                             {
-                                id: this.projekt,
+                                id: this.project,
                                 self: response.headers.get('Location')
                             }
                         }
@@ -157,18 +158,16 @@ export const data = {
                     }
                 );
         },
-        buildSelektionsVektor: function(parameter) {
-            var selektionsVektor = {};
+        buildSelectionVector: function(parameter) {
+            var selectionVector = {};
             for (var i in parameter) {
-                selektionsVektor[parameter[i].name] = parameter[i].wert;
+                selectionVector[parameter[i].name] = parameter[i].value;
             }
-            return selektionsVektor;
+            return selectionVector;
         },
     },
-    watch: {
-    },
     computed: {
-        selektionsVektorParameterGegenueberstellungHeader: function() {
+        selectionVectorParameterComparisonHeader: function() {
             return [
                 {
                     text: this.$tc('name'),
@@ -178,15 +177,13 @@ export const data = {
                 },
                 {
                     text: this.$route.params.id,
-                    value: 'start',
                     sortable: true,
-                    value: 'quell',
+                    value: 'src',
                 },
                 {
-                    text: this.projekt,
-                    value: 'start',
+                    text: this.project,
                     sortable: true,
-                    value: 'aktuell',
+                    value: 'target',
                },
             ];
         },
@@ -195,25 +192,25 @@ export const data = {
 	    this.wait = true;
 
         this.$store.commit('breadcrumbs', [
-            { text: this.$tc('projekt', 2),  disabled: false, exact: true, to: { name: 'projekte' } },
-            { text: this.$tc('kopiere_projekt'), disabled: true }
+            { text: this.$tc('project', 2),  disabled: false, exact: true, to: { name: 'projects' } },
+            { text: this.$tc('project_copy'), disabled: true }
         ]);
 
         this.$http.get(this.$route.params.screeningsheet).then(
             response => {
-                this.quellScreeningSheet = response.body;
+                this.srcScreeningSheet = response.body;
 
-                this.quellSelektionsVektorParameter = [];
-                for (var name in this.quellScreeningSheet.selektionsVektor.levels) {
-                    this.quellSelektionsVektorParameter.push({
+                this.srcSelectionVectorParameter = [];
+                for (var name in this.srcScreeningSheet.selectionVector.levels) {
+                    this.srcSelectionVectorParameter.push({
                         label: this.$tc(name),
                         name: name,
-                        wert: this.quellScreeningSheet.selektionsVektor.levels[name]
+                        value: this.srcScreeningSheet.selectionVector.levels[name]
                    });
                 }
-                this.quellSelektionsVektorParameter.sort((a, b) => (a.label > b.label) ? 1 : -1)
+                this.srcSelectionVectorParameter.sort((a, b) => (a.label > b.label) ? 1 : -1)
 
-                this.quellScreeningSheetDownload = this.quellScreeningSheet._links['datei'].href;
+                this.srcScreeningSheetDownload = this.srcScreeningSheet._links['datei'].href;
 
                 this.wait = false;
             },

@@ -38,7 +38,7 @@
             <map />
           </option>
           <option name="resolveToWorkspace" value="false" />
-          <option name="workingDirPath" value="$PROJECT_DIR$/../../git/tailoringexpert/tailoringexpert-web" />
+          <option name="workingDirPath" value="$PROJECT_DIR$/../../git/tailoringexpert/web" />
         </MavenRunnerParameters>
       </option>
     </MavenSettings>
