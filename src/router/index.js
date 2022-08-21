@@ -10,47 +10,47 @@ export const routes = [
         component: () => import('@/components/Home.vue'),
     },
     {
-        path: '/katalog',
-        component: () => import('@/components/KatalogImport.vue'),
-        name: 'gesamtkatalog'
+        path: '/catalog',
+        component: () => import('@/components/BaseCatalog.vue'),
+        name: 'basecatalog'
     },
     {
-        path: '/projekt',
+        path: '/project',
         component: () => import('@/components/Container.vue'),
         children: [
             {
                 path: '',
-                component: () => import('@/components/Projekte.vue'),
-                name: 'projekte'
+                component: () => import('@/components/Projects.vue'),
+                name: 'projects'
             },
             {
                 path: ':id',
-                component: () => import('@/components/Projekt.vue'),
+                component: () => import('@/components/Project.vue'),
                 props: true,
-                name: 'projekt'
+                name: 'project'
             },
             {
-                path: 'neu',
-                component: () => import('@/components/ProjektAnlegen.vue'),
-                name: 'projektanlegen'
+                path: 'new',
+                component: () => import('@/components/ProjectNew.vue'),
+                name: 'projectnew'
             },
             {
-                path: ':id/kopie',
-                component: () => import('@/components/ProjektKopieren.vue'),
+                path: ':id/copy',
+                component: () => import('@/components/ProjectCopy.vue'),
                 props: true,
-                name: 'projektkopieren'
+                name: 'projectcopy'
             },
             {
-                path: ':id/:phase/katalog',
-                component: () => import('@/components/Katalog.vue'),
+                path: ':id/:tailoring/catalog',
+                component: () => import('@/components/TailoringCatalog.vue'),
                 props: true,
-                name: 'katalog'
+                name: 'catalog'
             },
             {
-                path: ':id/phase/neu',
-                component: () => import('@/components/TailoringAnlegen.vue'),
+                path: ':id/tailoring/new',
+                component: () => import('@/components/TailoringNew.vue'),
                 props: true,
-                name: 'tailoringanlegen'
+                name: 'tailoringnew'
             },
         ]
     },

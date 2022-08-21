@@ -5,6 +5,7 @@ export const data = {
             snack: false,
             snackColor: '',
             snackText: '',
+
 			headers: [
 				{
 					text: this.$tc('name'),
@@ -15,47 +16,46 @@ export const data = {
 				{
 					text: this.$tc('phase', 2),
 					sortable: true,
-					value: 'phasen',
+					value: 'phases',
 				},
                 {
-                    text: this.$tc('katalog'),
+                    text: this.$tc('catalog'),
                     sortable: true,
-                    value: 'katalogVersion',
+                    value: 'catalogVersion',
                 },
 				{
-					text: this.$tc('aktion', 2),
+					text: this.$tc('action', 2),
 					value: 'actions',
 					sortable: false
 				},
 			],
-            tailoringName: null,
-			projekt : {
+			project : {
 			    tailorings : []
 			},
+            tailoringName: null,
 
-			openScreeningSheet: false,
+			isScreeningSheetOpen: false,
 			screeningSheetTab: null,
             screeningSheet: {
                 parameters: []
             },
             screeningSheetDownload : null,
-            screeningSheetParameterHeader: [
+            screeningSheetHeader: [
                 {
                     text: this.$tc('name'),
                     align: 'start',
                     sortable: true,
-                    value: 'bezeichnung',
+                    value: 'label',
                 },
                 {
-                    text: this.$tc('wert'),
-                    value: 'action',
+                    text: this.$tc('value'),
                     sortable: true,
-                    value: 'wert',
+                    value: 'value',
                 },
             ],
 
-            openSelektionsVektor: false,
-            selektionsVektorHeader: [
+            isSelectionVectorOpen: false,
+            selectionVectorHeader: [
                 {
                     text:  this.$tc('name'),
                     align: 'start',
@@ -63,40 +63,36 @@ export const data = {
                     value: 'label',
                 },
                 {
-                    text: this.$tc('wert'),
+                    text: this.$tc('value'),
                     value: 'action',
-                    value: 'wert',
+                    value: 'value',
                 },
             ],
-            selektionsVektorParameter: [],
+            selectionVectorParameter: [],
 
-            openDokumentGenerierung : false,
+            isDocumentsOpen : false,
             panel: [0],
             tailoring : null,
-            dokumentZeichnungenHeader: [
+            signaturesHeader: [
                 {
-                    text:  this.$tc('dokument_download.bereich'),
-                    align: 'start',
+                    text:  this.$tc('documents.faculty'),
                     sortable: true,
-                    value: 'bereich',
+                    value: 'faculty',
                 },
                 {
-                    text: this.$tc('dokument_download.unterzeichner'),
-                    value: 'action',
+                    text: this.$tc('documents.signee'),
                     sortable: true,
-                    value: 'unterzeichner',
+                    value: 'signee',
                 },
                 {
-                    text: this.$tc('dokument_download.zeichnungsstatus'),
-                    value: 'action',
+                    text: this.$tc('documents.state'),
                     sortable: true,
-                    value: 'status',
+                    value: 'signature_state',
                 },
                 {
-                    text: this.$tc('dokument_download.anwendbar'),
-                    value: 'action',
+                    text: this.$tc('documents.applicable'),
                     sortable: true,
-                    value: 'anwendbar',
+                    value: 'applicable',
                 },
                 {
                     text: 'Actions',
@@ -104,30 +100,30 @@ export const data = {
                     sortable: false
                 },
             ],
-            dokumentZeichnungen: [],
-            editDokumentZeichnung: false,
-            dokumentZeichnung: {
-                benutzer: '',
-                bereich: '',
-                status: '',
-                anwendbar: false
+            signatures: [],
+            isSignatureOpen: false,
+            signature: {
+                signee: '',
+                faculty: '',
+                state: '',
+                applicable: false
             },
-            dokumentZeichnungIndex: -1,
+            signatureIndex: -1,
 
-            openDokumente : false,
-            dokumenteHeader : [
+            isAttachmentOpen : false,
+            attachmentsHeader : [
                 {
-                    text: this.$tc('dokument_upload.dokument'),
+                    text: this.$tc('attachment.file'),
                     sortable: true,
                     value: 'name',
                 },
                 {
                     text: "Typ",
                     sortable: true,
-                    value: 'typ',
+                    value: 'type',
                 },
                 {
-                    text: this.$tc('dokument_upload.checksumme'),
+                    text: this.$tc('attachment.checksum'),
                     sortable: true,
                     value: 'hash',
                 },
@@ -137,28 +133,29 @@ export const data = {
                     sortable: false
                 },
             ],
-            dokumente : [],
-            uploadDatei: null,
+            attachments: [],
+            file: null,
 
-            openImport: false,
+            isImportOpen: false,
 		};
 	},
 	methods: {
-		onNewTailoring: function() {
+		onTailoringNew: function() {
             this.$router.push({
-                name: 'tailoringanlegen',
+                name: 'tailoringnew',
                 params: {
-                    id: this.projekt.name,
+                    id: this.project.name,
                     previous: this.$route.params.self,
-                    self: this.projekt._links['tailoring'].href,
-                    referer: this.projekt._links['self'].href
+                    self: this.project._links['tailoring'].href,
+                    referer: this.project._links['self'].href
                 }
             });
 		},
-        onOpenTailoringName: function(item) {
+
+        onTailoringNameOpen: function(item) {
             this.tailoringName = item.name;
 		},
-        onSaveTailoringName: function(item) {
+        onTailoringNameSave: function(item) {
             this.wait = true;
             this.$http.put(item._links.name.href, item.name, {emulateJSON: true}).then(
                 response => {
@@ -166,10 +163,10 @@ export const data = {
                     this.wait = false;
                     this.snack = true;
                     this.snackColor = 'success';
-                    this.snackText = this.$tc('tailoring_name_aendern.status.fehlerfrei');
+                    this.snackText = this.$tc('tailoring_changename.state.success');
                 },
                 response => {
-                    this.$confirm(response.bodyText,{  buttonFalseText: null, buttonTrueText: this.$tc('tailoring_name_aendern.ok'), color: "warning", title: this.$tc('projektphase_name_aendern.titel') }).then(
+                    this.$confirm(response.bodyText,{  buttonFalseText: null, buttonTrueText: this.$tc('tailoring_changename.ok'), color: "warning", title: this.$tc('tailoring_changename.title') }).then(
                         confirmed => {
                             if ( confirmed ) {
                                 item.name = this.tailoringName;
@@ -181,53 +178,41 @@ export const data = {
                 }
             );
         },
-        onCancelTailoringName: function() {
+        onTailoringNameCancel: function() {
             this.snack = true;
             this.snackColor = 'error';
-            this.snackText = this.$tc('tailoring_name_aendern.status.fehler')
+            this.snackText = this.$tc('tailoring_changename.state.error')
         },
-		onEditTailoringKatalog: function(tailoring) {
+
+		onTailoringCatalogEdit: function(tailoring) {
             this.$router.push({
-                name: 'katalog',
+                name: 'catalog',
 				params: {
-				    id: this.projekt.name,
-					phase: tailoring.name,
-					self: tailoring._links.katalog,
+				    id: this.project.name,
+					tailoring: tailoring.name,
+					self: tailoring._links.catalog,
 					previous: this.$route.params.self
 			    }
 			});
 		},
-		onDeleteTailoring: function(tailoring) {
-			this.$confirm(this.$tc('tailoring_loeschen.text'),
-			    { buttonFalseText: this.$tc('nein'), buttonTrueText: this.$tc('ja'), color: "warning", title: this.$tc('tailoring_loeschen.title') }).then(
+
+		onTailoringDelete: function(tailoring) {
+			this.$confirm(this.$tc('tailoring_delete.text'),
+			    { buttonFalseText: this.$tc('no'), buttonTrueText: this.$tc('yes'), color: "warning", title: this.$tc('tailoring_delete.title') }).then(
                 confirmed => {
               	    if ( confirmed ) {
               	        this.wait = true;
                         this.$http.delete(tailoring._links.self.href).then(
                             response => {
-                                this.projekt.tailorings.splice(this.projekt.tailorings.indexOf(tailoring), 1);
+                                this.projekt.tailorings.splice(this.project.tailorings.indexOf(tailoring), 1);
                                 this.wait = false;
                             }
                        )
                     }
                 });
 		},
-		onLoadProjekt : function() {
-			this.wait = true;
 
-            this.$http.get(this.$route.params.self).then(
-                response => {
-                    this.projekt= response.body;
-                    this.wait = false;
-                },
-                response => {
-                  console.log(repsonse);
-                  this.wait = false;
-                }
-            );
-		},
-
-		onViewTailoringVergleich: function(link) {
+		onTailoringCompare: function(link) {
             this.wait = true;
 
             this.$http.get(link, {responseType: 'arraybuffer'}).then(
@@ -245,27 +230,27 @@ export const data = {
                     this.wait = false;
                 });
 		},
-	    onOpenScreeningSheet: function(link) {
+
+	    onScreeningSheetOpen: function(link) {
 	        this.wait = true;
 
 	        this.$http.get(link).then(
 	            response => {
 	                this.screeningSheet = response.body;
 
-                    this.selektionsVektorParameter = [];
-                    for (var name in this.screeningSheet.selektionsVektor.levels) {
-                        this.selektionsVektorParameter.push({
+                    this.selectionVectorParameter = [];
+                    for (var name in this.screeningSheet.selectionVector.levels) {
+                        this.selectionVectorParameter.push({
                             label: this.$tc(name),
                             name: name,
-                            wert: this.screeningSheet.selektionsVektor.levels[name]
+                            value: this.screeningSheet.selectionVector.levels[name]
                        });
                     }
-                    this.selektionsVektorParameter.sort((a, b) => (a.label > b.label) ? 1 : -1)
-
+                    this.selectionVectorParameter.sort((a, b) => (a.label > b.label) ? 1 : -1)
                     this.screeningSheetDownload = this.screeningSheet._links['datei'].href;
 
                     this.wait = false;
-            	    this.openScreeningSheet = true;
+            	    this.isScreeningSheetOpen = true;
                 },
                 response => {
                     console.log(repsonse);
@@ -273,7 +258,7 @@ export const data = {
                }
             );
 	    },
-	    onOpenScreeningSheetDatei: function() {
+	    onScreeningSheetFileOpen: function() {
 	        this.wait = true;
             this.$http.get(this.screeningSheetDownload, {responseType: 'arraybuffer'}).then(
                 response => {
@@ -291,25 +276,25 @@ export const data = {
                 }
            );
 	    },
-	    onOpenSelektionsVektor: function(link) {
+	    onSelectionVectorOpen: function(link) {
             this.wait = true;
 
 	        this.$http.get(link).then(
 	            response => {
-	                var selektionsVektor = response.body;
+	                var selectionVector = response.body;
 
-                    this.selektionsVektorParameter = [];
-                    for (var name in selektionsVektor.levels) {
-                        this.selektionsVektorParameter.push({
+                    this.selectionVectorParameter = [];
+                    for (var name in selectionVector.levels) {
+                        this.selectionVectorParameter.push({
                             label: this.$tc(name),
                             name: name,
-                            wert: selektionsVektor.levels[name]
+                            value: selectionVector.levels[name]
                        });
                     }
-                    this.selektionsVektorParameter.sort((a, b) => (a.label > b.label) ? 1 : -1)
+                    this.selectionVectorParameter.sort((a, b) => (a.label > b.label) ? 1 : -1)
 
                     this.wait = false;
-                    this.openSelektionsVektor = true;
+                    this.isSelectionVectorOpen = true;
                 },
                 response => {
                     console.log(repsonse);
@@ -317,13 +302,14 @@ export const data = {
                 }
             );
 	    },
-        onOpenDokumentGenerierung: function(item) {
+        onDocumentOpen: function(item) {
             this.tailoring = item;
+            this.wait = true;
 
-            this.$http.get(this.tailoring._links.zeichnung.href).then(
+            this.$http.get(this.tailoring._links.signature.href).then(
                 response => {
-                    this.dokumentZeichnungen= response.body._embedded.dokumentZeichnungResourceList;
-                    this.openDokumentGenerierung = true;
+                    this.signatures = response.body._embedded.documentSignatureResourceList;
+                    this.isDocumentsOpen = true;
                     this.wait = false;
                 },
                 response => {
@@ -332,11 +318,11 @@ export const data = {
                 }
             );
         },
-        onCreateDokuments: function() {
-            this.openDokumentGenerierung = false;
+        onDocumentsCreate: function() {
+            this.isDocumentsOpen = false;
             this.wait = true;
 
-            this.$http.get(this.tailoring._links.dokument.href, {responseType: 'arraybuffer'}).then(
+            this.$http.get(this.tailoring._links.document.href, {responseType: 'arraybuffer'}).then(
                 response => {
                     const link = document.createElement('a');
                     const name = response.headers.get('Content-Disposition').split('filename=')[1].replaceAll("\"", "");
@@ -352,11 +338,11 @@ export const data = {
                     this.wait = false;
                 });
         },
-        onCreateKatalog: function() {
-            this.openDokumentGenerierung = false;
+        onCatalogCreate: function() {
+            this.isDocumentsOpen = false;
             this.wait = true;
 
-            this.$http.get(this.tailoring._links.katalogdokument.href, {responseType: 'arraybuffer'}).then(
+            this.$http.get(this.tailoring._links.tailoringcatalog.href, {responseType: 'arraybuffer'}).then(
                 response => {
                     const link = document.createElement('a');
                     const name = response.headers.get('Content-Disposition').split('filename=')[1].replaceAll("\"", "");
@@ -372,64 +358,67 @@ export const data = {
                     this.wait = false;
                 });
         },
-        onEditDokumentZeichnung: function(item) {
-            this.dokumentZeichnungIndex = this.dokumentZeichnungen.indexOf(item)
-            this.dokumentZeichnung = Object.assign({}, item)
-            this.editDokumentZeichnung = true
+        onSignatureEdit: function(item) {
+            this.signatureIndex = this.signatures.indexOf(item)
+            this.signature = Object.assign({}, item)
+            this.isSignatureOpen = true
         },
-        onSaveDokumentZeichnung: function() {
-           this.$http.put(this.dokumentZeichnung._links.self.href, JSON.stringify(this.dokumentZeichnung), {emulateJSON: true}).then(
+        onSignatureSave: function() {
+           this.$http.put(this.signature._links.self.href, JSON.stringify(this.signature), {emulateJSON: true}).then(
                response => {
-                    if (this.dokumentZeichnungIndex > -1) {
-                        Object.assign(this.dokumentZeichnungen[this.dokumentZeichnungIndex], response.body);
+                    if (this.signatureIndex > -1) {
+                        Object.assign(this.signatures[this.signatureIndex], response.body);
                     }
-                   this.onCloseDokumentZeichnung();
+                   this.onSignatureClose();
               }
            )
         },
-        onCloseDokumentZeichnung: function () {
-            this.editDokumentZeichnung = false
+        onSignatureClose: function () {
+            this.isSignatureOpen = false
             this.$nextTick(() => {
-                this.dokumentZeichnung = Object.assign({}, this.defaultDokumentZeichnung)
-                this.dokumentZeichnungIndex = -1
+                this.signature = Object.assign({}, this.defaultDokumentZeichnung)
+                this.signatureIndex = -1
             });
         },
-        onOpenDokumente: function(item) {
+
+        onSelectFile : function(file) {
+            this.file = file;
+        },
+
+        // attachments
+        onAttachmentOpen: function(item) {
             this.tailoring = item;
-            this.loadDokumentListe();
+            this.loadAttachmentList();
         },
-        onSelectUploadDatei : function(uploadDatei) {
-            this.uploadDatei = uploadDatei;
-        },
-        onUploadDokument: function() {
-            if (!this.uploadDatei) {
-                this.message = this.$tc('datei_auswaehlen');
+        onAttachmentUpload: function() {
+            if (!this.file) {
+                this.message = this.$tc('file_select');
                 return;
             }
             this.message = "";
 
             let data = new FormData();
-            data.append("datei", this.uploadDatei);
+            data.append("datei", this.file);
 
             this.wait = true
-            this.openDokumente = false;
-            this.$http.post(this.tailoring._links.dokument.href, data, {emulateJSON: true} ).then(
+            this.isAttachmentOpen = false;
+            this.$http.post(this.tailoring._links.attachment.href, data, {emulateJSON: true} ).then(
                 response => {
-                    this.openDokumente = true;
+                    this.openAttachment = true;
                     this.wait = false;
-                    this.uploadDatei = null;
-                    this.loadDokumentListe();
+                    this.file = null;
+                    this.loadAttachmentList();
                 },
                 response => {
-                    this.openDokumente = true;
+                    this.openAttachment = true;
                     this.wait = false;
                     console.log("error");
                 }
             );
         },
-        onDownloadDokument: function(item) {
+        onAttachmentDownload: function(item) {
 	        this.wait = true;
-            this.$http.get(item._links.dokument.href, {responseType: 'arraybuffer'}).then(
+            this.$http.get(item._links.self.href, {responseType: 'arraybuffer'}).then(
                 response => {
                     const blob = new Blob([response.body], { type: response.headers.get('Content-Type') });
                     const link = document.createElement('a');
@@ -445,16 +434,16 @@ export const data = {
                 }
            );
 	    },
-	    onDeleteDokument: function(item) {
+	    onAttachmentDelete: function(item) {
             this.wait = true;
-            this.$confirm(this.$tc('dokument_loeschen.text'),
+            this.$confirm(this.$tc('attachment_delete.text'),
                 { buttonFalseText: this.$tc('nein'), buttonTrueText: this.$tc('ja'), color: "warning", title: this.$tc('dokument_loeschen.title') }).then(
                 confirmed => {
                     if ( confirmed ) {
                         this.wait = true;
-                        this.$http.delete(item._links.dokument.href).then(
+                        this.$http.delete(item._links.self.href).then(
                             response => {
-                                this.dokumente.splice(this.dokumente.indexOf(item), 1);
+                                this.attachments.splice(this.attachments.indexOf(item), 1);
                                 this.wait = false;
                             },
                             response => {
@@ -465,9 +454,11 @@ export const data = {
                     }
                 });
         },
+
+
 	    onDownloadKatalogDefinition: function(item) {
             this.wait = true;
-            this.$http.get(item._links.katalogdefinitiondokument.href, {responseType: 'arraybuffer'}).then(
+            this.$http.get(item._links.basecatalog.href, {responseType: 'arraybuffer'}).then(
                 response => {
                     const blob = new Blob([response.body], { type: response.headers.get('Content-Type') });
                     const link = document.createElement('a');
@@ -483,13 +474,13 @@ export const data = {
                 }
            );
         },
-	    loadDokumentListe: function() {
-            this.$http.get(this.tailoring._links.zeichnung.href + "/doks").then(
+	    loadAttachmentList: function() {
+            this.$http.get(this.tailoring._links.attachment.href).then(
                 response => {
                     if (response.body.hasOwnProperty('_embedded')) {
-                        this.dokumente = response.body._embedded.dokumentResourceList;
+                        this.attachments = response.body._embedded.fileResourceList;
                     }
-                    this.openDokumente = true;
+                    this.isAttachmentOpen = true;
                     this.wait = false;
                 },
                 response => {
@@ -501,33 +492,33 @@ export const data = {
 
 
 
-	    onOpenImport: function(item) {
-	        this.openImport = true;
+	    onImportOpen: function(item) {
+	        this.isImportOpen = true;
             this.tailoring = item;
         },
 
-	    onImportAnforderungen: function() {
-            if (!this.uploadDatei) {
-                this.message = this.$tc('datei_auswaehlen');
+	    onImportRequirements: function() {
+            if (!this.file) {
+                this.message = this.$tc('file_select');
                 return;
             }
             this.message = "";
 
             let data = new FormData();
-            data.append("datei", this.uploadDatei);
+            data.append("datei", this.file);
 
             this.wait = true
-            this.openImport = false;
+            this.isImportOpen = false;
             this.$http.post(this.tailoring._links.import.href, data, {emulateJSON: true} ).then(
                 response => {
                     this.wait = false;
-                    this.uploadDatei = null;
+                    this.file = null;
                     this.snack = true;
                     this.snackColor = 'success';
                     this.snackText = this.$tc('anforderung_importieren.status.fehlerfrei');
                 },
                 response => {
-                    this.openImport = true;
+                    this.isImportOpen = true;
                     this.wait = false;
                     console.log("error");
                 }
@@ -539,10 +530,23 @@ export const data = {
 	watch: {
 	},
 	created: function() {
+        this.wait = true;
+
         this.$store.commit('breadcrumbs', [
-            { text: this.$tc('projekt', 2),  disabled: false, exact: true, to: { name: 'projekte' } },
-            { text: this.$route.params.id, disabled: false, exact: true,  to: { name: 'projekt', params: { id: this.$route.params.id} } }
+            { text: this.$tc('project', 2),  disabled: false, exact: true, to: { name: 'projects' } },
+            { text: this.$route.params.id, disabled: false, exact: true,  to: { name: 'project', params: { id: this.$route.params.id} } }
         ]);
-		this.onLoadProjekt();
+
+		// this.onProjectLoad();
+        this.$http.get(this.$route.params.self).then(
+            response => {
+                this.project= response.body;
+                this.wait = false;
+            },
+            response => {
+              console.log(repsonse);
+              this.wait = false;
+            }
+        );
 	}
 }

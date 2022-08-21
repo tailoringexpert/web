@@ -3,17 +3,18 @@
         <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
 
-    <v-dialog v-if="edit"
-              v-model="edit"
+    <!-- dialog edit requirement -->
+    <v-dialog v-if="isEdit"
+              v-model="isEdit"
               persistent
               transition="dialog-bottom-transition"
               justify="center">
         <v-card>
             <v-toolbar dark color="primary">
-                <v-btn icon dark @click="onCancelEdit()">
+                <v-btn icon dark @click="onEditCancel()">
                     <v-icon>mdi-close</v-icon>
                 </v-btn>
-                <v-toolbar-title>{{$tc('anforderung_bearbeiten.titel')}}</v-toolbar-title>
+                <v-toolbar-title>{{$tc('requirement_edit.title')}}</v-toolbar-title>
             </v-toolbar>
 
             <v-divider></v-divider>
@@ -118,10 +119,10 @@
                 <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn color="blue darken-1" text @click="edit= false">
-                        {{$tc('anforderung_bearbeiten.abbrechen')}}
+                        {{$tc('requirement_edit.cancel')}}
                     </v-btn>
-                    <v-btn color="blue darken-1" text @click="onSaveAnforderung">
-                        {{$tc('anforderung_bearbeiten.speichern')}}
+                    <v-btn color="blue darken-1" text @click="onRequirementSave">
+                        {{$tc('requirement_edit.save')}}
                     </v-btn>
                 </v-card-actions>
             </v-card>
@@ -130,8 +131,8 @@
         </v-card>
     </v-dialog>
 
-    <v-card v-if="!edit">
-        <v-card-title class="indigo white--text headline">{{$tc('anforderungskatalog')}}</v-card-title>
+    <v-card v-if="!isEdit">
+        <v-card-title class="indigo white--text headline">{{$tc('requirements')}}</v-card-title>
         <v-sheet class="pa-4 primary lighten-2">
             <v-row>
                 <v-col cols="4">
@@ -145,10 +146,10 @@
                     </v-text-field>
                 </v-col>
                 <v-col cols="1">
-                    <v-btn elevation="10" @click="onHandleGruppeAusgewaehlt(item, true)">
+                    <v-btn elevation="10" @click="onChapterRequirementsSelect(item, true)">
                         <v-icon>mdi-thumb-up-outline</v-icon>
                     </v-btn>
-                    <v-btn elevation="10" @click="onHandleGruppeAusgewaehlt(item,false)">
+                    <v-btn elevation="10" @click="onChapterRequirementsSelect(item,false)">
                         <v-icon>mdi-thumb-down-outline</v-icon>
                     </v-btn>
                 </v-col>
@@ -157,17 +158,17 @@
 
         <v-row class="pa-4" justify="space-around" align="start">
             <v-col cols="5">
-                <v-treeview :items="katalog.toc.kapitel"
-                            item-text="kapitelName"
-                            item-key="nummer"
-                            item-children="kapitel"
+                <v-treeview :items="catalog.toc.chapters"
+                            item-text="chapterName"
+                            item-key="number"
+                            item-children="chapters"
                             return-object
                             ref="tree"
                             :search="search"
                             :open.sync="open"
                             selectionType="leaf"
                             activatable
-                            @update:active="onSelectKapitel">
+                            @update:active="onChapterSelect">
                     <template v-slot:prepend="{ item }">
                         <v-icon v-if="!item.children">mdi-account</v-icon>
                     </template>
@@ -178,7 +179,7 @@
 
             <v-col>
                 <v-breadcrumbs :items="breadcrumbs" divider="-"></v-breadcrumbs>
-                <v-data-iterator :items="anforderungen" :hide-default-header="true">
+                <v-data-iterator :items="requirements" :hide-default-header="true">
                     <template slot="no-data">
                         <div style="visibility: hidden"></div>
                     </template>
@@ -195,26 +196,26 @@
                                 <v-card-title class="subheading font-weight-bold">
                                     <v-row align="center" no-gutters>
                                         <v-col>
-                                            {{item.position}}<span v-if="item.geaendert"> ({{$tc('changed')}})</span>
+                                            {{item.position}}<span v-if="item.changed"> ({{$tc('changed')}})</span>
                                         </v-col>
                                         <v-col cols="auto">
                                             <v-tooltip bottom>
                                                 <template v-slot:activator="{ on, attrs }">
                                                     <div v-on="on" v-bind="attrs" style="width:min-content;">
-                                                        <v-switch v-model="item.ausgewaehlt"
+                                                        <v-switch v-model="item.selected"
                                                                   inset
                                                                   color="green"
-                                                                  @click="onHandleAusgewaehlt(item)">
+                                                                  @click="onRequirementSelect(item)">
                                                         </v-switch>
                                                     </div>
                                                 </template>
-                                                <span>{{$tc('tooltip.auswahl_aendern')}}</span>
+                                                <span>{{$tc('tooltip.applicabilty_change')}}</span>
                                             </v-tooltip>
                                         </v-col>
                                     </v-row>
                                 </v-card-title>
                                 <v-card-subtitle>
-                                    <span v-if="item.referenz != null">{{item.referenz}}</span>
+                                    <span v-if="item.reference != null">{{item.reference}}</span>
                                 </v-card-subtitle>
                                 <v-divider></v-divider>
 
@@ -228,7 +229,7 @@
                                         <v-tooltip bottom>
                                             <template v-slot:activator="{ on, attrs }">
                                                 <v-btn v-on="on" v-bind="attrs"
-                                                       @click="onEditAnforderung(item)"
+                                                       @click="onRequirementEdit(item)"
                                                        class="mx-2"
                                                        fab
                                                        dark
@@ -237,12 +238,12 @@
                                                     <v-icon dark> mdi-pencil</v-icon>
                                                 </v-btn>
                                             </template>
-                                            <span>{{$tc('tooltip.anforderung_bearbeiten')}}</span>
+                                            <span>{{$tc('tooltip.requirement_edit')}}</span>
                                         </v-tooltip>
                                         <v-tooltip bottom>
                                             <template v-slot:activator="{ on, attrs }">
                                                 <v-btn v-on="on" v-bind="attrs"
-                                                       @click="onNewAnforderung(item)"
+                                                       @click="onRequirementNew(item)"
                                                        class="mx-2"
                                                        fab
                                                        dark
@@ -251,7 +252,7 @@
                                                     <v-icon dark> mdi-plus</v-icon>
                                                 </v-btn>
                                             </template>
-                                            <span>{{$tc('tooltip.anforderung_erstellen')}}</span>
+                                            <span>{{$tc('tooltip.requirement_create')}}</span>
                                         </v-tooltip>
                                     </v-row>
                                 </v-card-actions>

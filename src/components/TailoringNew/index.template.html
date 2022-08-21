@@ -5,20 +5,20 @@
 
     <v-stepper v-model="e1">
         <v-stepper-header>
-            <v-stepper-step step="1" :complete="e1 > 1 && katalog!= undefined">
-                {{$tc('katalog')}}
+            <v-stepper-step step="1" :complete="e1 > 1 && catalog!= undefined">
+                {{$tc('catalog')}}
             </v-stepper-step>
             <v-divider></v-divider>
             <v-stepper-step step="2" :complete="e1 > 2 && screeningSheet != undefined">
                 {{$tc('screeningsheet')}}
             </v-stepper-step>
             <v-divider></v-divider>
-            <v-stepper-step step="3" :complete="e1 > 3 && selektionsVektorParameter != undefined">
-                {{$tc('selektionsvektor')}}
+            <v-stepper-step step="3" :complete="e1 > 3 && selectionVectorParameter != undefined">
+                {{$tc('selectionvector')}}
             </v-stepper-step>
             <v-divider></v-divider>
             <v-stepper-step step="4">
-                {{$tc('zusammenfassung')}}
+                {{$tc('summary')}}
             </v-stepper-step>
         </v-stepper-header>
 
@@ -26,10 +26,10 @@
             <v-stepper-content step="1">
                 <v-container>
                     <v-row no-gutters justify="center" align="center">
-                        <v-select v-model="katalog"
-                                  :items="kataloge"
+                        <v-select v-model="catalog"
+                                  :items="catalogs"
                                   item-text="version"
-                                  item-value="projekt"
+                                  item-value="project"
                                   label="Version auswählen">
                         </v-select>
                     </v-row>
@@ -45,7 +45,7 @@
                         <v-col>
                             <v-card-actions>
                                 <v-spacer></v-spacer>
-                                <v-btn color="primary" @click="e1 = 2">{{$tc('weiter')}}</v-btn>
+                                <v-btn color="primary" @click="e1 = 2">{{$tc('next')}}</v-btn>
                             </v-card-actions>
                         </v-col>
                     </v-row>
@@ -60,7 +60,7 @@
                                     show-size
                                     label="File input"
                                     accept="application/pdf"
-                                    @change="onSelectScreeningSheet">
+                                    @change="onScreeningSheetSelect">
                             </v-file-input>
                         </v-col>
 
@@ -69,7 +69,7 @@
                                     color="success"
                                     dark
                                     small
-                                    @click="onUploadScreeningSheet"
+                                    @click="onScreeningSheetUpload"
                             >Upload
                                 <v-icon right dark>mdi-cloud-upload</v-icon>
                             </v-btn>
@@ -91,11 +91,11 @@
                         <v-col>
                             <v-card-actions>
                                 <v-btn @click="e1 = 1">
-                                    {{$tc('zurueck')}}
+                                    {{$tc('back')}}
                                 </v-btn>
                                 <v-spacer></v-spacer>
                                 <v-btn color="primary" @click="e1 = 3">
-                                    {{$tc('weiter')}}
+                                    {{$tc('next')}}
                                 </v-btn>
                             </v-card-actions>
                         </v-col>
@@ -106,34 +106,33 @@
             <v-stepper-content step="3">
                 <v-container>
                     <v-row>
-                        <v-col col="1">{{$tc('projekt')}}</v-col>
-                        <v-col>{{projekt}}</v-col>
+                        <v-col col="1">{{$tc('project')}}</v-col>
+                        <v-col>{{project}}</v-col>
                     </v-row>
-                    <v-row cols="12">
+                    <v-row>
                         <v-col>
                             <v-data-table
-                                    :headers="selektionsVektorHeader"
-                                    :items="selektionsVektorParameter"
+                                    :headers="selectionVectorHeader"
+                                    :items="selectionVectorParameter"
                                     class="elevation-1"
                             >
-
-                                <template v-slot:header.wert="{ header }">
-                                    <v-select dense v-model="profil" full-width :items="profile" item-text="name" return-object label="Profil" @change="onSelectSelektionsVektorProfil"/>
+                                <template v-slot:header.value="{ header }">
+                                    <v-select dense v-model="profil" full-width :items="profile" item-text="name" return-object label="Profil" @change="onSelectionVectorProfileSelect"/>
                                 </template>
 
-                                <template v-slot:item.wert="props">
+                                <template v-slot:item.value="props">
                                     <v-edit-dialog
-                                            :return-value.sync="props.item.wert"
+                                            :return-value.sync="props.item.value"
                                             large
                                             persistent
-                                            @save="onSaveSelektionsVektorBearbeitung"
-                                            @cancel="onCancelSelektionsVektorBearbeitung"
+                                            @save="onSelectionVectorEditSave"
+                                            @cancel="onSelectionVectorEditCancel"
                                     >
-                                        <div>{{ props.item.wert }}</div>
+                                        <div>{{ props.item.value }}</div>
                                         <template v-slot:input>
                                             <div class="mt-4 title">{{ props.item.label }}</div>
                                             <v-text-field
-                                                    v-model="props.item.wert"
+                                                    v-model="props.item.value"
                                                     label="Edit"
                                                     single-line
                                                     counter
@@ -147,10 +146,9 @@
                             <v-snackbar v-model="snack" :timeout="3000" :color="snackColor">
                                 {{ snackText }}
                                 <template v-slot:action="{ attrs }">
-                                    <v-btn v-bind="attrs" text @click="snack = false"
-                                    >Close
-                                    </v-btn
-                                    >
+                                    <v-btn v-bind="attrs" text @click="snack = false">
+                                        {{$tc('close')}}
+                                    </v-btn>
                                 </template>
                             </v-snackbar>
                         </v-col>
@@ -160,11 +158,11 @@
                         <v-col>
                             <v-card-actions>
                                 <v-btn @click="e1 = 2">
-                                    {{$tc('zurueck')}}
+                                    {{$tc('back')}}
                                 </v-btn>
                                 <v-spacer></v-spacer>
-                                <v-btn color="primary" @click="e1 = 4; onZusammenfassung()">
-                                    {{$tc('weiter')}}
+                                <v-btn color="primary" @click="e1 = 4; onSummary()">
+                                    {{$tc('next')}}
                                 </v-btn>
                             </v-card-actions>
                         </v-col>
@@ -175,18 +173,18 @@
             <v-stepper-content step="4">
                 <v-container>
                     <v-row>
-                        <v-col col="1">{{$tc('projekt')}}</v-col>
-                        <v-col>{{projekt}}</v-col>
+                        <v-col col="1">{{$tc('project')}}</v-col>
+                        <v-col>{{project}}</v-col>
                     </v-row>
                     <v-row>
                         <v-col>
                             <v-card>
                                 <v-card-title>
-                                    {{$tc('selektionsvektor_gegenueberstellung')}}
+                                    {{$tc('selectionvector_comparison')}}
                                 </v-card-title>
                                 <v-data-table
-                                        :headers="selektionsVektorParameterGegenueberstellungHeader"
-                                        :items="selektionsVektorParameterGegenueberstellung"
+                                        :headers="selectionVectorParameterComparisonHeader"
+                                        :items="selectionVectorParameterComparison"
                                         class="elevation-1"
                                 >
                                 </v-data-table>
@@ -197,10 +195,10 @@
                         <v-col>
                             <v-card-actions>
                                 <v-btn @click="e1 = 3">
-                                    {{$tc('zurueck')}}
+                                    {{$tc('back')}}
                                 </v-btn>
                                 <v-spacer></v-spacer>
-                                <v-btn color="primary" @click="onCreateProject">{{$tc('projekt_anlegen')}}</v-btn>
+                                <v-btn color="primary" @click="onCreateTailoring">{{$tc('tailoring_new')}}</v-btn>
                             </v-card-actions>
                         </v-col>
                     </v-row>

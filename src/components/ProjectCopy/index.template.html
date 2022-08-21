@@ -20,8 +20,8 @@
             <v-divider></v-divider>
             <v-stepper-step
                     step="3"
-                    :complete="e1 > 3 && selektionsVektorParameter != undefined"
-            >Zusammenfassung
+                    :complete="e1 > 3 && selectionVectorParameter != undefined"
+            >{{$tc('summary')}}
             </v-stepper-step
             >
         </v-stepper-header>
@@ -32,19 +32,19 @@
                 <v-container>
                     <v-row>
                         {{$tc('screeningsheet')}}
-                        <v-icon @click="onOpenScreeningSheetDatei">mdi-file-pdf-outline</v-icon>
+                        <v-icon @click="onScreeningSheetFileOpen">mdi-file-pdf-outline</v-icon>
                     </v-row>
                     <v-row>
                         <v-tabs centered icons-and-text>
                             <v-tabs-slider></v-tabs-slider>
 
                             <v-tab>{{$tc('screeningsheet_parameter')}}</v-tab>
-                            <v-tab>{{$tc('berechneter_selektionsvektor')}}</v-tab>
+                            <v-tab>{{$tc('selectionvector_calculated')}}</v-tab>
 
                             <v-tab-item>
                                 <v-data-table
                                         :headers="screeningSheetParameterHeader"
-                                        :items="quellScreeningSheet.parameters"
+                                        :items="srcScreeningSheet.parameters"
                                         class="elevation-1"
                                 >
                                 </v-data-table>
@@ -52,8 +52,8 @@
 
                             <v-tab-item>
                                 <v-data-table
-                                        :headers="selektionsVektorHeader"
-                                        :items="quellSelektionsVektorParameter"
+                                        :headers="selectionVectorHeader"
+                                        :items="srcSelectionVectorParameter"
                                         class="elevation-1"
                                 >
                                 </v-data-table>
@@ -63,9 +63,9 @@
                     <v-row>
                         <v-col>
                             <v-card-actions>
-                                <v-btn color="primary" @click="onCancelProjektKopieren">{{$tc('abbrechen')}}</v-btn>
+                                <v-btn color="primary" @click="onProjectCopyCancel">{{$tc('cancel')}}</v-btn>
                                 <v-spacer></v-spacer>
-                                <v-btn color="primary" @click="e1 = 2">{{$tc('weiter')}}</v-btn>
+                                <v-btn color="primary" @click="e1 = 2">{{$tc('next')}}</v-btn>
                             </v-card-actions>
                         </v-col>
                     </v-row>
@@ -79,7 +79,7 @@
                             <v-file-input
                                     show-size
                                     label="File input"
-                                    @change="onSelectScreeningSheet"
+                                    @change="onScreeningSheetSelect"
                             >
                             </v-file-input>
                         </v-col>
@@ -89,7 +89,7 @@
                                     color="success"
                                     dark
                                     small
-                                    @click="onUploadScreeningSheet"
+                                    @click="onScreeningSheetUpload"
                             >Upload
                                 <v-icon right dark>mdi-cloud-upload</v-icon>
                             </v-btn>
@@ -110,9 +110,9 @@
                     <v-row>
                         <v-col>
                             <v-card-actions>
-                                <v-btn color="primary" @click="e1 = 1">{{$tc('zurueck')}}</v-btn>
+                                <v-btn color="primary" @click="e1 = 1">{{$tc('back')}}</v-btn>
                                 <v-spacer></v-spacer>
-                                <v-btn color="primary" @click="e1 = 3; onZusammenfassung()">{{$tc('weiter')}}</v-btn>
+                                <v-btn color="primary" @click="e1 = 3; onSummary()">{{$tc('next')}}</v-btn>
                             </v-card-actions>
                         </v-col>
                     </v-row>
@@ -122,14 +122,14 @@
             <v-stepper-content step="3">
                 <v-container>
                     <v-row>
-                        <v-col col="1">{{$tc('projekt')}}</v-col>
-                        <v-col>{{projekt}}</v-col>
+                        <v-col col="1">{{$tc('project')}}</v-col>
+                        <v-col>{{project}}</v-col>
                     </v-row>
                     <v-row>
                         <v-col>
                             <v-data-table
-                                    :headers="selektionsVektorParameterGegenueberstellungHeader"
-                                    :items="selektionsVektorParameterGegenueberstellung"
+                                    :headers="selectionVectorParameterComparisonHeader"
+                                    :items="selectionVectorParameterComparison"
                                     class="elevation-1"
                             >
                             </v-data-table>
@@ -140,10 +140,10 @@
                     <v-row>
                         <v-col>
                             <v-card-actions>
-                                <v-btn @click="e1 = 2">{{$tc('zurueck')}}</v-btn>
+                                <v-btn @click="e1 = 2">{{$tc('back')}}</v-btn>
                                 <v-spacer></v-spacer>
-                                <v-btn color="primary" @click="onCreateProjektKopie"
-                                >{{$tc('projektkopie_erstellen')}}
+                                <v-btn color="primary" @click="onProjectCopyCreate"
+                                >{{$tc('projectcopy_create')}}
                                 </v-btn>
                             </v-card-actions>
                         </v-col>

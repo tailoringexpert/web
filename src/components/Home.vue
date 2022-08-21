@@ -4,7 +4,7 @@
 <script>
 export default {
     created: function() {
-        this.$router.push({ name: 'projekte' });
+        this.$router.push({ name: 'projects' });
     },
 }
 </script>
