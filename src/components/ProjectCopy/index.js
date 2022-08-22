@@ -100,8 +100,8 @@ export const data = {
                     this.selectionVectorParameter.sort((a, b) => (a.label > b.label) ? 1 : -1)
 
                     for (let i = 0; i < this.screeningSheet.parameters.length; i++) {
-                        if (this.screeningSheet.parameters[i].bezeichnung == 'Kuerzel') {
-                            this.project = this.screeningSheet.parameters[i].wert;
+                        if (this.screeningSheet.parameters[i].label == 'Kuerzel') {
+                            this.project = this.screeningSheet.parameters[i].value;
                             break;
                         }
                     }
@@ -132,7 +132,7 @@ export const data = {
             this.wait = true;
 
             let data = new FormData();
-            data.append("datei", this.screeningSheetDatei);
+            data.append("datei", this.screeningSheetFile);
 
             this.$http.post(this.$route.params.self, data, {emulateJSON: true} ).then(
                 response => {
