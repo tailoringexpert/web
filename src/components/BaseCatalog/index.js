@@ -97,8 +97,8 @@ export const data = {
             this.$http.get(this.catalogLink).then(
                 response => {
                     this.catalogs = [];
-                    for (let i = 0; i<response.body._embedded.baseCatalogs.length; i++) {
-                        var item = response.body._embedded.baseCatalogs[i];
+                    for (let i = 0; i<response.body._embedded.baseCatalogVersions.length; i++) {
+                        var item = response.body._embedded.baseCatalogVersions[i];
                         Vue.$log.info(item);
                         var links = item._links;
 

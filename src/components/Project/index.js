@@ -308,7 +308,7 @@ export const data = {
 
             this.$http.get(this.tailoring._links.signature.href).then(
                 response => {
-                    this.signatures = response.body._embedded.documentSignatureResourceList;
+                    this.signatures = response.body._embedded.signatures;
                     this.isDocumentsOpen = true;
                     this.wait = false;
                 },
@@ -478,7 +478,7 @@ export const data = {
             this.$http.get(this.tailoring._links.attachment.href).then(
                 response => {
                     if (response.body.hasOwnProperty('_embedded')) {
-                        this.attachments = response.body._embedded.fileResourceList;
+                        this.attachments = response.body._embedded.files;
                     }
                     this.isAttachmentOpen = true;
                     this.wait = false;
