@@ -52,9 +52,9 @@ Vue.http.get(origin).then(
         Vue.http.get(response.body._links['catalog'].href).then(
             response => {
                 var kataloge = [];
-                for (let i = 0; i<response.body._embedded.baseCatalogs.length; i++) {
-                    var item = response.body._embedded.baseCatalogs[i];
-                    var links = response.body._embedded.baseCatalogs[i]._links;
+                for (let i = 0; i<response.body._embedded.baseCatalogVersions.length; i++) {
+                    var item = response.body._embedded.baseCatalogVersions[i];
+                    var links = response.body._embedded.baseCatalogVersions[i]._links;
                     kataloge.push({
                         version: item.version,
                         standard: item.standard,
@@ -70,7 +70,7 @@ Vue.http.get(origin).then(
 
         Vue.http.get(response.body._links['selectionvector'].href).then(
             response => {
-                store.commit('selectionvectors', response.body._embedded.selectionVectorProfileResourceList	);
+                store.commit('selectionvectors', response.body._embedded.selectionVectorProfiles);
             },
             response => {
                 console.log(response);

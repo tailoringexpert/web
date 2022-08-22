@@ -169,7 +169,6 @@ export const data = {
             selectionVector.levels = levels;
             requestParameter.selectionVector = selectionVector;
 
-console.log( this.project);
             this.$http.post(this.catalog, JSON.stringify(requestParameter), {emulateJSON: true} )
                 .then(
                     response => {
@@ -216,9 +215,9 @@ console.log( this.project);
         this.$http.get(this.$store.state.links['catalog'].href).then(
             response => {
                 this.catalogs = [];
-                for (let i = 0; i<response.body._embedded.baseCatalogs.length; i++) {
-                    var item = response.body._embedded.baseCatalogs[i];
-                    var links = response.body._embedded.baseCatalogs[i]._links;
+                for (let i = 0; i<response.body._embedded.baseCatalogVersions.length; i++) {
+                    var item = response.body._embedded.baseCatalogVersions[i];
+                    var links = response.body._embedded.baseCatalogVersions[i]._links;
                     this.catalogs.push({
                         version: item.version,
                         standard: item.standard,
