@@ -35,6 +35,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <license.licenseName>gpl_v3</license.licenseName>
         <plattform.version>0.0.1-SNAPSHOT</plattform.version>
+        <npm.mode>development</npm.mode>
 
         <frontend-maven-plugin.verion>1.12.1</frontend-maven-plugin.verion>
         <node.version>14.19.0</node.version>
@@ -175,7 +176,7 @@
                                 </goals>
                                 <phase>generate-resources</phase>
                                 <configuration>
-                                    <arguments>run serve -- --port 3000</arguments>
+                                    <arguments>run serve -- --mode ${npm.mode} --port 3000 </arguments>
                                 </configuration>
                             </execution>
                         </executions>

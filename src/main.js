@@ -41,8 +41,9 @@ Vue.use(VueLogger, {
 
 
 Vue.http.interceptors.push(function(request) {
-    request.headers.set('X-Tenant', 'arzs');
+    request.headers.set('X-Tenant', process.env.VUE_APP_TENANT);
 });
+
 
 var origin = window.location.origin + "/api";
 Vue.http.get(origin).then(
