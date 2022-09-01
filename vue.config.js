@@ -5,6 +5,10 @@ module.exports = {
             '^/api': {
                 target: 'http://localhost:8080',
                 changeOrigin: true
+            },
+            '^/help': {
+                target: 'http://localhost',
+                changeOrigin: true
             }
         }
     },
