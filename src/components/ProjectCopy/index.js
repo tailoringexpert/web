@@ -87,9 +87,11 @@ export const data = {
 
                     // merken für nächstem Wizzard Schritt
                     this.screeningSheet = response.body;
+                    this.project = this.screeningSheet.project;
                     this.selectionVector = this.screeningSheet.selectionVector;
 
                     // konvertieren für genrische Darstellung in Tabelle
+                    this.selectionVectorParameter = [];
                     for (var name in this.screeningSheet.selectionVector.levels) {
                         this.selectionVectorParameter.push({
                             label: this.$t(name),
@@ -98,13 +100,6 @@ export const data = {
                         });
                     }
                     this.selectionVectorParameter.sort((a, b) => (a.label > b.label) ? 1 : -1)
-
-                    for (let i = 0; i < this.screeningSheet.parameters.length; i++) {
-                        if (this.screeningSheet.parameters[i].label == 'Kuerzel') {
-                            this.project = this.screeningSheet.parameters[i].value;
-                            break;
-                        }
-                    }
                 }, response => {
                     this.wait = false;
                     console.log("error");
@@ -193,6 +188,7 @@ export const data = {
 
         this.$store.commit('breadcrumbs', [
             { text: this.$tc('project', 2),  disabled: false, exact: true, to: { name: 'projects' } },
+            { text: this.$route.params.id, disabled: false, exact: true,  to: { name: 'project', params: { id: this.$route.params.id, self: this.$route.params.self} } },
             { text: this.$tc('project_copy'), disabled: true }
         ]);
 

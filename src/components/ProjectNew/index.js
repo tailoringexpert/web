@@ -70,7 +70,6 @@ export const data = {
     methods: {
         onScreeningSheetSelect : function(screeningSheetDatei) {
             this.screeningSheetDatei = screeningSheetDatei;
-
         },
         onScreeningSheetUpload: function() {
             if (!this.screeningSheetDatei) {
@@ -89,9 +88,11 @@ export const data = {
 
                     // merken für nächstem Wizzard Schritt
                     this.screeningSheet = response.body;
+                    this.project = this.screeningSheet.project;
                     this.selectionVector = this.screeningSheet.selectionVector;
 
                     // konvertieren für genrische Darstellung in Tabelle
+                    this.selectionVectorParameter = [];
                     for (var name in this.screeningSheet.selectionVector.levels) {
                         this.selectionVectorParameter.push({
                             label: this.$t(name),
@@ -100,13 +101,6 @@ export const data = {
                         });
                     }
                     this.selectionVectorParameter.sort((a, b) => (a.label > b.label) ? 1 : -1)
-
-                    for (let i = 0; i < this.screeningSheet.parameters.length; i++) {
-                        if (this.screeningSheet.parameters[i].label == 'Kuerzel') {
-                            this.project = this.screeningSheet.parameters[i].value;
-                            break;
-                        }
-                    }
 
                     // sonst hinweis dialog
                 }, response => {
@@ -169,7 +163,7 @@ export const data = {
             selectionVector.levels = levels;
             requestParameter.selectionVector = selectionVector;
 
-            this.$http.post(this.catalog, JSON.stringify(requestParameter), {emulateJSON: true} )
+            this.$http.post(this.catalog._links.project.href, JSON.stringify(requestParameter), {emulateJSON: true} )
                 .then(
                     response => {
                         this.wait = false;
@@ -206,7 +200,6 @@ export const data = {
     },
     created: function() {
         this.wait = true;
-
         this.$store.commit('breadcrumbs', [
             { text: this.$tc('project', 2),  disabled: false, exact: true, to: { name: 'projects' } },
             { text: this.$tc('project_new'), disabled: true }
@@ -220,12 +213,12 @@ export const data = {
                     var links = response.body._embedded.baseCatalogVersions[i]._links;
                     this.catalogs.push({
                         version: item.version,
-                        standard: item.standard,
+                        //standard: item.standard,
                         project: links.project.href
                     });
 
                     if(item.standard) {
-                        this.catalog = links.self.href;
+                        this.catalog = item;
                     }
                 }
                 this.wait = false;
