@@ -29,7 +29,7 @@
                         <v-select v-model="catalog"
                                   :items="catalogs"
                                   item-text="version"
-                                  item-value="project"
+                                  item-value="catalog"
                                   label="Version auswählen">
                         </v-select>
                     </v-row>
@@ -117,7 +117,7 @@
                                     class="elevation-1"
                             >
                                 <template v-slot:header.value="{ header }">
-                                    <v-select dense v-model="profil" full-width :items="profile" item-text="name" return-object label="Profil" @change="onSelectionVectorProfileSelect"/>
+                                    <v-select dense v-model="profile" full-width :items="profiles" item-text="name" return-object label="Profile" @change="onSelectionVectorProfileSelect"/>
                                 </template>
 
                                 <template v-slot:item.value="props">
@@ -198,7 +198,7 @@
                                     {{$tc('back')}}
                                 </v-btn>
                                 <v-spacer></v-spacer>
-                                <v-btn color="primary" @click="onCreateTailoring">{{$tc('tailoring_new')}}</v-btn>
+                                <v-btn color="primary" @click="onTailoringCreate">{{$tc('tailoring_new')}}</v-btn>
                             </v-card-actions>
                         </v-col>
                     </v-row>

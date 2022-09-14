@@ -101,6 +101,7 @@ export const data = {
 			);
 		},
 		onCopyProject: function(project){
+		console.log(project.self);
             this.$router.push({
                 name: 'projectcopy',
             	params: {
