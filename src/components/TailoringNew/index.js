@@ -89,9 +89,11 @@ export const data = {
 
                     // merken für nächstem Wizzard Schritt
                     this.screeningSheet = response.body;
+                    this.project = this.screeningSheet.project;
                     this.selectionVector = this.screeningSheet.selectionVector;
 
                     // konvertieren für genrische Darstellung in Tabelle
+                    this.selectionVectorParameter = [];
                     for (var name in this.screeningSheet.selectionVector.levels) {
                         this.selectionVectorParameter.push({
                             label: this.$t(name),
@@ -100,32 +102,23 @@ export const data = {
                         });
                     }
                     this.selectionVectorParameter.sort((a, b) => (a.label > b.label) ? 1 : -1)
-
-                    for (let i = 0; i < this.screeningSheet.parameters.length; i++) {
-                        if (this.screeningSheet.parameters[i].bezeichnung == 'Kuerzel') {
-                            this.project = this.screeningSheet.parameters[i].wert;
-                            break;
-                        }
-                    }
-
-                    // sonst hinweis dialog
                 }, response => {
                     this.wait = false;
                     console.log("error");
-                  });
+                  }
+            );
         },
 
         onSelectionVectorProfileSelect: function() {
             this.selectionVectorParameter = [];
-            for (var name in this.profil.levels) {
+            for (var name in this.profile.levels) {
                 this.selectionVectorParameter.push({
                     label: this.$t(name),
                     name: name,
-                    value: this.profil.levels[name]
+                    value: this.profile.levels[name]
                 });
             }
             this.selectionVectorParameter.sort((a, b) => (a.label > b.label) ? 1 : -1)
-
         },
         onSelectionVectorEditSave: function() {
             this.snack = true;
@@ -138,6 +131,7 @@ export const data = {
             this.snackColor = 'error';
             this.snackText = 'Wert nicht aktualisiert';
         },
+
         onSummary: function() {
             this.selectionVectorParameterComparison = [];
             var modifiedSelectionVector = this.buildSelectionVector(this.selectionVectorParameter);
@@ -157,6 +151,7 @@ export const data = {
         },
         onTailoringCreate: function() {
             this.wait = true;
+
 
             var levels = {};
             for (var i in this.selectionVectorParameter) {
@@ -205,10 +200,8 @@ export const data = {
             return selectionVector;
         },
     },
-    watch: {
-    },
     computed: {
-        profile: function() {
+        profiles: function() {
             return this.$store.state.selectionvectors;
         }
     },
@@ -228,12 +221,12 @@ export const data = {
                     var links = response.body._embedded.baseCatalogVersions[i]._links;
                     this.catalogs.push({
                         version: item.version,
-                        standard: item.standard,
+                        //standard: item.standard,
                         project: links.project.href
                     });
 
                     if(item.standard) {
-                        this.catalog = links.self.href;
+                        this.catalog = item;
                     }
                 }
                 this.wait = false;
