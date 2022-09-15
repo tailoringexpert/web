@@ -103,8 +103,14 @@ export const data = {
                     }
                     this.selectionVectorParameter.sort((a, b) => (a.label > b.label) ? 1 : -1)
                 }, response => {
-                    this.wait = false;
-                    console.log("error");
+                    this.$confirm(
+                        response.bodyText,
+                        { buttonFalseText: null, buttonTrueText: "OK", color: "error", title: "Fehler" }
+                    ).then(
+                        confirmed => {
+                      	    this.wait = false;
+                        }
+                    )
                   }
             );
         },
