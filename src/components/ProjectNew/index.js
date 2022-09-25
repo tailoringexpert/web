@@ -8,6 +8,7 @@ export const data = {
 
             e1: 1,
             message: "",
+            note: undefined,
             catalogs: [],
             catalog: undefined,
             screeningSheetParameterHeader: [
@@ -163,6 +164,7 @@ export const data = {
                 levels[this.selectionVectorParameter[i].name]=  this.selectionVectorParameter[i].value;
             }
             var requestParameter = {};
+            requestParameter.note = this.note;
             requestParameter.screeningSheet = this.screeningSheet;
 
             var selectionVector = {};
