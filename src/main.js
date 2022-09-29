@@ -11,6 +11,7 @@ import VuetifyConfirm from "vuetify-confirm";
 
 import VueLogger from 'vuejs-logger';
 
+
 // CREATE VUETIFY INSTANCE
 const vuetify = new Vuetify({
   theme: { dark: false }
@@ -28,17 +29,15 @@ Vue.use(VueResource);
 
 Vue.config.productionTip = false;
 Vue.use(VueLogger, {
-        isEnabled: true,
-        logLevel : Vue.config.productionTip  ? 'error' : 'debug',
-        stringifyArguments : false,
-        showLogLevel : true,
-        showMethodName : true,
-        separator: '|',
-        showConsoleColors: true
-    }
+    isEnabled: true,
+    logLevel : Vue.config.productionTip  ? 'error' : 'debug',
+    stringifyArguments : false,
+    showLogLevel : true,
+    showMethodName : true,
+    separator: '|',
+    showConsoleColors: true
+}
 );
-
-
 
 Vue.http.interceptors.push(function(request) {
     request.headers.set('X-Tenant', process.env.VUE_APP_TENANT);
@@ -49,25 +48,6 @@ var origin = window.location.origin + "/api";
 Vue.http.get(origin).then(
     response => {
         store.commit('links', response.body._links);
-
-        Vue.http.get(response.body._links['catalog'].href).then(
-            response => {
-                var kataloge = [];
-                for (let i = 0; i<response.body._embedded.baseCatalogVersions.length; i++) {
-                    var item = response.body._embedded.baseCatalogVersions[i];
-                    var links = response.body._embedded.baseCatalogVersions[i]._links;
-                    kataloge.push({
-                        version: item.version,
-                        standard: item.standard,
-                        projekt: links.self.href
-                    });
-                }
-                store.commit('catalogs', kataloge);
-            },
-            response => {
-                console.log(response);
-            }
-        );
 
         Vue.http.get(response.body._links['selectionvector'].href).then(
             response => {

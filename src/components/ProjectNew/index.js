@@ -124,7 +124,6 @@ export const data = {
                     value: this.profile.levels[name]
                 });
             }
-
             this.selectionVectorParameter.sort((a, b) => (a.label > b.label) ? 1 : -1)
         },
         onSelectionVectorEditSave: function() {

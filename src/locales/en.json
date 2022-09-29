@@ -26,6 +26,7 @@
   "cancel": "Cancel",
   "close": "Close",
   "save": "Save",
+  "add":  "Add",
   "file_select": "Please select a file!",
   "validFrom": "Valid from",
   "validUntil": "Valid until",
@@ -97,6 +98,9 @@
       "error": "Requirements could not be imported"
     }
   },
+  "tailoring_notes": {
+    "title": "Notes"
+  },
   "tooltip": {
     "requirements_edit": "Edit requirements",
     "selectionvector_open": "Open selectionvector",
@@ -114,6 +118,7 @@
     "applicabilty_change": "Change applicabilty",
     "tailoring_compare": "Show tailoring diffs",
     "requirement_import": "Import tailored requirements",
+    "tailoring_notes": "Show and add notes to tailoring",
     "katalogdefinition_oeffnen": "Open base catalogue document",
     "katalog_download_json": "Download JSON",
     "katalog_download_pdf": "Download PDF"

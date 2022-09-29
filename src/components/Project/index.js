@@ -137,6 +137,10 @@ export const data = {
             file: null,
 
             isImportOpen: false,
+
+            isNotesOpen : false,
+            notes: [],
+            noteText: null,
 		};
 	},
 	methods: {
@@ -455,8 +459,52 @@ export const data = {
                 });
         },
 
+        onNotesOpen: function(item) {
+            this.tailoring = item;
+            this.wait = true;
+            this.$http.get(this.tailoring._links.note.href).then(
+                response => {
+                    if (response.body.hasOwnProperty('_embedded')) {
+                        this.notes = response.body._embedded.notes;
+                    }
+                    this.isNotesOpen = true,
+                    this.wait = false;
+                },
+                response => {
+                    console.log(response);
+                    this.wait = false;
+                }
+            );
 
-	    onDownloadKatalogDefinition: function(item) {
+        },
+
+        onNoteNew: function() {
+            if ( this.noteText == null) {
+                return;
+            }
+
+            this.wait = true;
+            this.isNotesOpen = false;
+
+            this.$http.post(this.tailoring._links.note.href, this.noteText, {emulateJSON: true}).then(
+                response => {
+                    this.noteText = null;
+                    this.wait = false;
+                    this.onNotesOpen(this.tailoring);
+                },
+                response => {
+                    console.log(response);
+                    this.wait = false;
+                }
+           );
+        },
+
+        onNotesClose: function() {
+            this.noteText = null;
+            this.isNotesOpen = false;
+        },
+
+	    onBaseCatalogDownload: function(item) {
             this.wait = true;
             this.$http.get(item._links.basecatalog.href, {responseType: 'arraybuffer'}).then(
                 response => {
