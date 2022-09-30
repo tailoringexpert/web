@@ -105,7 +105,7 @@ export const data = {
                 }, response => {
                     this.$confirm(
                         response.bodyText,
-                        { buttonFalseText: null, buttonTrueText: "OK", color: "error", title: "Fehler" }
+                        { buttonFalseText: null, buttonTrueText: "OK", color: "error", title: "Error" }
                     ).then(
                         confirmed => {
                       	    this.wait = false;

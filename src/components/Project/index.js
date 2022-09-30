@@ -338,9 +338,16 @@ export const data = {
                     this.wait = false;
                 },
                 response => {
-                    console.log(response);
-                    this.wait = false;
-                });
+                    this.$confirm(
+                        new TextDecoder("utf-8").decode(new Uint8Array(response.body)),
+                        { buttonFalseText: null, buttonTrueText: "OK", color: "error", title: "Error" }
+                    ).then(
+                        confirmed => {
+                      	    this.wait = false;
+                        }
+                    )
+                }
+            )
         },
         onCatalogCreate: function() {
             this.isDocumentsOpen = false;
@@ -358,9 +365,16 @@ export const data = {
                     this.wait = false;
                 },
                 response => {
-                    console.log(response);
-                    this.wait = false;
-                });
+                    this.$confirm(
+                        new TextDecoder("utf-8").decode(new Uint8Array(response.body)),
+                        { buttonFalseText: null, buttonTrueText: "OK", color: "error", title: "Error" }
+                    ).then(
+                        confirmed => {
+                      	    this.wait = false;
+                        }
+                    )
+                }
+            );
         },
         onSignatureEdit: function(item) {
             this.signatureIndex = this.signatures.indexOf(item)
@@ -517,8 +531,14 @@ export const data = {
                     this.wait = false;
                 },
                 response => {
-                    console.log(response);
-                    this.wait = false;
+                    this.$confirm(
+                        new TextDecoder("utf-8").decode(new Uint8Array(response.body)),
+                        { buttonFalseText: null, buttonTrueText: "OK", color: "error", title: "Error" }
+                    ).then(
+                        confirmed => {
+                      	    this.wait = false;
+                        }
+                    )
                 }
            );
         },
@@ -537,7 +557,6 @@ export const data = {
                 }
             );
 	    },
-
 
 
 	    onImportOpen: function(item) {
@@ -592,7 +611,6 @@ export const data = {
                 this.wait = false;
             },
             response => {
-              console.log(repsonse);
               this.wait = false;
             }
         );
