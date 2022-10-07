@@ -15,12 +15,6 @@ export const data = {
 					sortable: true,
 				},
 				{
-					text: this.$tc('catalog'),
-					value: 'catalogVersion',
-					sortable: true,
-					align: 'start',
-				},
-				{
 					text: this.$tc('action', 2),
 					value: 'actions',
 					sortable: false
@@ -85,7 +79,6 @@ export const data = {
 								{
 									name: item.name,
 									creationTimestamp: item.creationTimestamp,
-									catalogVersion: item.catalogVersion,
 									self: links.self.href,
 									screeningsheet: links.screeningsheet.href
 								}
