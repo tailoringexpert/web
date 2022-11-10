@@ -229,6 +229,54 @@
         </v-card>
     </v-dialog>
 
+    <v-dialog v-model="isNotesOpen" max-width="75%" justify="center">
+        <v-card class="mx-auto" >
+            <v-card-title class="blue-grey white--text">
+                <span class="text-h6">{{$tc('tailoring_notes.title')}}</span>
+                <v-spacer></v-spacer>
+            </v-card-title>
+            <v-card-text class="py-0">
+                <v-timeline align-top dense>
+                    <v-timeline-item
+                            fill-dot
+                            class="white--text mb-12"
+                            color="orange"
+                            large>
+                        <template v-slot:icon>
+                        </template>
+                        <v-text-field
+                                v-model="noteText"
+                                hide-details
+                                flat
+                                label="New Note"
+                                solo>
+                            <template v-slot:append>
+                                <v-btn class="mx-0" depressed @click="onNoteNew">{{$tc('add')}}</v-btn>
+                            </template>
+                        </v-text-field>
+                    </v-timeline-item>
+
+
+                    <v-timeline-item
+                            v-for="note in notes"
+                            :key="note.number"
+                            class="mb-4"
+                            color="teal lighten-3"
+                            small>
+                        <v-row justify="space-between">
+                            <v-col cols="7" v-text="note.text"></v-col>
+                            <v-col class="text-right" cols="5" v-text="note.creationTimestamp"></v-col>
+                        </v-row>
+                    </v-timeline-item>
+                </v-timeline>
+            </v-card-text>
+            <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn outlined rounded text @click="onNotesClose">{{$tc('close')}}</v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
+
     <v-row>
         <v-col cols="1">{{$tc('project')}}</v-col>
         <v-col>{{project.name}}
@@ -283,8 +331,8 @@
                     </v-edit-dialog>
                 </template>
 
-                <template v-slot:item.baseCatalogVersion="{ item }">
-                    <span @click="onDownloadKatalogDefinition(item)">{{item.baseCatalogVersion}}</span>
+                <template v-slot:item.catalogVersion="{ item }">
+                    <span @click="onBaseCatalogDownload(item)">{{item.catalogVersion}}</span>
                 </template>
 
                 <template v-slot:item.actions="{ item }">
@@ -352,12 +400,23 @@
                     <v-tooltip bottom>
                         <template v-slot:activator="{ on, attrs }">
                             <v-icon small class="mr-2" v-on="on" v-bind="attrs"
+                                    @click="onNotesOpen(item)">
+                                mdi-message-bulleted
+                            </v-icon>
+                        </template>
+                        <span>{{$tc('tooltip.tailoring_notes')}}</span>
+                    </v-tooltip>
+
+                    <v-tooltip bottom>
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-icon small class="mr-2" v-on="on" v-bind="attrs"
                                     @click="onTailoringDelete(item)">
                                 mdi-delete
                             </v-icon>
                         </template>
                         <span>{{$tc('tooltip.tailoring_delete')}}</span>
                     </v-tooltip>
+
                 </template>
             </v-data-table>
 

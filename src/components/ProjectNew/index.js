@@ -8,6 +8,7 @@ export const data = {
 
             e1: 1,
             message: "",
+            note: undefined,
             catalogs: [],
             catalog: undefined,
             screeningSheetParameterHeader: [
@@ -104,7 +105,7 @@ export const data = {
                 }, response => {
                     this.$confirm(
                         response.bodyText,
-                        { buttonFalseText: null, buttonTrueText: "OK", color: "error", title: "Fehler" }
+                        { buttonFalseText: null, buttonTrueText: "OK", color: "error", title: "Error" }
                     ).then(
                         confirmed => {
                       	    this.wait = false;
@@ -123,7 +124,6 @@ export const data = {
                     value: this.profile.levels[name]
                 });
             }
-
             this.selectionVectorParameter.sort((a, b) => (a.label > b.label) ? 1 : -1)
         },
         onSelectionVectorEditSave: function() {
@@ -163,6 +163,7 @@ export const data = {
                 levels[this.selectionVectorParameter[i].name]=  this.selectionVectorParameter[i].value;
             }
             var requestParameter = {};
+            requestParameter.note = this.note;
             requestParameter.screeningSheet = this.screeningSheet;
 
             var selectionVector = {};

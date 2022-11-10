@@ -8,6 +8,7 @@ export const data = {
 
             e1: 1,
             message: "",
+            note: undefined,
             catalogs: [],
             catalog: undefined,
             screeningSheetParameterHeader: [
@@ -70,7 +71,6 @@ export const data = {
     methods: {
         onScreeningSheetSelect : function(screeningSheetDatei) {
             this.screeningSheetDatei = screeningSheetDatei;
-
         },
         onScreeningSheetUpload: function() {
             if (!this.screeningSheetDatei) {
@@ -166,6 +166,7 @@ export const data = {
             var requestParameter = {};
             requestParameter.catalog = this.catalog.version;
             requestParameter.screeningSheet = this.screeningSheet;
+            requestParameter.note = this.note;
 
             var selectionVector = {};
             selectionVector.levels = levels;
