@@ -4,6 +4,7 @@ export const data = {
             wait: false,
 
             e1: 1,
+            note: undefined,
             screeningSheetParameterHeader: [
                 {
                     text: this.$tc('name'),
