@@ -19,6 +19,11 @@ export const data = {
 					value: 'phases',
 				},
                 {
+                    text: this.$tc('state'),
+                    sortable: true,
+                    value: 'state',
+                },
+                {
                     text: this.$tc('catalog'),
                     sortable: true,
                     value: 'catalogVersion',
@@ -200,6 +205,24 @@ export const data = {
 			});
 		},
 
+        onTailoringState: function(tailoring) {
+			this.$confirm(this.$tc('tailoring_state.text'),
+			    { buttonFalseText: this.$tc('no'), buttonTrueText: this.$tc('yes'), color: "warning", title: this.$tc('tailoring_state.title') }).then(
+                confirmed => {
+              	    if ( confirmed ) {
+              	        this.wait = true;
+              	        console.log(this.project.tailorings.indexOf(tailoring));
+                        this.$http.put(tailoring._links.state.href).then(
+                            response => {
+                                var index = this.project.tailorings.indexOf(tailoring);
+                                this.project.tailorings.splice(index, 1, response.body);
+                                this.wait = false;
+                            }
+                       )
+                    }
+                });
+		},
+
 		onTailoringDelete: function(tailoring) {
 			this.$confirm(this.$tc('tailoring_delete.text'),
 			    { buttonFalseText: this.$tc('no'), buttonTrueText: this.$tc('yes'), color: "warning", title: this.$tc('tailoring_delete.title') }).then(
@@ -208,7 +231,7 @@ export const data = {
               	        this.wait = true;
                         this.$http.delete(tailoring._links.self.href).then(
                             response => {
-                                this.projekt.tailorings.splice(this.project.tailorings.indexOf(tailoring), 1);
+                                this.project.tailorings.splice(this.project.tailorings.indexOf(tailoring), 1);
                                 this.wait = false;
                             }
                        )
@@ -590,6 +613,12 @@ export const data = {
                     console.log("error");
                 }
             );
+        },
+        isTailoringEditable: function(item) {
+            return "CREATED" == item.state;
+        },
+        isTailoringDeletable: function(item) {
+            return "CREATED" == item.state;
         },
 	},
     computed: {

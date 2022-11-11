@@ -331,6 +331,10 @@
                     </v-edit-dialog>
                 </template>
 
+                <template v-slot:item.state="{ item }">
+                    <span @click="onTailoringState(item)">{{item.state}}</span>
+                </template>
+
                 <template v-slot:item.catalogVersion="{ item }">
                     <span @click="onBaseCatalogDownload(item)">{{item.catalogVersion}}</span>
                 </template>
@@ -339,7 +343,7 @@
                     <v-tooltip bottom>
                         <template v-slot:activator="{ on, attrs }">
                             <v-icon small class="mr-2" v-on="on" v-bind="attrs"
-                                    @click="onTailoringCatalogEdit(item)">mdi-pencil
+                                    @click="onTailoringCatalogEdit(item)" :disabled="!isTailoringEditable(item)">mdi-pencil
                             </v-icon>
                         </template>
                         <span>{{$tc('tooltip.requirements_edit')}}</span>
@@ -391,7 +395,7 @@
                     <v-tooltip bottom>
                         <template v-slot:activator="{ on, attrs }">
                             <v-icon small class="mr-2" v-on="on" v-bind="attrs"
-                                    @click="onImportOpen(item)">mdi-microsoft-excel
+                                    @click="onImportOpen(item)" :disabled="!isTailoringEditable(item)">mdi-microsoft-excel
                             </v-icon>
                         </template>
                         <span>{{$tc('tooltip.requirement_import')}}</span>
@@ -410,7 +414,7 @@
                     <v-tooltip bottom>
                         <template v-slot:activator="{ on, attrs }">
                             <v-icon small class="mr-2" v-on="on" v-bind="attrs"
-                                    @click="onTailoringDelete(item)">
+                                    @click="onTailoringDelete(item)" :disabled="!isTailoringDeletable(item)">
                                 mdi-delete
                             </v-icon>
                         </template>

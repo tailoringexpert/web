@@ -34,6 +34,7 @@
   "requirements": "Requirements",
   "changed": "changed",
   "upload": "Upload",
+  "state": "State",
   "requirement_edit": {
     "title": "Edit requirement",
     "cancel": "Cancel",
@@ -98,10 +99,19 @@
       "error": "Requirements could not be imported"
     }
   },
+  "tailoring_state": {
+    "title": "Next tailoring state",
+    "text": "Do you really want to set next state of tailoring?\nAfter setting to next state neither requirements can be changed nor tailoring be deleted!",
+      "state": {
+        "success": "State changed",
+        "error": "State could not be changed"
+      }
+  },
   "tailoring_notes": {
     "title": "Notes"
   },
   "tooltip": {
+    "tailoring_state": "Next state",
     "requirements_edit": "Edit requirements",
     "selectionvector_open": "Open selectionvector",
     "screeningsheet_open": "Open screeningsheet",
