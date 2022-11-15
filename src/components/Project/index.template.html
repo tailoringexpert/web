@@ -64,7 +64,7 @@
                               :headers="signaturesHeader"
                               class="elevation-1">
                     <template v-slot:item="{ item }">
-                        <tr @dblclick="onSignatureEdit(item)">
+                        <tr>
                             <td>{{ item.faculty }}</td>
                             <td>{{ item.signee }}</td>
                             <td class="text-xs-right">{{ item.state }}</td>
@@ -76,7 +76,7 @@
                                 </v-simple-checkbox>
                             </td>
                             <td>
-                                <v-icon small class="mr-2" @click="onSignatureEdit(item)">
+                                <v-icon small class="mr-2" @click="onSignatureEdit(item)" :disabled="!isTailoringEditable(tailoring)">
                                     mdi-pencil
                                 </v-icon>
                             </td>

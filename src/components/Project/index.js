@@ -211,7 +211,6 @@ export const data = {
                 confirmed => {
               	    if ( confirmed ) {
               	        this.wait = true;
-              	        console.log(this.project.tailorings.indexOf(tailoring));
                         this.$http.put(tailoring._links.state.href).then(
                             response => {
                                 var index = this.project.tailorings.indexOf(tailoring);

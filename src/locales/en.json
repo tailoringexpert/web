@@ -101,7 +101,7 @@
   },
   "tailoring_state": {
     "title": "Next tailoring state",
-    "text": "Do you really want to set next state of tailoring?\nAfter setting to next state neither requirements can be changed nor tailoring be deleted!",
+    "text": "Do you really want to set next state of tailoring?<br/>After setting to next state neither requirements can be changed nor tailoring be deleted!<br/><br/>In case you need to downstate call your administrator",
       "state": {
         "success": "State changed",
         "error": "State could not be changed"
