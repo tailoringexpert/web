@@ -6,7 +6,7 @@
     <groupId>eu.tailoringexpert</groupId>
     <artifactId>tailoringexpert-web</artifactId>
     <name>${project.groupId}:${project.artifactId}</name>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.3-SNAPSHOT</version>
     <description>TailoringExpert Web Frontend</description>
     <packaging>jar</packaging>
 
@@ -34,25 +34,13 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <license.licenseName>gpl_v3</license.licenseName>
-        <plattform.version>0.0.1-SNAPSHOT</plattform.version>
+        <plattform.version>0.0.3</plattform.version>
         <npm.mode>development</npm.mode>
 
         <frontend-maven-plugin.verion>1.12.1</frontend-maven-plugin.verion>
         <node.version>14.19.0</node.version>
     </properties>
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>io.github.baedorf.tailoringexpert</groupId>
-                <artifactId>tailoringexpert-dependencies</artifactId>
-                <version>${plattform.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-
-    </dependencyManagement>
     <build>
         <plugins>
             <plugin>
