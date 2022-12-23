@@ -5,6 +5,7 @@ import router from '@/router'
 import store from '@/store'
 import i18n from '@/plugins/i18n'
 import md from "@mdi/font/css/materialdesignicons.min.css";
+import Storage from 'vue-ls';
 
 import Vuetify from "vuetify";
 import VuetifyConfirm from "vuetify-confirm";
@@ -39,8 +40,15 @@ Vue.use(VueLogger, {
 }
 );
 
+Vue.use(Storage, {
+    namespace: 'tailoringexpert__', // key prefix
+    name: 'storage', // name variable Vue.[ls] or this.[$ls],
+    storage: 'local', // storage name session, local, memory
+});
+
+Vue.storage.set('tenant', process.env.VUE_APP_TENANT);
 Vue.http.interceptors.push(function(request) {
-    request.headers.set('X-Tenant', process.env.VUE_APP_TENANT);
+    request.headers.set('X-Tenant', Vue.storage.get('tenant'));
 });
 
 
