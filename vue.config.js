@@ -1,6 +1,9 @@
 module.exports = {
     devServer: {
-        headers: { "Access-Control-Allow-Origin": "*" },
+        headers: {
+            'Access-Control-Allow-Origin': '*',
+            'X-TENANT': process.env.VUE_APP_TENANT,
+        },
         proxy: {
             '^/api': {
                 target: 'http://localhost:8080',
