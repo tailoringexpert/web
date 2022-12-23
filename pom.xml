@@ -34,15 +34,27 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <license.licenseName>gpl_v3</license.licenseName>
-        <plattform.version>0.0.3</plattform.version>
         <npm.mode>development</npm.mode>
 
         <frontend-maven-plugin.verion>1.12.1</frontend-maven-plugin.verion>
         <node.version>14.19.0</node.version>
+        <maven-resources-plugin.version>3.3.0</maven-resources-plugin.version>
+        <maven-release-plugin.version>3.0.0-M7</maven-release-plugin.version>
+        <maven-release-plugin.goal>install</maven-release-plugin.goal>
     </properties>
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>${maven-release-plugin.version}</version>
+                <configuration>
+                    <goals>${maven-release-plugin.goal}</goals>
+                    <tagNameFormat>v@{project.version}</tagNameFormat>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
@@ -64,7 +76,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
-                <version>3.1.0</version>
+                <version>${maven-resources-plugin.version}</version>
                 <executions>
                     <execution>
                         <id>prepare-package</id>
