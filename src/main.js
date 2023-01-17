@@ -6,7 +6,7 @@ import store from '@/store'
 import i18n from '@/plugins/i18n'
 import md from "@mdi/font/css/materialdesignicons.min.css";
 import Storage from 'vue-ls';
-
+import getEnv from '@/utils/env'
 import Vuetify from "vuetify";
 import VuetifyConfirm from "vuetify-confirm";
 
@@ -46,7 +46,7 @@ Vue.use(Storage, {
     storage: 'local', // storage name session, local, memory
 });
 
-Vue.storage.set('tenant', process.env.VUE_APP_TENANT);
+Vue.storage.set('tenant', getEnv('VUE_APP_TENANT'));
 Vue.http.interceptors.push(function(request) {
     request.headers.set('X-Tenant', Vue.storage.get('tenant'));
 });
