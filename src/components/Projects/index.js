@@ -2,22 +2,35 @@ export const data = {
 	data: function() {
 		return {
 			wait: false,
+			state: '',
 			headers: [
 				{
 					text: this.$tc('name'),
 					value: 'name',
 					sortable: true,
 					align: 'start',
+					width: '40%'
 				},
 				{
 					text: this.$tc('created_at'),
 					value: 'creationTimestamp',
 					sortable: true,
+					width: '15%'
+				},
+				{
+					text: this.$tc('state'),
+					value: 'state',
+					sortable: false,
+					width: '15%',
+					filter: value => {
+                         return this.state === null || this.state.trim() === ""  || value == this.state ;
+                        }
 				},
 				{
 					text: this.$tc('action', 2),
 					value: 'actions',
-					sortable: false
+					sortable: false,
+					width: '30%'
 				},
 			],
 			projects: []
@@ -79,6 +92,7 @@ export const data = {
 								{
 									name: item.name,
 									creationTimestamp: item.creationTimestamp,
+									state: item.state,
 									self: links.self.href,
 									screeningsheet: links.screeningsheet.href
 								}

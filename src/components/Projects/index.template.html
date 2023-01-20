@@ -19,6 +19,18 @@
                     </v-toolbar>
                 </template>
 
+                <template v-slot:header.state>
+                    <v-container>
+                        <v-select
+                                label="State"
+                                :items="['', 'ONGOING', 'COMPLETED']"
+                                v-model="state"
+                                dense
+                                light
+                        >
+                        </v-select>
+                    </v-container>
+                </template>
                 <template v-slot:item.actions="{ item }">
                     <v-tooltip bottom>
                         <template v-slot:activator="{ on, attrs }">
