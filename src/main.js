@@ -6,7 +6,7 @@ import store from '@/store'
 import i18n from '@/plugins/i18n'
 import md from "@mdi/font/css/materialdesignicons.min.css";
 import Storage from 'vue-ls';
-import getEnv from '@/utils/env'
+import getEnv from '@/utils/env';
 import Vuetify from "vuetify";
 import VuetifyConfirm from "vuetify-confirm";
 
