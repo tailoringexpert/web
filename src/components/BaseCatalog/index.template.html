@@ -38,7 +38,7 @@
                                 @click="onDownloadPdf(item)">mdi-file-pdf-box
                         </v-icon>
                     </template>
-                    <span>{{$tc('tooltip.katalog_download_pdf')}}</span>
+                    <span>{{$tc('tooltip.catalog_download_pdf')}}</span>
                 </v-tooltip>
                 <v-tooltip bottom>
                     <template v-slot:activator="{ on, attrs }">
@@ -46,7 +46,15 @@
                                 @click="onDownloadJson(item)">mdi-code-json
                         </v-icon>
                     </template>
-                    <span>{{$tc('tooltip.katalog_download_json')}}</span>
+                    <span>{{$tc('tooltip.catalog_download_json')}}</span>
+                </v-tooltip>
+                <v-tooltip bottom>
+                    <template v-slot:activator="{ on, attrs }">
+                        <v-icon small class="mr-2" v-on="on" v-bind="attrs"
+                                @click="onDownloadDocuments(item)">mdi-folder-zip
+                        </v-icon>
+                    </template>
+                    <span>{{$tc('tooltip.catalog_download_documents')}}</span>
                 </v-tooltip>
             </template>
         </v-data-table>

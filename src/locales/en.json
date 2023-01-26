@@ -110,6 +110,14 @@
   "tailoring_notes": {
     "title": "Notes"
   },
+  "project_state": {
+    "title": "Next project state",
+    "text": "Do you really want to set next state of project?",
+    "state": {
+      "success": "State changed",
+      "error": "State could not be changed"
+    }
+  },
   "tooltip": {
     "tailoring_state": "Next state",
     "requirements_edit": "Edit requirements",
@@ -129,9 +137,10 @@
     "tailoring_compare": "Show tailoring diffs",
     "requirement_import": "Import tailored requirements",
     "tailoring_notes": "Show and add notes to tailoring",
-    "katalogdefinition_oeffnen": "Open base catalogue document",
-    "katalog_download_json": "Download JSON",
-    "katalog_download_pdf": "Download PDF"
+    "catalogdefinition_oeffnen": "Open base catalogue document",
+    "catalog_download_json": "Download JSON",
+    "catalog_download_pdf": "Download PDF",
+    "catalog_download_documents": "Download documents"
   },
   "projectcopy_create": "Create project copy",
 

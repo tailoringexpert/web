@@ -73,6 +73,9 @@ export const data = {
         onDownloadJson: function(item) {
             this.onDownload(item.links.json.href);
         },
+        onDownloadDocuments: function(item) {
+            this.onDownload(item.links.document.href);
+        },
         onDownload: function(href) {
             this.wait = true;
             this.$http.get(href, {responseType: 'arraybuffer'}).then(

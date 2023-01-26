@@ -2,7 +2,7 @@ export const data = {
 	data: function() {
 		return {
 			wait: false,
-			state: '',
+			state: 'ONGOING',
 			headers: [
 				{
 					text: this.$tc('name'),
@@ -93,8 +93,9 @@ export const data = {
 									name: item.name,
 									creationTimestamp: item.creationTimestamp,
 									state: item.state,
+									nextstate: links.state.href,
 									self: links.self.href,
-									screeningsheet: links.screeningsheet.href
+									screeningsheet: links.screeningsheet.href,
 								}
 							);
 						}
@@ -108,7 +109,6 @@ export const data = {
 			);
 		},
 		onCopyProject: function(project){
-		console.log(project.self);
             this.$router.push({
                 name: 'projectcopy',
             	params: {
@@ -118,6 +118,22 @@ export const data = {
                 }
             });
         },
+        onProjectState: function(project) {
+			this.$confirm(this.$tc('project_state.text'),
+			    { buttonFalseText: this.$tc('no'), buttonTrueText: this.$tc('yes'), color: "warning", title: this.$tc('project_state.title') }).then(
+                confirmed => {
+              	    if ( confirmed ) {
+              	        this.wait = true;
+                        this.$http.put(project.nextstate).then(
+                            response => {
+                                project.state = response.body.state;
+                                project.nextstate = response.body._links.state.href;
+                                this.wait = false;
+                            }
+                       )
+                    }
+                });
+		},
 	},
 	created: function() {
 		this.onLoadProjects();
