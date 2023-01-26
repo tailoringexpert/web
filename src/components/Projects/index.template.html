@@ -31,6 +31,12 @@
                         </v-select>
                     </v-container>
                 </template>
+
+
+                <template v-slot:item.state="{ item }">
+                    <span @click="onProjectState(item)">{{item.state}}</span>
+                </template>
+
                 <template v-slot:item.actions="{ item }">
                     <v-tooltip bottom>
                         <template v-slot:activator="{ on, attrs }">
