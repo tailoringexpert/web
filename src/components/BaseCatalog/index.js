@@ -1,5 +1,3 @@
-import Vue from 'vue'
-
 export const data = {
     data() {
         return {
@@ -68,13 +66,13 @@ export const data = {
             reader.readAsText(this.file);
         },
         onDownloadPdf: function(item) {
-            this.onDownload(item.links.pdf.href);
+            this.onDownload(item._links.pdf.href);
         },
         onDownloadJson: function(item) {
-            this.onDownload(item.links.json.href);
+            this.onDownload(item._links.json.href);
         },
         onDownloadDocuments: function(item) {
-            this.onDownload(item.links.document.href);
+            this.onDownload(item._links.document.href);
         },
         onDownload: function(href) {
             this.wait = true;
@@ -97,27 +95,18 @@ export const data = {
 
         loadCatalogs: function() {
             this.wait = true;
-            this.$http.get(this.catalogLink).then(
+
+            this.$http.get(this.$store.state.links['catalog'].href).then(
                 response => {
                     this.catalogs = [];
-                    for (let i = 0; i<response.body._embedded.baseCatalogVersions.length; i++) {
-                        var item = response.body._embedded.baseCatalogVersions[i];
-                        Vue.$log.info(item);
-                        var links = item._links;
-
-                        this.catalogs.push({
-                            version: item.version,
-                            validFrom: new Date(item.gueltigAb).toLocaleDateString(),
-                            validUntil: "",
-                            links: links,
-                        });
-                    }
+                    this.catalogs = response.body._embedded.baseCatalogVersions;
                     this.wait = false;
-                },
-                response => {
+
+               },
+               response => {
                     console.log(response);
                     this.wait = false;
-                }
+               }
            );
         },
     },
@@ -126,27 +115,10 @@ export const data = {
     computed: {
     },
     created() {
-        this.wait = true;
-
         this.$store.commit('breadcrumbs', [
-            { text: this.$tc('project', 2),  disabled: false, exact: true, to: { name: 'projects' } },
             { text: this.$tc('catalog'), disabled: true }
         ]);
 
-        var origin = window.location.origin + "/api";
-        this.$http.get(origin)
-            .then(
-                response => {
-                    this.catalogLink = response.body._links['catalog'].href;
-                    this.loadCatalogs();
-                    this.wait = false;
-                },
-                response => {
-                    console.log(response);
-                    this.wait = false;
-                }
-            );
-
-
+        this.loadCatalogs();
     },
 }
