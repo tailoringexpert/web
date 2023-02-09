@@ -35,6 +35,9 @@
 
                 <router-view></router-view>
 
+                <v-btn plain @click="openImpressum()">Impressum</v-btn>
+                <v-btn plain @click="openDataProtection()">Data Protection</v-btn>
+
                 <v-bottom-sheet v-model="help">
                     <v-card class="overflow-y-auto" max-height="400">
                         <v-banner class="justify-end headline font-weight-light" sticky>
@@ -65,19 +68,36 @@ export default {
   methods: {
     openHelp : function() {
         var origin = window.location.origin + "/help/" + this.$route.name + ".html";
+        this.loadHTML(origin);
         //window.open(origin);
         //window.location = origin;
         //location.replace(origin);
 
-        this.$http.get(origin).then(
+        /*this.$http.get(origin).then(
+            response => {
+                console.log(response.body);
+                this.helpText = response.body;
+                this.help = true;
+            }
+        );*/
+    },
+    openImpressum: function() {
+        var origin = window.location.origin + "/impressum.html";
+        this.loadHTML(origin);
+    },
+    openDataProtection: function() {
+        var origin = window.location.origin + "/dataprotection.html";
+        this.loadHTML(origin);
+    },
+    loadHTML : function(url) {
+        this.$http.get(url).then(
             response => {
                 console.log(response.body);
                 this.helpText = response.body;
                 this.help = true;
             }
         );
-
-    }
+    },
   }
 
 }

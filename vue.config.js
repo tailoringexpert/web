@@ -12,6 +12,14 @@ module.exports = {
             '^/help': {
                 target: 'http://localhost',
                 changeOrigin: true
+            },
+            'impressum.html': {
+                target: 'http://localhost',
+                changeOrigin: true
+            },
+            'dataprotection.html': {
+                target: 'http://localhost',
+                changeOrigin: true
             }
         }
     },
