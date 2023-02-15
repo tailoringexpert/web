@@ -67,8 +67,7 @@ export default {
   ),
   methods: {
     openHelp : function() {
-        var origin = window.location.origin + "/help/" + this.$route.name + ".html";
-        this.loadHTML(origin);
+        this.loadHTML("/help", this.$route.name + ".html");
         //window.open(origin);
         //window.location = origin;
         //location.replace(origin);
@@ -82,19 +81,26 @@ export default {
         );*/
     },
     openImpressum: function() {
-        var origin = window.location.origin + "/impressum.html";
-        this.loadHTML(origin);
+        this.loadHTML("", "impressum.html");
     },
     openDataProtection: function() {
-        var origin = window.location.origin + "/dataprotection.html";
-        this.loadHTML(origin);
+        this.loadHTML("", "dataprotection.html");
     },
-    loadHTML : function(url) {
-        this.$http.get(url).then(
+    loadHTML : function(path, file) {
+        this.$http.get(window.location.origin + path + "/" + this.$storage.get('tenant') + "/" + file).then(
             response => {
-                console.log(response.body);
                 this.helpText = response.body;
                 this.help = true;
+            },
+            response => {
+                if(404 === response.status) {
+                    this.$http.get( window.location.origin +  path + "/" + file).then(
+                        response => {
+                            this.helpText = response.body;
+                            this.help = true;
+                        }
+                   );
+                }
             }
         );
     },
