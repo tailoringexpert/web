@@ -187,8 +187,14 @@ export const data = {
 
                     },
                     response => {
-                        this.wait = false;
-                        console.log("error");
+                        this.$confirm(
+                            response.bodyText,
+                            { buttonFalseText: null, buttonTrueText: "OK", color: "error", title: "Error" }
+                        ).then(
+                            confirmed => {
+                                this.wait = false;
+                            }
+                        )
                     }
                 );
         },
