@@ -67,7 +67,7 @@ export default {
   ),
   methods: {
     openHelp : function() {
-        this.loadHTML("/help", this.$route.name + ".html");
+        this.loadHTML("/static", "help/" + this.$route.name + ".html");
         //window.open(origin);
         //window.location = origin;
         //location.replace(origin);
@@ -81,10 +81,10 @@ export default {
         );*/
     },
     openImpressum: function() {
-        this.loadHTML("", "impressum.html");
+        this.loadHTML("/static", "impressum.html");
     },
     openDataProtection: function() {
-        this.loadHTML("", "dataprotection.html");
+        this.loadHTML("/static", "dataprotection.html");
     },
     loadHTML : function(path, file) {
         this.$http.get(window.location.origin + path + "/" + this.$storage.get('tenant') + "/" + file).then(

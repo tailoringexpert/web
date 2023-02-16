@@ -9,7 +9,7 @@ module.exports = {
                 target: 'http://localhost:8080',
                 changeOrigin: true
             },
-            '^/help': {
+           '^/static': {
                 target: 'http://localhost',
                 changeOrigin: true
             },
