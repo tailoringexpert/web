@@ -4,26 +4,6 @@
     </v-overlay>
 
     <v-row no-gutters justify="center" align="center">
-        <v-col cols="8">
-            <v-file-input
-                    show-size
-                    label="File input"
-                    accept="application/json"
-                    @change="onFileSelect">
-            </v-file-input>
-        </v-col>
-
-        <v-col cols="4" class="pl-2">
-            <v-btn
-                    color="success"
-                    dark
-                    small
-                    @click="onFileUpload">
-                {{$tc('upload')}}
-                <v-icon right dark>mdi-cloud-upload</v-icon>
-            </v-btn>
-        </v-col>
-
         <v-row>
             <v-col>
                 <v-data-table :items="catalogs"
