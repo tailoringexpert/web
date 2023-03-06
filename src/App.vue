@@ -21,7 +21,7 @@
                         Projects
                     </v-list-item>
                     <v-list-item to="/catalog">
-                        Base catalogs
+                        Catalogs
                     </v-list-item>
                 </v-list>
             </v-menu>

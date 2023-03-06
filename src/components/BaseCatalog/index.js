@@ -28,43 +28,10 @@ export const data = {
                     sortable: false
                 },
             ],
-            catalogs: [],
-            file: undefined,
+            catalogs: []
         }
     },
     methods: {
-        onFileSelect : function(file) {
-            this.file = file;
-        },
-
-        onFileUpload: function() {
-            if (!this.file) {
-                this.message = this.$tc('file_select');
-                return;
-            }
-            this.message = "";
-
-            let data = new FormData();
-            data.append("datei", this.file);
-
-            const reader = new FileReader();
-            reader.onload = e =>  {
-                this.wait = true;
-
-                this.$http.post(this.$store.state.links.catalog.href, e.target.result, {emulateJSON: true} )
-                .then(
-                    response => {
-                        this.wait = false;
-                        Vue.$log.debug("fertig");
-                    },
-                    response => {
-                        this.wait = false;
-                        Vue.$log.debug("error");
-                    }
-                );
-            }
-            reader.readAsText(this.file);
-        },
         onDownloadPdf: function(item) {
             this.onDownload(item._links.pdf.href);
         },
@@ -116,7 +83,7 @@ export const data = {
     },
     created() {
         this.$store.commit('breadcrumbs', [
-            { text: this.$tc('catalog'), disabled: true }
+            { text: this.$tc('catalog', 2), disabled: true }
         ]);
 
         this.loadCatalogs();
