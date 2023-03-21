@@ -34,7 +34,7 @@
 
 
                 <template v-slot:item.state="{ item }">
-                    <span @click="onProjectState(item)">{{item.state}}</span>
+                    <span @click="onProjectState(item)">{{item.state}} <v-icon small class="mr-2">mdi-pencil-box-outline</v-icon></span>
                 </template>
 
                 <template v-slot:item.actions="{ item }">

@@ -77,7 +77,7 @@
                             </td>
                             <td>
                                 <v-icon small class="mr-2" @click="onSignatureEdit(item)" :disabled="!isTailoringEditable(tailoring)">
-                                    mdi-pencil
+                                    mdi-pencil-box-outline
                                 </v-icon>
                             </td>
                         </tr>
@@ -318,7 +318,7 @@
                                    @open="onTailoringNameOpen(item)"
                                    @save="onTailoringNameSave(item)"
                                    @cancel="onTailoringNameCancel">
-                        <div>{{ item.name }}</div>
+                        <div>{{ item.name }} <v-icon small class="mr-2">mdi-pencil</v-icon></div>
                         <template v-slot:input>
                             <v-text-field
                                     v-model="item.name"
@@ -332,21 +332,30 @@
                 </template>
 
                 <template v-slot:item.state="{ item }">
-                    <span @click="onTailoringState(item)">{{item.state}}</span>
+                    <span @click="onTailoringState(item)">{{item.state}} <v-icon small class="mr-2">mdi-pencil-box-outline</v-icon></span>
                 </template>
 
                 <template v-slot:item.catalogVersion="{ item }">
-                    <span @click="onBaseCatalogDownload(item)">{{item.catalogVersion}}</span>
+                    <span @click="onBaseCatalogDownload(item)">{{item.catalogVersion}}  <v-icon small class="mr-2">mdi-download</v-icon></span>
                 </template>
 
                 <template v-slot:item.actions="{ item }">
                     <v-tooltip bottom>
                         <template v-slot:activator="{ on, attrs }">
                             <v-icon small class="mr-2" v-on="on" v-bind="attrs"
-                                    @click="onTailoringCatalogEdit(item)" :disabled="!isTailoringEditable(item)">mdi-pencil
+                                    @click="onTailoringCatalogEdit(item)" :disabled="!isTailoringEditable(item)">mdi-pencil-box-outline
                             </v-icon>
                         </template>
                         <span>{{$tc('tooltip.requirements_edit')}}</span>
+                    </v-tooltip>
+                    <v-tooltip bottom>
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-icon small class="mr-2" v-on="on" v-bind="attrs"
+                                    @click="onDocumentOpen(item)">
+                                mdi-file-document-edit-outline
+                            </v-icon>
+                        </template>
+                        <span>{{$tc('tooltip.document_open')}}</span>
                     </v-tooltip>
                     <v-tooltip bottom>
                         <template v-slot:activator="{ on, attrs }">
@@ -356,7 +365,6 @@
                         </template>
                         <span>{{$tc('tooltip.tailoring_compare')}}</span>
                     </v-tooltip>
-
                     <v-tooltip bottom>
                         <template v-slot:activator="{ on, attrs }">
                             <v-icon small class="mr-2" v-on="on" v-bind="attrs"
@@ -374,15 +382,6 @@
                             </v-icon>
                         </template>
                         <span>{{$tc('tooltip.selectionvector_open')}}</span>
-                    </v-tooltip>
-                    <v-tooltip bottom>
-                        <template v-slot:activator="{ on, attrs }">
-                            <v-icon small class="mr-2" v-on="on" v-bind="attrs"
-                                    @click="onDocumentOpen(item)">
-                                mdi-file-document-edit-outline
-                            </v-icon>
-                        </template>
-                        <span>{{$tc('tooltip.document_open')}}</span>
                     </v-tooltip>
                     <v-tooltip bottom>
                         <template v-slot:activator="{ on, attrs }">
