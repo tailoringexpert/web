@@ -129,7 +129,7 @@
                                             @save="onSelectionVectorEditSave"
                                             @cancel="onSelectionVectorEditCancel"
                                     >
-                                        <div>{{ props.item.value }}</div>
+                                        <div>{{ props.item.value }}  <v-icon small class="mr-2">mdi-pencil</v-icon></div>
                                         <template v-slot:input>
                                             <div class="mt-4 title">{{ props.item.label }}</div>
                                             <v-text-field
