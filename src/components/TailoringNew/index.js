@@ -226,14 +226,14 @@ export const data = {
                 for (let i = 0; i<response.body._embedded.baseCatalogVersions.length; i++) {
                     var item = response.body._embedded.baseCatalogVersions[i];
                     var links = response.body._embedded.baseCatalogVersions[i]._links;
-                    this.catalogs.push({
-                        version: item.version,
-                        //standard: item.standard,
-                        project: links.project.href
-                    });
+
+                    var catalog = {};
+                    catalog.version = item.version;
+                    catalog.project = links.project.href;
+                    this.catalogs.push(catalog);
 
                     if(item.standard) {
-                        this.catalog = item;
+                        this.catalog = catalog;
                     }
                 }
                 this.wait = false;
