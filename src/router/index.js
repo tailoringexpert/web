@@ -7,48 +7,48 @@ export const routes = [
     {
         path: '',
         name: 'home',
-        component: () => import('@/components/Home.vue'),
+        component: () => import('@/pages/Home.vue'),
     },
     {
         path: '/catalog',
-        component: () => import('@/components/BaseCatalog.vue'),
+        component: () => import('@/pages/BaseCatalog.vue'),
         name: 'basecatalog'
     },
     {
         path: '/project',
-        component: () => import('@/components/Container.vue'),
+        component: () => import('@/pages/Container.vue'),
         children: [
             {
                 path: '',
-                component: () => import('@/components/Projects.vue'),
+                component: () => import('@/pages/Projects.vue'),
                 name: 'projects'
             },
             {
                 path: ':id',
-                component: () => import('@/components/Project.vue'),
+                component: () => import('@/pages/Project.vue'),
                 props: true,
                 name: 'project'
             },
             {
                 path: 'new',
-                component: () => import('@/components/ProjectNew.vue'),
+                component: () => import('@/pages/ProjectNew.vue'),
                 name: 'projectnew'
             },
             {
                 path: ':id/copy',
-                component: () => import('@/components/ProjectCopy.vue'),
+                component: () => import('@/pages/ProjectCopy.vue'),
                 props: true,
                 name: 'projectcopy'
             },
             {
                 path: ':id/:tailoring/catalog',
-                component: () => import('@/components/TailoringCatalog.vue'),
+                component: () => import('@/pages/TailoringCatalog.vue'),
                 props: true,
                 name: 'catalog'
             },
             {
                 path: ':id/tailoring/new',
-                component: () => import('@/components/TailoringNew.vue'),
+                component: () => import('@/pages/TailoringNew.vue'),
                 props: true,
                 name: 'tailoringnew'
             },
