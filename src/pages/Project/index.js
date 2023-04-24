@@ -267,7 +267,7 @@ export const data = {
                     this.selectionVectorParameter = [];
                     for (var name in this.screeningSheet.selectionVector.levels) {
                         this.selectionVectorParameter.push({
-                            label: this.$tc(name),
+                            label: this.selectionVectorParameterTranslations[name],
                             name: name,
                             value: this.screeningSheet.selectionVector.levels[name]
                        });
@@ -312,7 +312,7 @@ export const data = {
                     this.selectionVectorParameter = [];
                     for (var name in selectionVector.levels) {
                         this.selectionVectorParameter.push({
-                            label: this.$tc(name),
+                            label: this.selectionVectorParameterTranslations[name],
                             name: name,
                             value: selectionVector.levels[name]
                        });
@@ -621,6 +621,9 @@ export const data = {
         },
 	},
     computed: {
+        selectionVectorParameterTranslations: function() {
+            return this.$store.state.selectionVectorParameterTranslations;
+        }
     },
 	watch: {
 	},
@@ -642,5 +645,5 @@ export const data = {
               this.wait = false;
             }
         );
-	}
+    },
 }
