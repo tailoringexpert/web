@@ -51,6 +51,7 @@ Vue.http.interceptors.push(function(request) {
     request.headers.set('X-Tenant', Vue.storage.get('tenant'));
 });
 
+store.commit("selectionVectorParameterTranslations", i18n.t("tenants")[Vue.storage.get('tenant')]['selectionvector']);
 
 var origin = window.location.origin + "/api";
 Vue.http.get(origin).then(
@@ -80,3 +81,4 @@ Vue.http.get(origin).then(
         console.log(response);
     }
 );
+

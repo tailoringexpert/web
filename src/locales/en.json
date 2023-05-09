@@ -26,11 +26,10 @@
   "cancel": "Cancel",
   "close": "Close",
   "save": "Save",
-  "add":  "Add",
+  "add": "Add",
   "file_select": "Please select a file!",
   "validFrom": "Valid from",
   "validUntil": "Valid until",
-
   "requirements": "Requirements",
   "changed": "changed",
   "upload": "Upload",
@@ -64,13 +63,12 @@
       "error": ""
     }
   },
-
   "dokument_zeichnung": {
     "status": {
       "fehlerfrei": "Value applied"
     }
   },
-  "attachment" :{
+  "attachment": {
     "title": "Upload documents",
     "file": "File",
     "checksum": "Checksum"
@@ -79,7 +77,6 @@
     "title": "Delete attachment",
     "text": "Shall attachment be deleted?"
   },
-
   "project_delete": {
     "title": "Delete project",
     "text": "Shall project be deleted?"
@@ -102,10 +99,10 @@
   "tailoring_state": {
     "title": "Next tailoring state",
     "text": "Do you really want to set next state of tailoring?<br/>After setting to next state neither requirements can be changed nor tailoring be deleted!<br/><br/>In case you need to downstate call your administrator",
-      "state": {
-        "success": "State changed",
-        "error": "State could not be changed"
-      }
+    "state": {
+      "success": "State changed",
+      "error": "State could not be changed"
+    }
   },
   "tailoring_notes": {
     "title": "Notes"
@@ -125,7 +122,7 @@
     "screeningsheet_open": "Open screeningsheet",
     "document_open": "Create documents",
     "attachment_open": "Attachments",
-    "attachment_download" : "Download",
+    "attachment_download": "Download",
     "attachment_delete": "Delete attachment",
     "tailoring_delete": "Delete tailoring",
     "project_edit": "Edit project",
@@ -143,7 +140,6 @@
     "catalog_download_documents": "Download documents"
   },
   "projectcopy_create": "Create project copy",
-
   "select_all": "Select all",
   "deselect_all": "Deselect all",
   "value": "Value | Values",
@@ -157,18 +153,44 @@
   "software": "Software",
   "spaceDebris": "Weltraummüll",
   "cybersecurity": "Cyber- und Datensicherheit",
-  "A": "Produktsicherung",
-  "Q": "Qualitätssicherung",
-  "M": "Maintainability",
-  "E": "EEE Komponenten",
-  "P": "PMMP",
-  "R": "Zuverlässigkeit",
-  "S": "Safety",
-  "W": "Software",
-  "C": "Cyber- und Datensicherheit",
-  "J": "Space Debris",
-  "F": "Planetary Protection",
-  "B": "Bodensegment",
-  "G": "Engineering",
-  "N": "Management"
+  "tenants":
+    {
+      "arsu": {
+        "selectionvector": {
+          "A": "Produktsicherung",
+          "Q": "Qualitätssicherung",
+          "M": "Maintainability",
+          "E": "EEE Komponenten",
+          "P": "PMMP",
+          "R": "Zuverlässigkeit",
+          "S": "Safety",
+          "W": "Software",
+          "C": "Cyber- und Datensicherheit",
+          "J": "Space Debris",
+          "F": "Planetary Protection",
+          "B": "Bodensegment",
+          "G": "Engineering",
+          "N": "Management"
+        }
+      },
+      "demo": {
+        "selectionvector": {
+          "A": "Produktsicherung",
+          "Q": "Qualitätssicherung",
+          "M": "Maintainability",
+          "E": "EEE Komponenten",
+          "P": "PMMP",
+          "R": "Zuverlässigkeit",
+          "S": "Safety",
+          "W": "Software",
+          "C": "Cyber- und Datensicherheit",
+          "J": "Space Debris",
+          "F": "Planetary Protection",
+          "B": "Bodensegment",
+          "G": "Engineering",
+          "N": "Management"
+        }
+      }
+    }
 }
+

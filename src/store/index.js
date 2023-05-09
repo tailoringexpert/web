@@ -9,6 +9,7 @@ export default new Vuex.Store({
 	    catalogs: [],
         breadcrumbs: [],
         selectionvectors: [],
+        selectionVectorParameterTranslations: null,
     },
     mutations: {
         links: function(state, links) {
@@ -22,6 +23,9 @@ export default new Vuex.Store({
         },
         selectionvectors: function(state, selectionvectors) {
             state.selectionvectors = selectionvectors;
+        },
+        selectionVectorParameterTranslations: function(state, selectionVectorParameterTranslations) {
+            state.selectionVectorParameterTranslations = selectionVectorParameterTranslations;
         },
     },
 
