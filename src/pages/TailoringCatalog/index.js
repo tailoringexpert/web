@@ -147,7 +147,6 @@ export const data = {
                             this.wait = false;
                         },
                         response => {
-                            console.log(response);
                             this.wait = false;
                         }
                     );
