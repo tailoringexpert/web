@@ -46,12 +46,6 @@
                     </v-tooltip>
                     <v-tooltip bottom>
                         <template v-slot:activator="{ on, attrs }">
-                            <v-icon small class="mr-2" v-on="on" v-bind="attrs" @click="onCopyProject(item)">mdi-content-copy</v-icon>
-                        </template>
-                        <span>{{$tc('tooltip.project_copy')}}</span>
-                    </v-tooltip>
-                    <v-tooltip bottom>
-                        <template v-slot:activator="{ on, attrs }">
                             <v-icon small class="mr-2" v-on="on" v-bind="attrs" @click="onDeleteProject(item)">mdi-delete</v-icon>
                         </template>
                         <span>{{$tc('tooltip.project_delete')}}</span>

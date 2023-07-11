@@ -151,7 +151,12 @@ export const data = {
                     );
                 },
                 response => {
-                    this.$confirm('Bei der Anlage des Tailorins ist ein Fehler aufgetreten.<br>Bitte überprüfen Sie Ihre Eingaben.',
+                    var message = 'Bei der Anlage des Tailorins ist ein Fehler aufgetreten.<br>Bitte überprüfen Sie Ihre Eingaben.';
+                    if (412 == response.status) {
+                        message = response.bodyText;
+                    }
+
+                    this.$confirm(message,
                         { buttonFalseText: null, buttonTrueText: "OK", color: "error", title: "Fehler" }).then(
                       	    confirmed => {
                       	        this.wait = false;
