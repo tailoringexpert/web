@@ -88,7 +88,8 @@ export const data = {
             onRequirementNew: function(requirement) {
                 this.requirementRequest = this.onRequirementNewSave;
                 this.requirement = new Object();
-                this.editor.setContent(null);
+                this.requirement._links = requirement._links;
+                this.editor.setContent("");
                 this.isEdit = true;
             },
             onRequirementNewSave: function(text) {
