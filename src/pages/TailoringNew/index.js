@@ -230,12 +230,11 @@ export const data = {
                     var item = response.body._embedded.baseCatalogVersions[i];
                     var links = response.body._embedded.baseCatalogVersions[i]._links;
 
-                    var catalog = {};
-                    catalog.version = item.version;
-                    catalog.project = links.project.href;
-                    this.catalogs.push(catalog);
-
-                    if(item.standard) {
+                    if (item.valid) {
+                        var catalog = {};
+                        catalog.version = item.version;
+                        catalog.project = links.project.href;
+                        this.catalogs.push(catalog);
                         this.catalog = catalog;
                     }
                 }
