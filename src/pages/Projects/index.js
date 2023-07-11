@@ -108,16 +108,6 @@ export const data = {
 				}
 			);
 		},
-		onCopyProject: function(project){
-            this.$router.push({
-                name: 'projectcopy',
-            	params: {
-            	    id: project.name,
-            		self: project.self,
-            		screeningsheet: project.screeningsheet
-                }
-            });
-        },
         onProjectState: function(project) {
 			this.$confirm(this.$tc('project_state.text'),
 			    { buttonFalseText: this.$tc('no'), buttonTrueText: this.$tc('yes'), color: "warning", title: this.$tc('project_state.title') }).then(
