@@ -10,7 +10,7 @@
     <fileSets>
         <fileSet>
             <directory>dist</directory>
-            <outputDirectory>www</outputDirectory>
+            <outputDirectory>/</outputDirectory>
         </fileSet>
     </fileSets>
 </assembly>
