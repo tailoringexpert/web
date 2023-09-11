@@ -4,23 +4,23 @@ module.exports = {
             'Access-Control-Allow-Origin': '*',
             'X-TENANT': process.env.VUE_APP_TENANT,
         },
+
         proxy: {
-            '^/api': {
-                target: 'http://localhost:8080',
-                changeOrigin: true
-            },
+           '^/api': {
+               target: process.env.VUE_API_TARGET,
+           },
            '^/static': {
-                target: 'http://localhost',
-                changeOrigin: true
-            },
-            'impressum.html': {
-                target: 'http://localhost',
-                changeOrigin: true
-            },
-            'dataprotection.html': {
-                target: 'http://localhost',
-                changeOrigin: true
-            }
+                target: process.env.VUE_ASSETS_TARGET,
+           },
+           '^/assets' : {
+               target: process.env.VUE_ASSETS_TARGET,
+           },
+           'impressum.html': {
+                target: process.env.VUE_ASSETS_TARGET,
+           },
+           'dataprotection.html': {
+                target: process.env.VUE_ASSETS_TARGET,
+           }
         }
     },
     configureWebpack: {
