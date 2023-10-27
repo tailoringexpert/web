@@ -88,6 +88,7 @@
                 <configuration>
                     <descriptors>
                         <descriptor>distribution.xml</descriptor>
+                        <descriptor>docker.xml</descriptor>
                     </descriptors>
                 </configuration>
                 <executions>

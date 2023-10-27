@@ -69,7 +69,7 @@
     }
   },
   "attachment": {
-    "title": "Upload documents",
+    "title": "Upload file",
     "file": "File",
     "checksum": "Checksum"
   },
