@@ -5,7 +5,7 @@
     <groupId>eu.tailoringexpert</groupId>
     <artifactId>tailoringexpert-web</artifactId>
     <name>${project.groupId}:${project.artifactId}</name>
-    <version>0.1.0</version>
+    <version>0.1.1</version>
     <description>TailoringExpert Web Frontend</description>
     <packaging>jar</packaging>
 
@@ -88,6 +88,7 @@
                 <configuration>
                     <descriptors>
                         <descriptor>distribution.xml</descriptor>
+                        <descriptor>docker.xml</descriptor>
                     </descriptors>
                 </configuration>
                 <executions>

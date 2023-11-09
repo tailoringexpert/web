@@ -477,7 +477,7 @@ export const data = {
 	    onAttachmentDelete: function(item) {
             this.wait = true;
             this.$confirm(this.$tc('attachment_delete.text'),
-                { buttonFalseText: this.$tc('nein'), buttonTrueText: this.$tc('ja'), color: "warning", title: this.$tc('dokument_loeschen.title') }).then(
+                { buttonFalseText: this.$tc('nein'), buttonTrueText: this.$tc('ja'), color: "warning", title: this.$tc('attachment_delete.title') }).then(
                 confirmed => {
                     if ( confirmed ) {
                         this.wait = true;
