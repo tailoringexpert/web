@@ -39,6 +39,14 @@
     "cancel": "Cancel",
     "save": "Save"
   },
+  "basecatalog": {
+    "convert": "Convert"
+  },
+
+  "basecatalog_convert": {
+    "title": "Covert file to catalog",
+    "convert": "Convert"
+  },
   "tailoring_delete": {
     "title": "Delete tailoring",
     "text": "Shall tailoring be deleted?"
