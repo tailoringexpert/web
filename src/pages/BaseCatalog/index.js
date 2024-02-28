@@ -38,6 +38,9 @@ export const data = {
         onDownloadJson: function(item) {
             this.onDownload(item._links.json.href);
         },
+        onDownloadExcel: function(item) {
+            this.onDownload(item._links.excel.href);
+        },
         onDownloadDocuments: function(item) {
             this.onDownload(item._links.document.href);
         },

@@ -136,6 +136,7 @@
     "tailoring_notes": "Show and add notes to tailoring",
     "catalogdefinition_oeffnen": "Open base catalogue document",
     "catalog_download_json": "Download JSON",
+    "catalog_download_excel": "Download Excel",
     "catalog_download_pdf": "Download PDF",
     "catalog_download_documents": "Download documents"
   },

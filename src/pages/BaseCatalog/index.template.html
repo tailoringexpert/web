@@ -30,6 +30,14 @@
                         <v-tooltip bottom>
                             <template v-slot:activator="{ on, attrs }">
                                 <v-icon small class="mr-2" v-on="on" v-bind="attrs"
+                                        @click="onDownloadExcel(item)">mdi-microsoft-excel
+                                </v-icon>
+                            </template>
+                            <span>{{$tc('tooltip.catalog_download_excel')}}</span>
+                        </v-tooltip>
+                        <v-tooltip bottom>
+                            <template v-slot:activator="{ on, attrs }">
+                                <v-icon small class="mr-2" v-on="on" v-bind="attrs"
                                         @click="onDownloadDocuments(item)">mdi-folder-zip
                                 </v-icon>
                             </template>
