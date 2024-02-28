@@ -44,6 +44,11 @@
     </properties>
 
     <distributionManagement>
+        <snapshotRepository>
+            <id>tailoringexpert-snapshots</id>
+            <!--suppress UnresolvedMavenProperty -->
+            <url>${tailoringexpert-snapshots.repository}</url>
+        </snapshotRepository>
         <repository>
             <id>tailoringexpert-releases</id>
             <!--suppress UnresolvedMavenProperty -->
