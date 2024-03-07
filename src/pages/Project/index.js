@@ -604,7 +604,7 @@ export const data = {
                     this.file = null;
                     this.snack = true;
                     this.snackColor = 'success';
-                    this.snackText = this.$tc('anforderung_importieren.status.fehlerfrei');
+                    this.snackText = this.$tc('requirement_import.state.success');
                 },
                 response => {
                     this.isImportOpen = true;

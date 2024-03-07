@@ -5,7 +5,7 @@
     <groupId>eu.tailoringexpert</groupId>
     <artifactId>tailoringexpert-web</artifactId>
     <name>${project.groupId}:${project.artifactId}</name>
-    <version>0.1.1</version>
+    <version>0.1.2</version>
     <description>TailoringExpert Web Frontend</description>
     <packaging>jar</packaging>
 
@@ -35,15 +35,20 @@
         <license.licenseName>gpl_v3</license.licenseName>
         <npm.mode>development</npm.mode>
 
-        <gitflow-maven-plugin.version>1.20.0</gitflow-maven-plugin.version>
+        <gitflow-maven-plugin.version>1.21.0</gitflow-maven-plugin.version>
         <frontend-maven-plugin.verion>1.12.1</frontend-maven-plugin.verion>
         <node.version>14.19.0</node.version>
-        <maven-resources-plugin.version>3.3.0</maven-resources-plugin.version>
+        <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
         <maven-release-plugin.version>3.0.0</maven-release-plugin.version>
         <maven-release-plugin.goal>install</maven-release-plugin.goal>
     </properties>
 
     <distributionManagement>
+        <snapshotRepository>
+            <id>tailoringexpert-snapshots</id>
+            <!--suppress UnresolvedMavenProperty -->
+            <url>${tailoringexpert-snapshots.repository}</url>
+        </snapshotRepository>
         <repository>
             <id>tailoringexpert-releases</id>
             <!--suppress UnresolvedMavenProperty -->
