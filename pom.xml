@@ -36,11 +36,9 @@
         <npm.mode>development</npm.mode>
 
         <gitflow-maven-plugin.version>1.21.0</gitflow-maven-plugin.version>
-        <frontend-maven-plugin.verion>1.12.1</frontend-maven-plugin.verion>
-        <node.version>14.19.0</node.version>
+        <frontend-maven-plugin.verion>1.15.0</frontend-maven-plugin.verion>
+        <node.version>20.11.1</node.version>
         <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
-        <maven-release-plugin.version>3.0.0</maven-release-plugin.version>
-        <maven-release-plugin.goal>install</maven-release-plugin.goal>
     </properties>
 
     <distributionManagement>
@@ -75,16 +73,6 @@
                         <versionTagPrefix>v</versionTagPrefix>
                         <origin>origin</origin>
                     </gitFlowConfig>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>${maven-release-plugin.version}</version>
-                <configuration>
-                    <goals>${maven-release-plugin.goal}</goals>
-                    <tagNameFormat>v@{project.version}</tagNameFormat>
-                    <autoVersionSubmodules>true</autoVersionSubmodules>
                 </configuration>
             </plugin>
             <plugin>
