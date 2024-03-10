@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import { createApp } from 'vue'
 import VueResource from 'vue-resource';
 import App from '@/App.vue'
 import router from '@/router'
@@ -12,6 +12,7 @@ import VuetifyConfirm from "vuetify-confirm";
 
 import VueLogger from 'vuejs-logger';
 
+const app = createApp(App)
 
 // CREATE VUETIFY INSTANCE
 const vuetify = new Vuetify({
@@ -21,15 +22,15 @@ const vuetify = new Vuetify({
 
 // THIS IS IMPORTANT TO INSTALL DIALOGS
 // YOU NEED TO SEND VUETIFY INSTANCE INTO DIALOG CONTEXT
-Vue.use(Vuetify);
-Vue.use(VuetifyConfirm, {
+app.use(Vuetify);
+app.use(VuetifyConfirm, {
   vuetify
 });
 
-Vue.use(VueResource);
+app.use(VueResource);
 
 Vue.config.productionTip = false;
-Vue.use(VueLogger, {
+app.use(VueLogger, {
     isEnabled: true,
     logLevel : Vue.config.productionTip  ? 'error' : 'debug',
     stringifyArguments : false,
@@ -40,21 +41,21 @@ Vue.use(VueLogger, {
 }
 );
 
-Vue.use(Storage, {
+app.use(Storage, {
     namespace: 'tailoringexpert__', // key prefix
     name: 'storage', // name variable Vue.[ls] or this.[$ls],
     storage: 'local', // storage name session, local, memory
 });
 
-Vue.storage.set('tenant', getEnv('VUE_APP_TENANT'));
-Vue.http.interceptors.push(function(request) {
+app.storage.set('tenant', getEnv('VUE_APP_TENANT'));
+app.http.interceptors.push(function(request) {
     request.headers.set('X-Tenant', Vue.storage.get('tenant'));
 });
 
 store.commit("selectionVectorParameterTranslations", i18n.t("tenants")[Vue.storage.get('tenant')]['selectionvector']);
 
 var origin = window.location.origin + "/api";
-Vue.http.get(origin).then(
+app.http.get(origin).then(
     response => {
         store.commit('links', response.body._links);
 
