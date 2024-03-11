@@ -31,7 +31,6 @@
         <v-main>
             <v-container fluid>
 
-
                 <router-view></router-view>
 
                 <v-btn plain @click="openImpressum()">Impressum</v-btn>
@@ -53,4 +52,45 @@
     </v-app>
 </template>
 
+<script>
+import { useRouter, useRoute } from "vue-router"
 
+export default {
+  data: () => (
+    {
+        help: false,
+        helpText: '',
+        footer: {
+            inset: false,
+        },
+    }
+  ),
+  methods: {
+    openHelp : function() {
+        const route = useRoute()
+
+        // Will return the route name
+        console.log(route.name)
+        this.loadHTML("/static", "help/" + route.name + ".html");
+    },
+    openImpressum: function() {
+        this.loadHTML("/static", "impressum.html");
+    },
+    openDataProtection: function() {
+        this.loadHTML("/static", "dataprotection.html");
+    },
+    loadHTML : function(path, file) {
+        axios
+            .get(window.location.origin + path + "/demo/" + file)
+            .then(response => {
+                  this.helpText = response.data;
+                  this.help = true;
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    },
+  }
+
+}
+</script>

@@ -1,32 +1,35 @@
-import {
-    Editor,
-    EditorContent,
-    EditorMenuBar
-} from 'tiptap';
+import { Editor } from "@tiptap/core"
+import StarterKit from "@tiptap/starter-kit"
 
-import {
-    Blockquote,
-    CodeBlock,
-    HardBreak,
-    Heading,
-    OrderedList,
-    BulletList,
-    ListItem,
-    TodoItem,
-    TodoList,
-    Bold,
-    Code,
-    Italic,
-    Link,
-    Table,
-    TableHeader,
-    TableCell,
-    TableRow,
-    Strike,
-    Underline,
-    History,
-    Image
-} from 'tiptap-extensions';
+//import {
+//    Editor,
+//    EditorContent,
+//    EditorMenuBar
+//} from 'tiptap';
+
+//import {
+//    Blockquote,
+//    CodeBlock,
+//    HardBreak,
+//    Heading,
+//    OrderedList,
+//    BulletList,
+//    ListItem,
+//    TodoItem,
+//    TodoList,
+//    Bold,
+//    Code,
+//    Italic,
+//    Link,
+//    Table,
+//    TableHeader,
+//    TableCell,
+//    TableRow,
+//    Strike,
+//    Underline,
+//    History,
+//    Image
+//} from 'tiptap-extensions';
 
 import '@/assets/sass/editor.scss';
 
@@ -278,35 +281,36 @@ export const data = {
             this.editor = new Editor(
             {
                 extensions: [
-                    new Blockquote(),
-                    new BulletList(),
-                    new CodeBlock(),
-                    new HardBreak(),
-                    new Heading(
-                        {
-                            levels: [1, 2, 3]
-                        }
-                    ),
-                    new ListItem(),
-                    new OrderedList(),
-                    new TodoItem(),
-                    new TodoList(),
-                    new Link(),
-                    new Bold(),
-                    new Code(),
-                    new Italic(),
-                    new Strike(),
-                    new Underline(),
-                    new History(),
-                    new Table(
-                        {
-                            resizable: true,
-                        }
-                    ),
-                    new TableHeader(),
-                    new TableCell(),
-                    new TableRow(),
-                    new Image(),
+                StarterKit,
+//                    new Blockquote(),
+//                    new BulletList(),
+//                    new CodeBlock(),
+//                    new HardBreak(),
+//                    new Heading(
+//                        {
+//                            levels: [1, 2, 3]
+//                        }
+//                    ),
+//                    new ListItem(),
+//                    new OrderedList(),
+//                    new TodoItem(),
+//                    new TodoList(),
+//                    new Link(),
+//                    new Bold(),
+//                    new Code(),
+//                    new Italic(),
+//                    new Strike(),
+//                    new Underline(),
+//                    new History(),
+//                    new Table(
+//                        {
+//                            resizable: true,
+//                        }
+//                    ),
+//                    new TableHeader(),
+//                    new TableCell(),
+//                    new TableRow(),
+//                    new Image(),
                 ],
             });
         },

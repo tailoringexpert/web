@@ -1,9 +1,8 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
+import { createApp } from "vue"
+import { createWebHistory, createRouter } from "vue-router"
 
-Vue.use(VueRouter)
 
-export const routes = [
+const routes = [
     {
         path: '',
         name: 'home',
@@ -56,10 +55,11 @@ export const routes = [
     },
 ];
 
-
-export default new VueRouter({
-  mode: 'history',
-  linkActiveClass: 'is-active',
-  linkExactActiveClass: 'is-exact-active',
-  routes
+const router = createRouter({
+  history: createWebHistory(),
+  routes,
 });
+
+export default router;
+
+

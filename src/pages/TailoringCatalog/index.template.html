@@ -180,9 +180,9 @@
             <v-col>
                 <v-breadcrumbs :items="breadcrumbs" divider="-"></v-breadcrumbs>
                 <v-data-iterator :items="requirements" :hide-default-header="true">
-                    <template slot="no-data">
-                        <div style="visibility: hidden"></div>
-                    </template>
+<!--                    <template slot:no-data>-->
+<!--                        <div style="visibility: hidden"></div>-->
+<!--                    </template>-->
                     <template v-slot:default="props">
                         <v-row v-for="item in props.items"
                                :key="item.text"

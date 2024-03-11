@@ -1,6 +1,7 @@
 import { createApp } from "vue"
 import App from './App.vue'
 import { createStore } from "vuex"
+import router from '@/router' // <---
 
 import i18n from "@/plugins/i18n"
 import md from "@mdi/font/css/materialdesignicons.min.css"
@@ -23,6 +24,7 @@ const vuetify = createVuetify({
 })
 app.use(vuetify);
 
+app.use(router);
 
 // store
 const store = createStore({
