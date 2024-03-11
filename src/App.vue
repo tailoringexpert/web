@@ -30,8 +30,7 @@
 
         <v-main>
             <v-container fluid>
-                <v-breadcrumbs :items="$store.state.breadcrumbs">
-                </v-breadcrumbs>
+
 
                 <router-view></router-view>
 
@@ -54,57 +53,4 @@
     </v-app>
 </template>
 
-<script>
-export default {
-  data: () => (
-    {
-        help: false,
-        helpText: '',
-        footer: {
-            inset: false,
-        },
-    }
-  ),
-  methods: {
-    openHelp : function() {
-        this.loadHTML("/static", "help/" + this.$route.name + ".html");
-        //window.open(origin);
-        //window.location = origin;
-        //location.replace(origin);
 
-        /*this.$http.get(origin).then(
-            response => {
-                console.log(response.body);
-                this.helpText = response.body;
-                this.help = true;
-            }
-        );*/
-    },
-    openImpressum: function() {
-        this.loadHTML("/static", "impressum.html");
-    },
-    openDataProtection: function() {
-        this.loadHTML("/static", "dataprotection.html");
-    },
-    loadHTML : function(path, file) {
-        this.$http.get(window.location.origin + path + "/" + this.$storage.get('tenant') + "/" + file).then(
-            response => {
-                this.helpText = response.body;
-                this.help = true;
-            },
-            response => {
-                if(404 === response.status) {
-                    this.$http.get( window.location.origin +  path + "/" + file).then(
-                        response => {
-                            this.helpText = response.body;
-                            this.help = true;
-                        }
-                   );
-                }
-            }
-        );
-    },
-  }
-
-}
-</script>

@@ -1,15 +1,13 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
-import router from '@/router'
-Vue.use(Vuex);
+import { createApp } from "vue"
+import { createStore } from "vuex"
 
-export default new Vuex.Store({
+export default createStore({
     state: {
-        links: [],
-	    catalogs: [],
-        breadcrumbs: [],
-        selectionvectors: [],
-        selectionVectorParameterTranslations: null,
+            links: [],
+            catalogs: [],
+            breadcrumbs: [],
+            selectionvectors: [],
+            selectionVectorParameterTranslations: null,
     },
     mutations: {
         links: function(state, links) {
@@ -30,3 +28,4 @@ export default new Vuex.Store({
     },
 
 })
+
