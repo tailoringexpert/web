@@ -1,4 +1,4 @@
-<template src='./ProjectCopy/index.template.html'></template>
+<template src="./ProjectCopy/index.template.html" />
 <script>
 import { data } from "./ProjectCopy/index.js";
 

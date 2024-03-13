@@ -8,63 +8,98 @@ function log() {
 </script>
 
 <template>
-<v-container fluid>
+  <v-container fluid>
     <v-overlay :value="wait">
-        <v-progress-circular indeterminate size="64"></v-progress-circular>
+      <v-progress-circular
+        indeterminate
+        size="64"
+      />
     </v-overlay>
 
     <v-row>
-        <v-col>
-            <v-data-table
-                    :headers="headers"
-                    :items="projects"
-                    :items-per-page="20"
-                    class="elevation-1">
-                <template v-slot:top>
-                    <v-toolbar flat color="white">
-                        <v-toolbar-title>{{$tc('project', 2)}}</v-toolbar-title>
-                        <v-divider class="mx-4" inset vertical></v-divider>
-                        <v-btn color="primary" dark class="mb-2" @click="onNewProject()">{{$tc('project_new')}}</v-btn
-                        >
-                    </v-toolbar>
-                </template>
+      <v-col>
+        <v-data-table
+          :headers="headers"
+          :items="projects"
+          :items-per-page="20"
+          class="elevation-1"
+        >
+          <template #top>
+            <v-toolbar
+              flat
+              color="white"
+            >
+              <v-toolbar-title>{{ $tc('project', 2) }}</v-toolbar-title>
+              <v-divider
+                class="mx-4"
+                inset
+                vertical
+              />
+              <v-btn
+                color="primary"
+                dark
+                class="mb-2"
+                @click="onNewProject()"
+              >
+                {{ $tc('project_new') }}
+              </v-btn>
+            </v-toolbar>
+          </template>
 
-                <template v-slot:header.state>
-                    <v-container>
-                        <v-select
-                                label="State"
-                                :items="['', 'ONGOING', 'COMPLETED']"
-                                v-model="state"
-                                dense
-                                light
-                        >
-                        </v-select>
-                    </v-container>
-                </template>
+          <template #header.state>
+            <v-container>
+              <v-select
+                v-model="state"
+                label="State"
+                :items="['', 'ONGOING', 'COMPLETED']"
+                dense
+                light
+              />
+            </v-container>
+          </template>
 
 
-                <template v-slot:item.state="{ item }">
-                    <span @click="onProjectState(item)">{{item.state}} <v-icon small class="mr-2">mdi-pencil-box-outline</v-icon></span>
-                </template>
+          <template #item.state="{ item }">
+            <span @click="onProjectState(item)">{{ item.state }} <v-icon
+              small
+              class="mr-2"
+            >mdi-pencil-box-outline</v-icon></span>
+          </template>
 
-                <template v-slot:item.actions="{ item }">
-                    <v-tooltip bottom>
-                        <template v-slot:activator="{ on, attrs }">
-                            <v-icon small class="mr-2" v-on="on" v-bind="attrs" @click="onEditProject(item)">mdi-pencil</v-icon>
-                        </template>
-                        <span>{{$tc('tooltip.project_edit')}}</span>
-                    </v-tooltip>
-                    <v-tooltip bottom>
-                        <template v-slot:activator="{ on, attrs }">
-                            <v-icon small class="mr-2" v-on="on" v-bind="attrs" @click="onDeleteProject(item)">mdi-delete</v-icon>
-                        </template>
-                        <span>{{$tc('tooltip.project_delete')}}</span>
-                    </v-tooltip>
-                </template>
-            </v-data-table>
-        </v-col>
+          <template #item.actions="{ item }">
+            <v-tooltip bottom>
+              <template #activator="{ on, attrs }">
+                <v-icon
+                  small
+                  class="mr-2"
+                  v-bind="attrs"
+                  v-on="on"
+                  @click="onEditProject(item)"
+                >
+                  mdi-pencil
+                </v-icon>
+              </template>
+              <span>{{ $tc('tooltip.project_edit') }}</span>
+            </v-tooltip>
+            <v-tooltip bottom>
+              <template #activator="{ on, attrs }">
+                <v-icon
+                  small
+                  class="mr-2"
+                  v-bind="attrs"
+                  v-on="on"
+                  @click="onDeleteProject(item)"
+                >
+                  mdi-delete
+                </v-icon>
+              </template>
+              <span>{{ $tc('tooltip.project_delete') }}</span>
+            </v-tooltip>
+          </template>
+        </v-data-table>
+      </v-col>
     </v-row>
-</v-container>
+  </v-container>
 </template>
 
 

@@ -40,7 +40,7 @@ const routes = [
             },
             {
                 path: ':id/:tailoring/catalog',
-                component: () => import('@/pages/TailoringCatalog.vue'),
+                component: () => import('@/pages/Container.vue'),
                 props: true,
                 name: 'catalog'
             },

@@ -1,141 +1,140 @@
 export const data = {
-    data: function() {
+    data: function () {
         return {
             wait: false,
             snack: false,
-            snackColor: '',
-            snackText: '',
+            snackColor: "",
+            snackText: "",
 
             headers: [
                 {
-                    text: this.$tc('name'),
-                    align: 'start',
+                    text: this.$tc("name"),
+                    align: "start",
                     sortable: true,
-                    value: 'name',
+                    value: "name",
                 },
                 {
-                    text: this.$tc('phase', 2),
+                    text: this.$tc("phase", 2),
                     sortable: true,
-                    value: 'phases',
+                    value: "phases",
                 },
                 {
-                    text: this.$tc('state'),
+                    text: this.$tc("state"),
                     sortable: true,
-                    value: 'state',
+                    value: "state",
                 },
                 {
-                    text: this.$tc('catalog'),
+                    text: this.$tc("catalog"),
                     sortable: true,
-                    value: 'catalogVersion',
+                    value: "catalogVersion",
                 },
                 {
-                    text: this.$tc('action', 2),
-                    value: 'actions',
-                    sortable: false
+                    text: this.$tc("action", 2),
+                    value: "actions",
+                    sortable: false,
                 },
             ],
-            project : {
-                tailorings : []
+            project: {
+                tailorings: [],
             },
             tailoringName: null,
 
             isScreeningSheetOpen: false,
             screeningSheetTab: null,
             screeningSheet: {
-                parameters: []
+                parameters: [],
             },
-            screeningSheetDownload : null,
+            screeningSheetDownload: null,
             screeningSheetHeader: [
                 {
-                    text: this.$tc('name'),
-                    align: 'start',
+                    text: this.$tc("name"),
+                    align: "start",
                     sortable: true,
-                    value: 'label',
+                    value: "label",
                 },
                 {
-                    text: this.$tc('value'),
+                    text: this.$tc("value"),
                     sortable: true,
-                    value: 'value',
+                    value: "value",
                 },
             ],
 
             isSelectionVectorOpen: false,
             selectionVectorHeader: [
                 {
-                    text:  this.$tc('name'),
-                    align: 'start',
+                    text: this.$tc("name"),
+                    align: "start",
                     sortable: true,
-                    value: 'label',
+                    value: "label",
                 },
                 {
-                    text: this.$tc('value'),
-                    value: 'action',
-                    value: 'value',
+                    text: this.$tc("value"),
+                    value: "action",
                 },
             ],
             selectionVectorParameter: [],
 
-            isDocumentsOpen : false,
+            isDocumentsOpen: false,
             panel: [0],
-            tailoring : null,
+            tailoring: null,
             signaturesHeader: [
                 {
-                    text:  this.$tc('documents.faculty'),
+                    text: this.$tc("documents.faculty"),
                     sortable: true,
-                    value: 'faculty',
+                    value: "faculty",
                 },
                 {
-                    text: this.$tc('documents.signee'),
+                    text: this.$tc("documents.signee"),
                     sortable: true,
-                    value: 'signee',
+                    value: "signee",
                 },
                 {
-                    text: this.$tc('documents.state'),
+                    text: this.$tc("documents.state"),
                     sortable: true,
-                    value: 'signature_state',
+                    value: "signature_state",
                 },
                 {
-                    text: this.$tc('documents.applicable'),
+                    text: this.$tc("documents.applicable"),
                     sortable: true,
-                    value: 'applicable',
+                    value: "applicable",
                 },
                 {
-                    text: 'Actions',
-                    value: 'actions',
-                    sortable: false
+                    text: "Actions",
+                    value: "actions",
+                    sortable: false,
                 },
             ],
             signatures: [],
             isSignatureOpen: false,
             signature: {
-                signee: '',
-                faculty: '',
-                state: '',
-                applicable: false
+                signee: "",
+                faculty: "",
+                state: "",
+                applicable: false,
             },
             signatureIndex: -1,
 
-            isAttachmentOpen : false,
-            attachmentsHeader : [
+            isAttachmentOpen: false,
+            attachmentsHeader: [
                 {
-                    text: this.$tc('attachment.file'),
+                    text: this.$tc("attachment.file"),
                     sortable: true,
-                    value: 'name',
+                    value: "name",
                 },
                 {
                     text: "Typ",
                     sortable: true,
-                    value: 'type',
+                    value: "type",
                 },
                 {
-                    text: this.$tc('attachment.checksum'),
+                    text: this.$tc("attachment.checksum"),
                     sortable: true,
-                    value: 'hash',
+                    value: "hash",
                 },
                 {
-                    text: 'Actions',
-                    value: 'actions',
-                    sortable: false
+                    text: "Actions",
+                    value: "actions",
+                    sortable: false,
                 },
             ],
             attachments: [],
@@ -143,296 +142,386 @@ export const data = {
 
             isImportOpen: false,
 
-            isNotesOpen : false,
+            isNotesOpen: false,
             notes: [],
             noteText: null,
         };
     },
     methods: {
-        onTailoringNew: function() {
+        onTailoringNew: function () {
             this.$router.push({
-                name: 'tailoringnew',
+                name: "tailoringnew",
                 params: {
                     id: this.project.name,
                     previous: this.$route.params.self,
-                    self: this.project._links['tailoring'].href,
-                    referer: this.project._links['self'].href
-                }
+                    self: this.project._links["tailoring"].href,
+                    referer: this.project._links["self"].href,
+                },
             });
         },
 
-        onTailoringNameOpen: function(item) {
+        onTailoringNameOpen: function (item) {
             this.tailoringName = item.name;
         },
-        onTailoringNameSave: function(item) {
+        onTailoringNameSave: function (item) {
             this.wait = true;
-            this.$http.put(item._links.name.href, item.name, {emulateJSON: true}).then(
-                response => {
+
+            this.$axios
+                .put(item._links.name.href, item.name, { emulateJSON: true })
+                .then((response) => {
                     item._links = response.body._links;
                     this.wait = false;
                     this.snack = true;
-                    this.snackColor = 'success';
-                    this.snackText = this.$tc('tailoring_changename.state.success');
-                },
-                response => {
-                    this.$confirm(response.bodyText,{  buttonFalseText: null, buttonTrueText: this.$tc('tailoring_changename.ok'), color: "warning", title: this.$tc('tailoring_changename.title') }).then(
-                        confirmed => {
-                            if ( confirmed ) {
-                                item.name = this.tailoringName;
-                                this.tailoringName = null;
-                                this.wait = false;
-                            }
-                        }
+                    this.snackColor = "success";
+                    this.snackText = this.$tc(
+                        "tailoring_changename.state.success"
                     );
-                }
-            );
+                })
+                .catch((error) => {
+                    this.$confirm(error.bodyText, {
+                        buttonFalseText: null,
+                        buttonTrueText: this.$tc("tailoring_changename.ok"),
+                        color: "warning",
+                        title: this.$tc("tailoring_changename.title"),
+                    }).then((confirmed) => {
+                        if (confirmed) {
+                            item.name = this.tailoringName;
+                            this.tailoringName = null;
+                            this.wait = false;
+                        }
+                    });
+                });
         },
-        onTailoringNameCancel: function() {
+        onTailoringNameCancel: function () {
             this.snack = true;
-            this.snackColor = 'error';
-            this.snackText = this.$tc('tailoring_changename.state.error')
+            this.snackColor = "error";
+            this.snackText = this.$tc("tailoring_changename.state.error");
         },
 
-        onTailoringCatalogEdit: function(tailoring) {
+        onTailoringCatalogEdit: function (tailoring) {
             this.$router.push({
-                name: 'catalog',
+                name: "catalog",
                 params: {
                     id: this.project.name,
                     tailoring: tailoring.name,
                     self: tailoring._links.catalog,
-                    previous: this.$route.params.self
+                    previous: this.$route.params.self,
+                },
+            });
+        },
+
+        onTailoringState: function (tailoring) {
+            this.$confirm(this.$tc("tailoring_state.text"), {
+                buttonFalseText: this.$tc("no"),
+                buttonTrueText: this.$tc("yes"),
+                color: "warning",
+                title: this.$tc("tailoring_state.title"),
+            }).then((confirmed) => {
+                if (confirmed) {
+                    this.wait = true;
+
+                    this.$axios
+                        .put(tiloring._links.state.href)
+                        .then((response) => {
+                            var index =
+                                this.project.tailorings.indexOf(tailoring);
+                            this.project.tailorings.splice(
+                                index,
+                                1,
+                                response.body
+                            );
+                            this.wait = false;
+                        })
+                        .catch((error) => {
+                            this.file = null;
+                            this.wait = false;
+                            console.log("error");
+                        });
                 }
             });
         },
 
-        onTailoringState: function(tailoring) {
-            this.$confirm(this.$tc('tailoring_state.text'),
-                { buttonFalseText: this.$tc('no'), buttonTrueText: this.$tc('yes'), color: "warning", title: this.$tc('tailoring_state.title') }).then(
-                confirmed => {
-                    if ( confirmed ) {
-                        this.wait = true;
-                        this.$http.put(tailoring._links.state.href).then(
-                            response => {
-                                var index = this.project.tailorings.indexOf(tailoring);
-                                this.project.tailorings.splice(index, 1, response.body);
-                                this.wait = false;
-                            }
-                       )
-                    }
-                });
+        onTailoringDelete: function (tailoring) {
+            this.$confirm(this.$tc("tailoring_delete.text"), {
+                buttonFalseText: this.$tc("no"),
+                buttonTrueText: this.$tc("yes"),
+                color: "warning",
+                title: this.$tc("tailoring_delete.title"),
+            }).then((confirmed) => {
+                if (confirmed) {
+                    this.wait = true;
+
+                    this.$axios
+                        .delete(tailoring._links.self.href)
+                        .then((response) => {
+                            this.project.tailorings.splice(
+                                this.project.tailorings.indexOf(tailoring),
+                                1
+                            );
+                            this.wait = false;
+                        })
+                        .catch((error) => {
+                            this.file = null;
+                            this.wait = false;
+                            console.log("error");
+                        });
+                }
+            });
         },
 
-        onTailoringDelete: function(tailoring) {
-            this.$confirm(this.$tc('tailoring_delete.text'),
-                { buttonFalseText: this.$tc('no'), buttonTrueText: this.$tc('yes'), color: "warning", title: this.$tc('tailoring_delete.title') }).then(
-                confirmed => {
-                    if ( confirmed ) {
-                        this.wait = true;
-                        this.$http.delete(tailoring._links.self.href).then(
-                            response => {
-                                this.project.tailorings.splice(this.project.tailorings.indexOf(tailoring), 1);
-                                this.wait = false;
-                            }
-                       )
-                    }
-                });
-        },
-
-        onTailoringCompare: function(link) {
+        onTailoringCompare: function (link) {
             this.wait = true;
 
-            this.$http.get(link, {responseType: 'arraybuffer'}).then(
-                response => {
-                    const link = document.createElement('a');
-                    const blob = new Blob([response.body], { type: response.headers.get('Content-Type') });
+            this.$axios
+                .get(link, { responseType: "arraybuffer" })
+                .then((response) => {
+                    const link = document.createElement("a");
+                    const blob = new Blob([response.data], {
+                        type: response.headers.get("Content-Type"),
+                    });
                     link.href = URL.createObjectURL(blob);
-                    link.download = response.headers.get('Content-Disposition').split('filename=')[1];
+                    link.download = response.headers
+                        .get("Content-Disposition")
+                        .split("filename=")[1];
                     link.click();
                     URL.revokeObjectURL(link.href);
                     this.wait = false;
-                },
-                response => {
-                    console.log(response);
+                })
+                .catch((error) => {
+                    this.file = null;
                     this.wait = false;
+                    console.log("error");
                 });
         },
 
-        onScreeningSheetOpen: function(link) {
+        onScreeningSheetOpen: function (link) {
             this.wait = true;
 
-            this.$http.get(link).then(
-                response => {
-                    this.screeningSheet = response.body;
+            this.$axios
+                .get(link)
+                .then((response) => {
+                    this.screeningSheet = response.data;
 
                     this.selectionVectorParameter = [];
-                    for (var name in this.screeningSheet.selectionVector.levels) {
+                    for (var name in this.screeningSheet.selectionVector
+                        .levels) {
                         this.selectionVectorParameter.push({
-                            label: this.selectionVectorParameterTranslations[name],
+                            label: this.selectionVectorParameterTranslations[
+                                name
+                            ],
                             name: name,
-                            value: this.screeningSheet.selectionVector.levels[name]
-                       });
+                            value: this.screeningSheet.selectionVector.levels[
+                                name
+                            ],
+                        });
                     }
-                    this.selectionVectorParameter.sort((a, b) => (a.label > b.label) ? 1 : -1)
-                    this.screeningSheetDownload = this.screeningSheet._links['datei'].href;
+                    this.selectionVectorParameter.sort((a, b) =>
+                        a.label > b.label ? 1 : -1
+                    );
+                    this.screeningSheetDownload =
+                        this.screeningSheet._links["datei"].href;
 
                     this.wait = false;
                     this.isScreeningSheetOpen = true;
-                },
-                response => {
-                    console.log(repsonse);
+                })
+                .catch((error) => {
+                    console.log(response);
                     this.wait = false;
-               }
-            );
+                });
         },
-        onScreeningSheetFileOpen: function() {
+        onScreeningSheetFileOpen: function () {
             this.wait = true;
-            this.$http.get(this.screeningSheetDownload, {responseType: 'arraybuffer'}).then(
-                response => {
-                    const blob = new Blob([response.body], { type: response.headers.get('Content-Type') });
-                    const link = document.createElement('a');
+            this.$axios
+                .get(this.screeningSheetDownload, {
+                    responseType: "arraybuffer",
+                })
+                .then((response) => {
+                    const blob = new Blob([response.data], {
+                        type: response.headers.get("Content-Type"),
+                    });
+                    const link = document.createElement("a");
                     link.href = URL.createObjectURL(blob);
-                    link.download = response.headers.get('Content-Disposition').split('filename=')[1];
+                    link.download = response.headers
+                        .get("Content-Disposition")
+                        .split("filename=")[1];
                     link.click();
                     URL.revokeObjectURL(link.href);
                     this.wait = false;
-                },
-                response => {
+                })
+                .catch((response) => {
                     console.log(response);
                     this.wait = false;
-                }
-           );
+                });
         },
-        onSelectionVectorOpen: function(link) {
+        onSelectionVectorOpen: function (link) {
             this.wait = true;
 
-            this.$http.get(link).then(
-                response => {
-                    var selectionVector = response.body;
+            this.$axios
+                .get(link)
+                .then((response) => {
+                    var selectionVector = response.data;
 
                     this.selectionVectorParameter = [];
                     for (var name in selectionVector.levels) {
                         this.selectionVectorParameter.push({
-                            label: this.selectionVectorParameterTranslations[name],
+                            label: this.selectionVectorParameterTranslations[
+                                name
+                            ],
                             name: name,
-                            value: selectionVector.levels[name]
-                       });
+                            value: selectionVector.levels[name],
+                        });
                     }
-                    this.selectionVectorParameter.sort((a, b) => (a.label > b.label) ? 1 : -1)
+                    this.selectionVectorParameter.sort((a, b) =>
+                        a.label > b.label ? 1 : -1
+                    );
 
                     this.wait = false;
                     this.isSelectionVectorOpen = true;
-                },
-                response => {
-                    console.log(repsonse);
+                })
+                .catch((error) => {
+                    console.log(error);
                     this.wait = false;
-                }
-            );
+                });
         },
-        onDocumentOpen: function(item) {
+        onDocumentOpen: function (item) {
             this.tailoring = item;
             this.wait = true;
 
-            this.$http.get(this.tailoring._links.signature.href).then(
-                response => {
-                    this.signatures = response.body._embedded.signatures;
+            this.$axios
+                .get(this.tailoring._links.signature.href)
+                .then((response) => {
+                    this.signatures = response.data._embedded.signatures;
                     this.isDocumentsOpen = true;
                     this.wait = false;
-                },
-                response => {
-                  console.log(repsonse);
-                  this.wait = false;
-                }
-            );
+                })
+                .catch((response) => {
+                    console.log(response);
+                    this.wait = false;
+                });
         },
-        onDocumentsCreate: function() {
+        onDocumentsCreate: function () {
             this.isDocumentsOpen = false;
             this.wait = true;
 
-            this.$http.get(this.tailoring._links.document.href, {responseType: 'arraybuffer'}).then(
-                response => {
-                    const link = document.createElement('a');
-                    const name = response.headers.get('Content-Disposition').split('filename=')[1].replaceAll("\"", "");
-                    const blob = new Blob([response.body], { type: response.headers.get('Content-Type') });
+            this.$axios
+                .get(this.tailoring._links.document.href, {
+                    responseType: "arraybuffer",
+                })
+                .then((response) => {
+                    const link = document.createElement("a");
+                    const name = response.headers
+                        .get("Content-Disposition")
+                        .split("filename=")[1]
+                        .replaceAll('"', "");
+                    const blob = new Blob([response.data], {
+                        type: response.headers.get("Content-Type"),
+                    });
                     link.href = URL.createObjectURL(blob);
                     link.download = name;
                     link.click();
                     URL.revokeObjectURL(link.href);
                     this.wait = false;
-                },
-                response => {
+                })
+                .catch((error) => {
                     this.$confirm(
-                        new TextDecoder("utf-8").decode(new Uint8Array(response.body)),
-                        { buttonFalseText: null, buttonTrueText: "OK", color: "error", title: "Error" }
-                    ).then(
-                        confirmed => {
-                            this.wait = false;
+                        new TextDecoder("utf-8").decode(
+                            new Uint8Array(error.data)
+                        ),
+                        {
+                            buttonFalseText: null,
+                            buttonTrueText: "OK",
+                            color: "error",
+                            title: "Error",
                         }
-                    )
-                }
-            )
+                    ).then((confirmed) => {
+                        this.wait = false;
+                    });
+                });
         },
-        onCatalogCreate: function() {
+        onCatalogCreate: function () {
             this.isDocumentsOpen = false;
             this.wait = true;
 
-            this.$http.get(this.tailoring._links.tailoringcatalog.href, {responseType: 'arraybuffer'}).then(
-                response => {
-                    const link = document.createElement('a');
-                    const name = response.headers.get('Content-Disposition').split('filename=')[1].replaceAll("\"", "");
-                    const blob = new Blob([response.body], { type: response.headers.get('Content-Type') });
+            this.$axios
+                .get(this.tailoring._links.tailoringcatalog.href, {
+                    responseType: "arraybuffer",
+                })
+                .then((response) => {
+                    const link = document.createElement("a");
+                    const name = response.headers
+                        .get("Content-Disposition")
+                        .split("filename=")[1]
+                        .replaceAll('"', "");
+                    const blob = new Blob([response.data], {
+                        type: response.headers.get("Content-Type"),
+                    });
                     link.href = URL.createObjectURL(blob);
                     link.download = name;
                     link.click();
                     URL.revokeObjectURL(link.href);
                     this.wait = false;
-                },
-                response => {
+                })
+                .catch((error) => {
                     this.$confirm(
-                        new TextDecoder("utf-8").decode(new Uint8Array(response.body)),
-                        { buttonFalseText: null, buttonTrueText: "OK", color: "error", title: "Error" }
-                    ).then(
-                        confirmed => {
-                            this.wait = false;
+                        new TextDecoder("utf-8").decode(
+                            new Uint8Array(response.body)
+                        ),
+                        {
+                            buttonFalseText: null,
+                            buttonTrueText: "OK",
+                            color: "error",
+                            title: "Error",
                         }
-                    )
-                }
-            );
+                    ).then((confirmed) => {
+                        this.wait = false;
+                    });
+                });
         },
-        onSignatureEdit: function(item) {
-            this.signatureIndex = this.signatures.indexOf(item)
-            this.signature = Object.assign({}, item)
-            this.isSignatureOpen = true
+        onSignatureEdit: function (item) {
+            this.signatureIndex = this.signatures.indexOf(item);
+            this.signature = Object.assign({}, item);
+            this.isSignatureOpen = true;
         },
-        onSignatureSave: function() {
-           this.$http.put(this.signature._links.self.href, JSON.stringify(this.signature), {emulateJSON: true}).then(
-               response => {
+        onSignatureSave: function () {
+            this.$axios
+                .put(
+                    this.signature._links.self.href,
+                    JSON.stringify(this.signature),
+                    { emulateJSON: true }
+                )
+                .then((response) => {
                     if (this.signatureIndex > -1) {
-                        Object.assign(this.signatures[this.signatureIndex], response.body);
+                        Object.assign(
+                            this.signatures[this.signatureIndex],
+                            response.body
+                        );
                     }
-                   this.onSignatureClose();
-              }
-           )
+                    this.onSignatureClose();
+                });
         },
         onSignatureClose: function () {
-            this.isSignatureOpen = false
+            this.isSignatureOpen = false;
             this.$nextTick(() => {
-                this.signature = Object.assign({}, this.defaultDokumentZeichnung)
-                this.signatureIndex = -1
+                this.signature = Object.assign(
+                    {},
+                    this.defaultDokumentZeichnung
+                );
+                this.signatureIndex = -1;
             });
         },
 
-        onSelectFile : function(file) {
+        onSelectFile: function (file) {
             this.file = file;
         },
 
         // attachments
-        onAttachmentOpen: function(item) {
+        onAttachmentOpen: function (item) {
             this.tailoring = item;
             this.loadAttachmentList();
         },
-        onAttachmentUpload: function() {
+        onAttachmentUpload: function () {
             if (!this.file) {
-                this.message = this.$tc('file_select');
+                this.message = this.$tc("file_select");
                 return;
             }
             this.message = "";
@@ -440,155 +529,178 @@ export const data = {
             let data = new FormData();
             data.append("datei", this.file);
 
-            this.wait = true
+            this.wait = true;
             this.isAttachmentOpen = false;
-            this.$http.post(this.tailoring._links.attachment.href, data, {emulateJSON: true} ).then(
-                response => {
+            this.$axios
+                .post(this.tailoring._links.attachment.href, data, {
+                    emulateJSON: true,
+                })
+                .then((response) => {
                     this.openAttachment = true;
                     this.wait = false;
                     this.file = null;
                     this.loadAttachmentList();
-                },
-                response => {
+                })
+                .catch((error) => {
                     this.openAttachment = true;
                     this.wait = false;
-                    console.log("error");
-                }
-            );
+                    console.log(error);
+                });
         },
-        onAttachmentDownload: function(item) {
+        onAttachmentDownload: function (item) {
             this.wait = true;
-            this.$http.get(item._links.self.href, {responseType: 'arraybuffer'}).then(
-                response => {
-                    const blob = new Blob([response.body], { type: response.headers.get('Content-Type') });
-                    const link = document.createElement('a');
+            this.$axios
+                .get(item._links.self.href, { responseType: "arraybuffer" })
+                .then((response) => {
+                    const blob = new Blob([response.data], {
+                        type: response.headers.get("Content-Type"),
+                    });
+                    const link = document.createElement("a");
                     link.href = URL.createObjectURL(blob);
-                    link.download = response.headers.get('Content-Disposition').split('filename=')[1];
+                    link.download = response.headers
+                        .get("Content-Disposition")
+                        .split("filename=")[1];
                     link.click();
                     URL.revokeObjectURL(link.href);
                     this.wait = false;
-                },
-                response => {
-                    console.log(response);
+                })
+                .catch((error) => {
+                    console.log(error);
                     this.wait = false;
-                }
-           );
+                });
         },
-        onAttachmentDelete: function(item) {
+        onAttachmentDelete: function (item) {
             this.wait = true;
-            this.$confirm(this.$tc('attachment_delete.text'),
-                { buttonFalseText: this.$tc('nein'), buttonTrueText: this.$tc('ja'), color: "warning", title: this.$tc('attachment_delete.title') }).then(
-                confirmed => {
-                    if ( confirmed ) {
-                        this.wait = true;
-                        this.$http.delete(item._links.self.href).then(
-                            response => {
-                                this.attachments.splice(this.attachments.indexOf(item), 1);
-                                this.wait = false;
-                            },
-                            response => {
-                                console.log(response);
-                                this.wait = false;
-                            }
-                       );
+            this.$confirm(this.$tc("attachment_delete.text"), {
+                buttonFalseText: this.$tc("nein"),
+                buttonTrueText: this.$tc("ja"),
+                color: "warning",
+                title: this.$tc("attachment_delete.title"),
+            }).then((confirmed) => {
+                if (confirmed) {
+                    this.wait = true;
+                    this.$axios
+                        .delete(item._links.self.href)
+                        .then((response) => {
+                            this.attachments.splice(
+                                this.attachments.indexOf(item),
+                                1
+                            );
+                            this.wait = false;
+                        })
+                        .catch((error) => {
+                            console.log(error);
+                            this.wait = false;
+                        });
+                }
+            });
+        },
+
+        onNotesOpen: function (item) {
+            this.tailoring = item;
+            this.wait = true;
+            this.$axios
+                .get(this.tailoring._links.note.href)
+                .then((response) => {
+                    if (Object.hasOwn(response.data, '_embedded')) {
+                        this.notes = response.data._embedded.notes;
                     }
+                    this.isNotesOpen = true;
+                    this.wait = false;
+                })
+                .catch((error) => {
+                    console.log(error);
+                    this.wait = false;
                 });
         },
 
-        onNotesOpen: function(item) {
-            this.tailoring = item;
-            this.wait = true;
-            this.$http.get(this.tailoring._links.note.href).then(
-                response => {
-                    if (response.body.hasOwnProperty('_embedded')) {
-                        this.notes = response.body._embedded.notes;
-                    }
-                    this.isNotesOpen = true,
-                    this.wait = false;
-                },
-                response => {
-                    console.log(response);
-                    this.wait = false;
-                }
-            );
-
-        },
-
-        onNoteNew: function() {
-            if ( this.noteText == null) {
+        onNoteNew: function () {
+            if (this.noteText == null) {
                 return;
             }
 
             this.wait = true;
             this.isNotesOpen = false;
 
-            this.$http.post(this.tailoring._links.note.href, this.noteText, {emulateJSON: true}).then(
-                response => {
+            this.$axios
+                .post(this.tailoring._links.note.href, this.noteText, {
+                    emulateJSON: true,
+                })
+                .then((response) => {
                     this.noteText = null;
                     this.wait = false;
                     this.onNotesOpen(this.tailoring);
-                },
-                response => {
-                    console.log(response);
+                })
+                .catch((error) => {
+                    console.log(error);
                     this.wait = false;
-                }
-           );
+                });
         },
 
-        onNotesClose: function() {
+        onNotesClose: function () {
             this.noteText = null;
             this.isNotesOpen = false;
         },
 
-        onBaseCatalogDownload: function(item) {
+        onBaseCatalogDownload: function (item) {
             this.wait = true;
-            this.$http.get(item._links.basecatalog.href, {responseType: 'arraybuffer'}).then(
-                response => {
-                    const blob = new Blob([response.body], { type: response.headers.get('Content-Type') });
-                    const link = document.createElement('a');
+            this.$axios
+                .get(item._links.basecatalog.href, {
+                    responseType: "arraybuffer",
+                })
+                .then((response) => {
+                    const blob = new Blob([response.data], {
+                        type: response.headers.get("Content-Type"),
+                    });
+                    const link = document.createElement("a");
                     link.href = URL.createObjectURL(blob);
-                    link.download = response.headers.get('Content-Disposition').split('filename=')[1];
+                    link.download = response.headers
+                        .get("Content-Disposition")
+                        .split("filename=")[1];
                     link.click();
                     URL.revokeObjectURL(link.href);
                     this.wait = false;
-                },
-                response => {
+                })
+                .catch((error) => {
                     this.$confirm(
-                        new TextDecoder("utf-8").decode(new Uint8Array(response.body)),
-                        { buttonFalseText: null, buttonTrueText: "OK", color: "error", title: "Error" }
-                    ).then(
-                        confirmed => {
-                            this.wait = false;
+                        new TextDecoder("utf-8").decode(
+                            new Uint8Array(response.body)
+                        ),
+                        {
+                            buttonFalseText: null,
+                            buttonTrueText: "OK",
+                            color: "error",
+                            title: "Error",
                         }
-                    )
-                }
-           );
+                    ).then((confirmed) => {
+                        this.wait = false;
+                    });
+                });
         },
-        loadAttachmentList: function() {
-            this.$http.get(this.tailoring._links.attachment.href).then(
-                response => {
-                    if (response.body.hasOwnProperty('_embedded')) {
-                        this.attachments = response.body._embedded.files;
+        loadAttachmentList: function () {
+            this.$axis
+                .get(this.tailoring._links.attachment.href)
+                .then((response) => {
+                    if(Object.hasOwn(response.data, '_embedded')) {
+                        this.attachments = response.data._embedded.files;
                     }
                     this.isAttachmentOpen = true;
                     this.wait = false;
-                },
-                response => {
-                  console.log(repsonse);
-                  this.wait = false;
-                }
-            );
+                })
+                .catch((error) => {
+                    console.log(error);
+                    this.wait = false;
+                });
         },
 
-
-        onImportOpen: function(item) {
+        onImportOpen: function (item) {
             this.isImportOpen = true;
             this.tailoring = item;
         },
 
-        onImportRequirements: function() {
+        onImportRequirements: function () {
             if (!this.file) {
-                this.message = this.$tc('file_select');
+                this.message = this.$tc("file_select");
                 return;
             }
             this.message = "";
@@ -596,54 +708,67 @@ export const data = {
             let data = new FormData();
             data.append("datei", this.file);
 
-            this.wait = true
+            this.wait = true;
             this.isImportOpen = false;
-            this.$http.post(this.tailoring._links.import.href, data, {emulateJSON: true} ).then(
-                response => {
+            this.$axios
+                .post(this.tailoring._links.import.href, data, {
+                    emulateJSON: true,
+                })
+                .then((response) => {
                     this.wait = false;
                     this.file = null;
                     this.snack = true;
-                    this.snackColor = 'success';
-                    this.snackText = this.$tc('requirement_import.state.success');
-                },
-                response => {
+                    this.snackColor = "success";
+                    this.snackText = this.$tc(
+                        "requirement_import.state.success"
+                    );
+                })
+                .catch((error) => {
                     this.isImportOpen = true;
                     this.wait = false;
                     console.log("error");
-                }
-            );
+                });
         },
-        isTailoringEditable: function(item) {
+        isTailoringEditable: function (item) {
             return "CREATED" == item.state;
         },
-        isTailoringDeletable: function(item) {
+        isTailoringDeletable: function (item) {
             return "CREATED" == item.state;
         },
     },
     computed: {
-        selectionVectorParameterTranslations: function() {
+        selectionVectorParameterTranslations: function () {
             return this.$store.state.selectionVectorParameterTranslations;
-        }
+        },
     },
-    watch: {
-    },
-    created: function() {
+    watch: {},
+    created: function () {
         this.wait = true;
 
-        this.$store.commit('breadcrumbs', [
-            { text: this.$tc('project', 2),  disabled: false, exact: true, to: { name: 'projects' } },
-            { text: this.$route.params.id, disabled: false, exact: true,  to: { name: 'project', params: { id: this.$route.params.id} } }
+        this.$store.commit("breadcrumbs", [
+            {
+                text: this.$tc("project", 2),
+                disabled: false,
+                exact: true,
+                to: { name: "projects" },
+            },
+            {
+                text: this.$route.params.id,
+                disabled: false,
+                exact: true,
+                to: { name: "project", params: { id: this.$route.params.id } },
+            },
         ]);
 
         // this.onProjectLoad();
-        this.$http.get(this.$route.params.self).then(
-            response => {
-                this.project= response.body;
+        this.$axios
+            .get(this.$route.params.self)
+            .then((response) => {
+                this.project = response.body;
                 this.wait = false;
-            },
-            response => {
-              this.wait = false;
-            }
-        );
+            })
+            .catch((error) => {
+                this.wait = false;
+            });
     },
-}
+};

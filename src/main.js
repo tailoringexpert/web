@@ -1,13 +1,10 @@
 import { createApp } from "vue"
 import App from './App.vue'
-import { createStore } from "vuex"
 import router from '@/router'
 
 import i18n from "@/plugins/i18n"
 import vuetify from "@/plugins/vuetify"
 import store from "@/store"
-import md from "@mdi/font/css/materialdesignicons.min.css"
-import getEnv from "@/utils/env"
 import VueLogger from "vuejs3-logger"
 import axios from "axios"
 

@@ -1,4 +1,4 @@
-<template src='./TailoringNew/index.template.html'></template>
+<template src="./TailoringNew/index.template.html" />
 <script>
 import { data } from "./TailoringNew/index.js";
 

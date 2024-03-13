@@ -1,4 +1,4 @@
-<template src='@/pages/Project/index.template.html'></template>
+<template src="@/pages/Project/index.template.html" />
 <script>
 import { data } from "@/pages/Project/index.js";
 
