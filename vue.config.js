@@ -1,4 +1,5 @@
 const { defineConfig } = require("@vue/cli-service");
+
 module.exports = {
     devServer: {
         headers: {
@@ -35,7 +36,5 @@ module.exports = {
             enableInSFC: true
         }
     },
-    "transpileDependencies": [
-        "vuetify"
-  ]
+    transpileDependencies: true
 }

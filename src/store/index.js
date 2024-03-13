@@ -1,7 +1,6 @@
-import { createApp } from "vue"
 import { createStore } from "vuex"
 
-export default createStore({
+const store = createStore({
     state: {
             links: [],
             catalogs: [],
@@ -29,3 +28,4 @@ export default createStore({
 
 })
 
+export default store;

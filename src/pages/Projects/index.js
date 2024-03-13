@@ -1,68 +1,69 @@
 export const data = {
-	data: function() {
-		return {
-			wait: false,
-			state: 'ONGOING',
-			headers: [
-				{
-					text: this.$tc('name'),
-					value: 'name',
-					sortable: true,
-					align: 'start',
-					width: '40%'
-				},
-				{
-					text: this.$tc('created_at'),
-					value: 'creationTimestamp',
-					sortable: true,
-					width: '15%'
-				},
-				{
-					text: this.$tc('state'),
-					value: 'state',
-					sortable: false,
-					width: '15%',
-					filter: value => {
+    data: function() {
+        return {
+            wait: false,
+            state: 'ONGOING',
+            msg: 'Hello!',
+            headers: [
+                {
+                    text: this.$t('name'),
+                    value: 'name',
+                    sortable: true,
+                    align: 'start',
+                    width: '40%'
+                },
+                {
+                    text: this.$t('created_at'),
+                    value: 'creationTimestamp',
+                    sortable: true,
+                    width: '15%'
+                },
+                {
+                    text: this.$t('state'),
+                    value: 'state',
+                    sortable: false,
+                    width: '15%',
+                    filter: value => {
                          return this.state === null || this.state.trim() === ""  || value == this.state ;
                         }
-				},
-				{
-					text: this.$tc('action', 2),
-					value: 'actions',
-					sortable: false,
-					width: '30%'
-				},
-			],
-			projects: []
-		};
-	},
+                },
+                {
+                    text: this.$t('action', 2),
+                    value: 'actions',
+                    sortable: false,
+                    width: '30%'
+                },
+            ],
+            projects: []
+        };
+    },
 
-	methods: {
-		onNewProject: function() {
-			this.$router.push({
-			    name: 'projectnew'
+    methods: {
+        onNewProject: function() {
+            this.$router.push({
+                name: 'projectnew'
             });
-		},
-		onEditProject: function(project) {
-			this.$router.push({
+        },
+        onEditProject: function(project) {
+            this.$router.push({
                 name: 'project',
-				params: {
-				    id: project.name,
-					self: project.self
+                params: {
+                    id: project.name,
+                    self: project.self
                 }
             });
-		},
-		onDeleteProject: function(project) {
-		    this.$confirm(
-		        this.$tc('project_delete.text'),{
-    		        buttonFalseText: this.$tc('no'),
-    		        buttonTrueText: this.$tc('yes'),
-	    	        color: "warning",
-		            title: this.$tc('project_delete.title')
-		        }).then(
-  		            confirmed => {
-  		                if ( confirmed ) {
-  		      	            this.wait = true;
+        },
+        onDeleteProject: function(project) {
+            this.$confirm(
+                this.$t('project_delete.text'),{
+                    buttonFalseText: this.$t('no'),
+                    buttonTrueText: this.$t('yes'),
+                    color: "warning",
+                    title: this.$t('project_delete.title')
+                }).then(
+                    confirmed => {
+                        if ( confirmed ) {
+                            this.wait = true;
                             this.$http.delete(project.self).then(
                                 response => {
                                     this.wait = false;
@@ -76,44 +77,45 @@ export const data = {
                         }
                    }
                );
-		},
-		onLoadProjects : function() {
-			this.wait = true;
+        },
+        onLoadProjects : function() {
+            this.wait = true;
 
-			this.$http.get(this.$store.state.links['project'].href).then(
-				response => {
-				    this.projects = [];
+        this.$axios
+            .get(origin)
+            .then(response => {
+                this.projects = [];
 
-					if (response.body._embedded != undefined) {
-						for (let i = 0; i < response.body._embedded.projects.length; i++) {
-							var item = response.body._embedded.projects[i];
-							var links = response.body._embedded.projects[i]._links;
-							this.projects.push(
-								{
-									name: item.name,
-									creationTimestamp: item.creationTimestamp,
-									state: item.state,
-									nextstate: links.state.href,
-									self: links.self.href,
-									screeningsheet: links.screeningsheet.href,
-								}
-							);
-						}
-					}
-				this.wait = false;
-				},
-				response => {
-					console.log("error: " + response);
-					this.wait = false;
-				}
-			);
-		},
+                if (response.data._embedded != undefined) {
+                    for (let i = 0; i < response.data._embedded.projects.length; i++) {
+                        var item = response.data._embedded.projects[i];
+                        var links = response.data._embedded.projects[i]._links;
+                        this.projects.push(
+                            {
+                                name: item.name,
+                                creationTimestamp: item.creationTimestamp,
+                                state: item.state,
+                                nextstate: links.state.href,
+                                self: links.self.href,
+                                screeningsheet: links.screeningsheet.href,
+                            }
+                        );
+                    }
+                }
+
+                this.wait = false;
+                })
+            .catch(error => {
+                console.log(error);
+                this.wait = false
+            });
+        },
         onProjectState: function(project) {
-			this.$confirm(this.$tc('project_state.text'),
-			    { buttonFalseText: this.$tc('no'), buttonTrueText: this.$tc('yes'), color: "warning", title: this.$tc('project_state.title') }).then(
+            this.$confirm(this.$t('project_state.text'),
+                { buttonFalseText: this.$t('no'), buttonTrueText: this.$t('yes'), color: "warning", title: this.$t('project_state.title') }).then(
                 confirmed => {
-              	    if ( confirmed ) {
-              	        this.wait = true;
+                    if ( confirmed ) {
+                        this.wait = true;
                         this.$http.put(project.nextstate).then(
                             response => {
                                 project.state = response.body.state;
@@ -123,12 +125,12 @@ export const data = {
                        )
                     }
                 });
-		},
-	},
-	created: function() {
-		this.onLoadProjects();
-		this.$store.commit('breadcrumbs', [
-		    { text:  this.$tc('project', 2),  disabled: false, exact: true, to: { name: 'projects' } }
-		]);
-	},
+        },
+    },
+    created: function() {
+        this.onLoadProjects();
+        this.$store.commit('breadcrumbs', [
+            { text:  this.$t('project', 2),  disabled: false, exact: true, to: { name: 'projects' } }
+        ]);
+    },
 }

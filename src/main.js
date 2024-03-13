@@ -1,62 +1,17 @@
 import { createApp } from "vue"
 import App from './App.vue'
 import { createStore } from "vuex"
-import router from '@/router' // <---
+import router from '@/router'
 
 import i18n from "@/plugins/i18n"
+import vuetify from "@/plugins/vuetify"
+import store from "@/store"
 import md from "@mdi/font/css/materialdesignicons.min.css"
 import getEnv from "@/utils/env"
 import VueLogger from "vuejs3-logger"
 import axios from "axios"
 
-import "vuetify/styles"
-import { createVuetify } from "vuetify"
-import * as components from "vuetify/components"
-import * as directives from "vuetify/directives"
-
-
 const app = createApp(App);
-
-// vuetify
-const vuetify = createVuetify({
-  components,
-  directives,
-})
-app.use(vuetify);
-
-app.use(router);
-
-// store
-const store = createStore({
-    state () {
-      return {
-          links: [],
-          catalogs: [],
-          breadcrumbs: [],
-          selectionvectors: [],
-          selectionVectorParameterTranslations: null
-      }
-    },
-    mutations: {
-      links: function(state, links) {
-          state.links = links;
-      },
-      catalogs: function(state, catalogs) {
-          state.catalogs = catalogs;
-      },
-      breadcrumbs: function(state, breadcrumbs) {
-          state.breadcrumbs = breadcrumbs;
-      },
-      selectionvectors: function(state, selectionvectors) {
-          state.selectionvectors = selectionvectors;
-      },
-      selectionVectorParameterTranslations: function(state, selectionVectorParameterTranslations) {
-          state.selectionVectorParameterTranslations = selectionVectorParameterTranslations;
-      },
-    },
-});
-app.use(store);
-
 
 // logger
 app.use(VueLogger, {
@@ -68,6 +23,18 @@ app.use(VueLogger, {
    separator: '|',
    showConsoleColors: true
 });
+
+// i8n
+app.use(i18n);
+
+// vuetify
+app.use(vuetify);
+
+// router
+app.use(router);
+
+// store
+app.use(store);
 
 axios.interceptors.request.use(
   config => {
@@ -95,5 +62,7 @@ axios
             .then( response => {
                 console.log(response.data._embedded);
                 store.commit('selectionvectors', response.data._embedded.selectionVectorProfiles);
+                 app.mount('#app')
             })
     });
+//app.mount('#app')

@@ -108,7 +108,7 @@ export const data = {
                         { buttonFalseText: null, buttonTrueText: "OK", color: "error", title: "Error" }
                     ).then(
                         confirmed => {
-                      	    this.wait = false;
+                            this.wait = false;
                         }
                     )
                   }

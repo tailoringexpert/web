@@ -108,7 +108,7 @@ export const data = {
                         { buttonFalseText: null, buttonTrueText: "OK", color: "error", title: "Fehler" }
                     ).then(
                         confirmed => {
-                      	    this.wait = false;
+                            this.wait = false;
                         }
                     )
                   }
@@ -191,10 +191,10 @@ export const data = {
                         this.$confirm('Bei der Anlage des Tailorings ist ein Fehler aufgetreten.<br>Bitte überprüfen Sie Ihre Eingaben.',
                             { buttonFalseText: null, buttonTrueText: "OK", color: "error", title: "Fehler" }
                         ).then(
-                      	    confirmed => {
-                      	        this.wait = false;
-                      	    }
-                    	 )
+                            confirmed => {
+                                this.wait = false;
+                            }
+                         )
                     }
                 );
         },

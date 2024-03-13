@@ -107,7 +107,7 @@ export const data = {
                         { buttonFalseText: null, buttonTrueText: "OK", color: "error", title: "Fehler" }
                     ).then(
                         confirmed => {
-                      	    this.wait = false;
+                            this.wait = false;
                         }
                     )
                   }
@@ -158,10 +158,10 @@ export const data = {
 
                     this.$confirm(message,
                         { buttonFalseText: null, buttonTrueText: "OK", color: "error", title: "Fehler" }).then(
-                      	    confirmed => {
-                      	        this.wait = false;
-                      	    }
-                    	 )
+                            confirmed => {
+                                this.wait = false;
+                            }
+                         )
                     }
                 );
         },
@@ -198,8 +198,8 @@ export const data = {
             return this.$store.state.selectionVectorParameterTranslations;
         }
     },
-	created: function() {
-	    this.wait = true;
+    created: function() {
+        this.wait = true;
 
         this.$store.commit('breadcrumbs', [
             { text: this.$tc('project', 2),  disabled: false, exact: true, to: { name: 'projects' } },

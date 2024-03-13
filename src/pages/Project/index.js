@@ -1,23 +1,23 @@
 export const data = {
-	data: function() {
-		return {
-			wait: false,
+    data: function() {
+        return {
+            wait: false,
             snack: false,
             snackColor: '',
             snackText: '',
 
-			headers: [
-				{
-					text: this.$tc('name'),
-					align: 'start',
-					sortable: true,
-					value: 'name',
-				},
-				{
-					text: this.$tc('phase', 2),
-					sortable: true,
-					value: 'phases',
-				},
+            headers: [
+                {
+                    text: this.$tc('name'),
+                    align: 'start',
+                    sortable: true,
+                    value: 'name',
+                },
+                {
+                    text: this.$tc('phase', 2),
+                    sortable: true,
+                    value: 'phases',
+                },
                 {
                     text: this.$tc('state'),
                     sortable: true,
@@ -28,19 +28,19 @@ export const data = {
                     sortable: true,
                     value: 'catalogVersion',
                 },
-				{
-					text: this.$tc('action', 2),
-					value: 'actions',
-					sortable: false
-				},
-			],
-			project : {
-			    tailorings : []
-			},
+                {
+                    text: this.$tc('action', 2),
+                    value: 'actions',
+                    sortable: false
+                },
+            ],
+            project : {
+                tailorings : []
+            },
             tailoringName: null,
 
-			isScreeningSheetOpen: false,
-			screeningSheetTab: null,
+            isScreeningSheetOpen: false,
+            screeningSheetTab: null,
             screeningSheet: {
                 parameters: []
             },
@@ -146,10 +146,10 @@ export const data = {
             isNotesOpen : false,
             notes: [],
             noteText: null,
-		};
-	},
-	methods: {
-		onTailoringNew: function() {
+        };
+    },
+    methods: {
+        onTailoringNew: function() {
             this.$router.push({
                 name: 'tailoringnew',
                 params: {
@@ -159,11 +159,11 @@ export const data = {
                     referer: this.project._links['self'].href
                 }
             });
-		},
+        },
 
         onTailoringNameOpen: function(item) {
             this.tailoringName = item.name;
-		},
+        },
         onTailoringNameSave: function(item) {
             this.wait = true;
             this.$http.put(item._links.name.href, item.name, {emulateJSON: true}).then(
@@ -193,24 +193,24 @@ export const data = {
             this.snackText = this.$tc('tailoring_changename.state.error')
         },
 
-		onTailoringCatalogEdit: function(tailoring) {
+        onTailoringCatalogEdit: function(tailoring) {
             this.$router.push({
                 name: 'catalog',
-				params: {
-				    id: this.project.name,
-					tailoring: tailoring.name,
-					self: tailoring._links.catalog,
-					previous: this.$route.params.self
-			    }
-			});
-		},
+                params: {
+                    id: this.project.name,
+                    tailoring: tailoring.name,
+                    self: tailoring._links.catalog,
+                    previous: this.$route.params.self
+                }
+            });
+        },
 
         onTailoringState: function(tailoring) {
-			this.$confirm(this.$tc('tailoring_state.text'),
-			    { buttonFalseText: this.$tc('no'), buttonTrueText: this.$tc('yes'), color: "warning", title: this.$tc('tailoring_state.title') }).then(
+            this.$confirm(this.$tc('tailoring_state.text'),
+                { buttonFalseText: this.$tc('no'), buttonTrueText: this.$tc('yes'), color: "warning", title: this.$tc('tailoring_state.title') }).then(
                 confirmed => {
-              	    if ( confirmed ) {
-              	        this.wait = true;
+                    if ( confirmed ) {
+                        this.wait = true;
                         this.$http.put(tailoring._links.state.href).then(
                             response => {
                                 var index = this.project.tailorings.indexOf(tailoring);
@@ -220,14 +220,14 @@ export const data = {
                        )
                     }
                 });
-		},
+        },
 
-		onTailoringDelete: function(tailoring) {
-			this.$confirm(this.$tc('tailoring_delete.text'),
-			    { buttonFalseText: this.$tc('no'), buttonTrueText: this.$tc('yes'), color: "warning", title: this.$tc('tailoring_delete.title') }).then(
+        onTailoringDelete: function(tailoring) {
+            this.$confirm(this.$tc('tailoring_delete.text'),
+                { buttonFalseText: this.$tc('no'), buttonTrueText: this.$tc('yes'), color: "warning", title: this.$tc('tailoring_delete.title') }).then(
                 confirmed => {
-              	    if ( confirmed ) {
-              	        this.wait = true;
+                    if ( confirmed ) {
+                        this.wait = true;
                         this.$http.delete(tailoring._links.self.href).then(
                             response => {
                                 this.project.tailorings.splice(this.project.tailorings.indexOf(tailoring), 1);
@@ -236,9 +236,9 @@ export const data = {
                        )
                     }
                 });
-		},
+        },
 
-		onTailoringCompare: function(link) {
+        onTailoringCompare: function(link) {
             this.wait = true;
 
             this.$http.get(link, {responseType: 'arraybuffer'}).then(
@@ -255,14 +255,14 @@ export const data = {
                     console.log(response);
                     this.wait = false;
                 });
-		},
+        },
 
-	    onScreeningSheetOpen: function(link) {
-	        this.wait = true;
+        onScreeningSheetOpen: function(link) {
+            this.wait = true;
 
-	        this.$http.get(link).then(
-	            response => {
-	                this.screeningSheet = response.body;
+            this.$http.get(link).then(
+                response => {
+                    this.screeningSheet = response.body;
 
                     this.selectionVectorParameter = [];
                     for (var name in this.screeningSheet.selectionVector.levels) {
@@ -276,16 +276,16 @@ export const data = {
                     this.screeningSheetDownload = this.screeningSheet._links['datei'].href;
 
                     this.wait = false;
-            	    this.isScreeningSheetOpen = true;
+                    this.isScreeningSheetOpen = true;
                 },
                 response => {
                     console.log(repsonse);
                     this.wait = false;
                }
             );
-	    },
-	    onScreeningSheetFileOpen: function() {
-	        this.wait = true;
+        },
+        onScreeningSheetFileOpen: function() {
+            this.wait = true;
             this.$http.get(this.screeningSheetDownload, {responseType: 'arraybuffer'}).then(
                 response => {
                     const blob = new Blob([response.body], { type: response.headers.get('Content-Type') });
@@ -301,13 +301,13 @@ export const data = {
                     this.wait = false;
                 }
            );
-	    },
-	    onSelectionVectorOpen: function(link) {
+        },
+        onSelectionVectorOpen: function(link) {
             this.wait = true;
 
-	        this.$http.get(link).then(
-	            response => {
-	                var selectionVector = response.body;
+            this.$http.get(link).then(
+                response => {
+                    var selectionVector = response.body;
 
                     this.selectionVectorParameter = [];
                     for (var name in selectionVector.levels) {
@@ -327,7 +327,7 @@ export const data = {
                     this.wait = false;
                 }
             );
-	    },
+        },
         onDocumentOpen: function(item) {
             this.tailoring = item;
             this.wait = true;
@@ -365,7 +365,7 @@ export const data = {
                         { buttonFalseText: null, buttonTrueText: "OK", color: "error", title: "Error" }
                     ).then(
                         confirmed => {
-                      	    this.wait = false;
+                            this.wait = false;
                         }
                     )
                 }
@@ -392,7 +392,7 @@ export const data = {
                         { buttonFalseText: null, buttonTrueText: "OK", color: "error", title: "Error" }
                     ).then(
                         confirmed => {
-                      	    this.wait = false;
+                            this.wait = false;
                         }
                     )
                 }
@@ -457,7 +457,7 @@ export const data = {
             );
         },
         onAttachmentDownload: function(item) {
-	        this.wait = true;
+            this.wait = true;
             this.$http.get(item._links.self.href, {responseType: 'arraybuffer'}).then(
                 response => {
                     const blob = new Blob([response.body], { type: response.headers.get('Content-Type') });
@@ -473,8 +473,8 @@ export const data = {
                     this.wait = false;
                 }
            );
-	    },
-	    onAttachmentDelete: function(item) {
+        },
+        onAttachmentDelete: function(item) {
             this.wait = true;
             this.$confirm(this.$tc('attachment_delete.text'),
                 { buttonFalseText: this.$tc('nein'), buttonTrueText: this.$tc('ja'), color: "warning", title: this.$tc('attachment_delete.title') }).then(
@@ -540,7 +540,7 @@ export const data = {
             this.isNotesOpen = false;
         },
 
-	    onBaseCatalogDownload: function(item) {
+        onBaseCatalogDownload: function(item) {
             this.wait = true;
             this.$http.get(item._links.basecatalog.href, {responseType: 'arraybuffer'}).then(
                 response => {
@@ -558,13 +558,13 @@ export const data = {
                         { buttonFalseText: null, buttonTrueText: "OK", color: "error", title: "Error" }
                     ).then(
                         confirmed => {
-                      	    this.wait = false;
+                            this.wait = false;
                         }
                     )
                 }
            );
         },
-	    loadAttachmentList: function() {
+        loadAttachmentList: function() {
             this.$http.get(this.tailoring._links.attachment.href).then(
                 response => {
                     if (response.body.hasOwnProperty('_embedded')) {
@@ -578,15 +578,15 @@ export const data = {
                   this.wait = false;
                 }
             );
-	    },
+        },
 
 
-	    onImportOpen: function(item) {
-	        this.isImportOpen = true;
+        onImportOpen: function(item) {
+            this.isImportOpen = true;
             this.tailoring = item;
         },
 
-	    onImportRequirements: function() {
+        onImportRequirements: function() {
             if (!this.file) {
                 this.message = this.$tc('file_select');
                 return;
@@ -619,15 +619,15 @@ export const data = {
         isTailoringDeletable: function(item) {
             return "CREATED" == item.state;
         },
-	},
+    },
     computed: {
         selectionVectorParameterTranslations: function() {
             return this.$store.state.selectionVectorParameterTranslations;
         }
     },
-	watch: {
-	},
-	created: function() {
+    watch: {
+    },
+    created: function() {
         this.wait = true;
 
         this.$store.commit('breadcrumbs', [
@@ -635,7 +635,7 @@ export const data = {
             { text: this.$route.params.id, disabled: false, exact: true,  to: { name: 'project', params: { id: this.$route.params.id} } }
         ]);
 
-		// this.onProjectLoad();
+        // this.onProjectLoad();
         this.$http.get(this.$route.params.self).then(
             response => {
                 this.project= response.body;

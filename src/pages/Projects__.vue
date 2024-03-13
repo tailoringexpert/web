@@ -1,3 +1,13 @@
+<script setup>
+
+const msg2 = "ajjl";
+// functions
+function log() {
+  console.log(msg)
+}
+</script>
+
+<template>
 <v-container fluid>
     <v-overlay :value="wait">
         <v-progress-circular indeterminate size="64"></v-progress-circular>
@@ -40,13 +50,13 @@
                 <template v-slot:item.actions="{ item }">
                     <v-tooltip bottom>
                         <template v-slot:activator="{ on, attrs }">
-                            <v-icon small class="mr-2" v-bind="attrs" v-on="on" @click="onEditProject(item)">mdi-pencil</v-icon>
+                            <v-icon small class="mr-2" v-on="on" v-bind="attrs" @click="onEditProject(item)">mdi-pencil</v-icon>
                         </template>
                         <span>{{$tc('tooltip.project_edit')}}</span>
                     </v-tooltip>
                     <v-tooltip bottom>
                         <template v-slot:activator="{ on, attrs }">
-                            <v-icon small class="mr-2" v-bind="attrs" v-on="on" @click="onDeleteProject(item)">mdi-delete</v-icon>
+                            <v-icon small class="mr-2" v-on="on" v-bind="attrs" @click="onDeleteProject(item)">mdi-delete</v-icon>
                         </template>
                         <span>{{$tc('tooltip.project_delete')}}</span>
                     </v-tooltip>
@@ -55,3 +65,16 @@
         </v-col>
     </v-row>
 </v-container>
+</template>
+
+
+<script>
+import { data } from "./Projects/index.js";
+
+export default {
+  mixins: [data],
+}
+
+console.log(data);
+</script>
+

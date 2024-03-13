@@ -1,12 +1,9 @@
-import Vue from 'vue';
-import Vuetify from 'vuetify/lib';
-import VuetifyConfirm from 'vuetify-confirm';
+//import Vue from 'vue';
+//import Vuetify from 'vuetify/lib';
+//import VuetifyConfirm from 'vuetify-confirm';
 import "vuetify/dist/vuetify.min.css";
 import "@mdi/font/css/materialdesignicons.min.css";
-
-import { createApp } from "vue"
-import App from './App.vue'
-
+import "vuetify/styles"
 // Vuetify
 import 'vuetify/styles'
 import { createVuetify } from 'vuetify'
@@ -18,4 +15,5 @@ const vuetify = createVuetify({
   directives,
 })
 
-createApp(App).use(vuetify).mount('#app')
+export default vuetify;
+// createApp(App).use(vuetify).mount('#app')
