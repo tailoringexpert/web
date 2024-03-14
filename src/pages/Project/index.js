@@ -221,7 +221,7 @@ export const data = {
                     this.wait = true;
 
                     this.$axios
-                        .put(tiloring._links.state.href)
+                        .put(tailoring._links.state.href)
                         .then((response) => {
                             var index =
                                 this.project.tailorings.indexOf(tailoring);
@@ -235,7 +235,7 @@ export const data = {
                         .catch((error) => {
                             this.file = null;
                             this.wait = false;
-                            console.log("error");
+                            console.log(error);
                         });
                 }
             });
@@ -259,11 +259,12 @@ export const data = {
                                 1
                             );
                             this.wait = false;
+                            console.log(response);
                         })
                         .catch((error) => {
                             this.file = null;
                             this.wait = false;
-                            console.log("error");
+                            console.log(error);
                         });
                 }
             });
@@ -290,7 +291,7 @@ export const data = {
                 .catch((error) => {
                     this.file = null;
                     this.wait = false;
-                    console.log("error");
+                    console.log(error);
                 });
         },
 
@@ -325,7 +326,7 @@ export const data = {
                     this.isScreeningSheetOpen = true;
                 })
                 .catch((error) => {
-                    console.log(response);
+                    console.log(error);
                     this.wait = false;
                 });
         },
@@ -435,6 +436,7 @@ export const data = {
                         }
                     ).then((confirmed) => {
                         this.wait = false;
+                        console.log(confirmed);
                     });
                 });
         },
@@ -462,18 +464,20 @@ export const data = {
                     this.wait = false;
                 })
                 .catch((error) => {
+                    console.log(error);
                     this.$confirm(
                         new TextDecoder("utf-8").decode(
-                            new Uint8Array(response.body)
+                            new Uint8Array(error.data)
                         ),
                         {
                             buttonFalseText: null,
                             buttonTrueText: "OK",
                             color: "error",
                             title: "Error",
-                        }
+                        }                        
                     ).then((confirmed) => {
                         this.wait = false;
+                        console.log(confirmed);
                     });
                 });
         },
@@ -540,6 +544,7 @@ export const data = {
                     this.wait = false;
                     this.file = null;
                     this.loadAttachmentList();
+                    console.log(response);
                 })
                 .catch((error) => {
                     this.openAttachment = true;
@@ -587,6 +592,7 @@ export const data = {
                                 1
                             );
                             this.wait = false;
+                            console.log(response);
                         })
                         .catch((error) => {
                             console.log(error);
@@ -630,6 +636,7 @@ export const data = {
                     this.noteText = null;
                     this.wait = false;
                     this.onNotesOpen(this.tailoring);
+                    console.log(response);
                 })
                 .catch((error) => {
                     console.log(error);
@@ -660,11 +667,13 @@ export const data = {
                     link.click();
                     URL.revokeObjectURL(link.href);
                     this.wait = false;
+                    console.log(response);
                 })
                 .catch((error) => {
+                    console.log(error);
                     this.$confirm(
                         new TextDecoder("utf-8").decode(
-                            new Uint8Array(response.body)
+                            new Uint8Array(error.data)
                         ),
                         {
                             buttonFalseText: null,
@@ -674,6 +683,7 @@ export const data = {
                         }
                     ).then((confirmed) => {
                         this.wait = false;
+                        console.log(confirmed);
                     });
                 });
         },
@@ -722,11 +732,12 @@ export const data = {
                     this.snackText = this.$tc(
                         "requirement_import.state.success"
                     );
+                    console.log(response);
                 })
                 .catch((error) => {
                     this.isImportOpen = true;
                     this.wait = false;
-                    console.log("error");
+                    console.log(error);
                 });
         },
         isTailoringEditable: function (item) {
@@ -769,6 +780,7 @@ export const data = {
             })
             .catch((error) => {
                 this.wait = false;
+                console.log(error);
             });
     },
 };

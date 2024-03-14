@@ -33,12 +33,6 @@ const routes = [
                 name: 'projectnew'
             },
             {
-                path: ':id/copy',
-                component: () => import('@/pages/ProjectCopy.vue'),
-                props: true,
-                name: 'projectcopy'
-            },
-            {
                 path: ':id/:tailoring/catalog',
                 component: () => import('@/pages/Container.vue'),
                 props: true,

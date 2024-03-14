@@ -3,8 +3,8 @@ export const data = {
         return {
             wait: false,
             snack: false,
-            snackColor: '',
-            snackText: '',
+            snackColor: "",
+            snackText: "",
 
             e1: 1,
             message: "",
@@ -13,68 +13,68 @@ export const data = {
             catalog: undefined,
             screeningSheetParameterHeader: [
                 {
-                    text: this.$tc('name'),
-                    align: 'start',
+                    text: this.$tc("name"),
+                    align: "start",
                     sortable: true,
-                    value: 'label',
+                    value: "label",
                 },
                 {
-                    text: this.$tc('value'),
+                    text: this.$tc("value"),
                     sortable: true,
-                    value: 'value',
+                    value: "value",
                 },
             ],
             screeningSheetParameter: [],
             screeningSheetDatei: undefined,
             screeningSheet: {
-                parameters: []
+                parameters: [],
             },
 
-            project: '',
-            profile: '',
+            project: "",
+            profile: "",
             selectionVectorHeader: [
                 {
-                    text: this.$tc('name'),
-                    align: 'start',
+                    text: this.$tc("name"),
+                    align: "start",
                     sortable: true,
-                    value: 'label',
-                    width: '50%',
+                    value: "label",
+                    width: "50%",
                 },
                 {
-                    text: this.$tc('value'),
-                    value: 'value',
+                    text: this.$tc("value"),
+                    value: "value",
                     sortable: false,
-                    width: '50%',
+                    width: "50%",
                 },
             ],
             selectionVectorParameter: [],
             selectionVectorParameterComparison: [],
 
             selectionVectorParameterComparisonHeader: [
-                   {
-                       text: this.$tc('name'),
-                       align: 'start',
-                       sortable: true,
-                       value: 'label',
-                   },
-                   {
-                       text: this.$tc('selectionvector_calculated'),
-                       value: 'calculated',
-                   },
-                  {
-                      text: this.$tc('selectionvector_applied'),
-                      value: 'modified',
-                  },
-               ],
-        }
+                {
+                    text: this.$tc("name"),
+                    align: "start",
+                    sortable: true,
+                    value: "label",
+                },
+                {
+                    text: this.$tc("selectionvector_calculated"),
+                    value: "calculated",
+                },
+                {
+                    text: this.$tc("selectionvector_applied"),
+                    value: "modified",
+                },
+            ],
+        };
     },
     methods: {
-        onScreeningSheetSelect : function(screeningSheetDatei) {
+        onScreeningSheetSelect: function (screeningSheetDatei) {
             this.screeningSheetDatei = screeningSheetDatei;
         },
-        onScreeningSheetUpload: function() {
+        onScreeningSheetUpload: function () {
             if (!this.screeningSheetDatei) {
-                this.message = this.$tc('file_select');
+                this.message = this.$tc("file_select");
                 return;
             }
             this.message = "";
@@ -83,8 +83,11 @@ export const data = {
             data.append("datei", this.screeningSheetDatei);
 
             this.wait = true;
-            this.$http.post(this.$store.state.links['screeningsheet'].href, data, {emulateJSON: true} ).then(
-                response => {
+            this.$axios
+                .post(this.$store.state.links["screeningsheet"].href, data, {
+                    emulateJSON: true,
+                })
+                .then((response) => {
                     this.wait = false;
 
                     // merken für nächstem Wizzard Schritt
@@ -94,73 +97,87 @@ export const data = {
 
                     // konvertieren für genrische Darstellung in Tabelle
                     this.selectionVectorParameter = [];
-                    for (var name in this.screeningSheet.selectionVector.levels) {
+                    for (var name in this.screeningSheet.selectionVector
+                        .levels) {
                         this.selectionVectorParameter.push({
-                            label: this.selectionVectorParameterTranslations[name],
+                            label: this.selectionVectorParameterTranslations[
+                                name
+                            ],
                             name: name,
-                            value: this.screeningSheet.selectionVector.levels[name]
+                            value: this.screeningSheet.selectionVector.levels[
+                                name
+                            ],
                         });
                     }
-                    this.selectionVectorParameter.sort((a, b) => (a.label > b.label) ? 1 : -1)
-                }, response => {
-                    this.$confirm(
-                        response.bodyText,
-                        { buttonFalseText: null, buttonTrueText: "OK", color: "error", title: "Error" }
-                    ).then(
-                        confirmed => {
-                            this.wait = false;
-                        }
-                    )
-                  }
-            );
+                    this.selectionVectorParameter.sort((a, b) =>
+                        a.label > b.label ? 1 : -1
+                    );
+                    console.log(response);
+                })
+                .catch((error) => {
+                    console.log(error);
+                    this.$confirm(error.bodyText, {
+                        buttonFalseText: null,
+                        buttonTrueText: "OK",
+                        color: "error",
+                        title: "Error",
+                    }).then((confirmed) => {
+                        console.log(confirmed);
+                        this.wait = false;
+                    });
+                });
         },
 
-        onSelectionVectorProfileSelect: function() {
+        onSelectionVectorProfileSelect: function () {
             this.selectionVectorParameter = [];
             for (var name in this.profile.levels) {
                 this.selectionVectorParameter.push({
                     label: this.selectionVectorParameterTranslations[name],
                     name: name,
-                    value: this.profile.levels[name]
+                    value: this.profile.levels[name],
                 });
             }
-            this.selectionVectorParameter.sort((a, b) => (a.label > b.label) ? 1 : -1)
+            this.selectionVectorParameter.sort((a, b) =>
+                a.label > b.label ? 1 : -1
+            );
         },
-        onSelectionVectorEditSave: function() {
+        onSelectionVectorEditSave: function () {
             this.snack = true;
-            this.snackColor = 'success';
-            this.snackText = 'Wert übernommen';
-
+            this.snackColor = "success";
+            this.snackText = "Wert übernommen";
         },
-        onSelectionVectorEditCancel: function() {
+        onSelectionVectorEditCancel: function () {
             this.snack = true;
-            this.snackColor = 'error';
-            this.snackText = 'Wert nicht aktualisiert';
+            this.snackColor = "error";
+            this.snackText = "Wert nicht aktualisiert";
         },
 
-        onSummary: function() {
+        onSummary: function () {
             this.selectionVectorParameterComparison = [];
-            var modifiedSelectionVector = this.buildSelectionVector(this.selectionVectorParameter);
+            var modifiedSelectionVector = this.buildSelectionVector(
+                this.selectionVectorParameter
+            );
 
             for (var name in this.screeningSheet.selectionVector.levels) {
-                this.selectionVectorParameterComparison.push(
-                    {
-                        name: name,
-                        label: this.selectionVectorParameterTranslations[name],
-                        calculated: this.screeningSheet.selectionVector.levels[name],
-                        modified: Number(modifiedSelectionVector[name])
-                    }
-                );
+                this.selectionVectorParameterComparison.push({
+                    name: name,
+                    label: this.selectionVectorParameterTranslations[name],
+                    calculated:
+                        this.screeningSheet.selectionVector.levels[name],
+                    modified: Number(modifiedSelectionVector[name]),
+                });
             }
-            this.selectionVectorParameterComparison.sort((a, b) => (a.label > b.label) ? 1 : -1)
-
+            this.selectionVectorParameterComparison.sort((a, b) =>
+                a.label > b.label ? 1 : -1
+            );
         },
-        onProjectCreate: function() {
+        onProjectCreate: function () {
             this.wait = true;
 
             var levels = {};
             for (var i in this.selectionVectorParameter) {
-                levels[this.selectionVectorParameter[i].name]=  this.selectionVectorParameter[i].value;
+                levels[this.selectionVectorParameter[i].name] =
+                    this.selectionVectorParameter[i].value;
             }
             var requestParameter = {};
             requestParameter.note = this.note;
@@ -170,35 +187,35 @@ export const data = {
             selectionVector.levels = levels;
             requestParameter.selectionVector = selectionVector;
 
-            this.$http.post(this.catalog.project, JSON.stringify(requestParameter), {emulateJSON: true} )
+            this.$http
+                .post(this.catalog.project, JSON.stringify(requestParameter), {
+                    emulateJSON: true,
+                })
                 .then(
-                    response => {
+                    (response) => {
                         this.wait = false;
-                        this.$router.push(
-                            {
-                                name: 'project',
-                                params:
-                                {
-                                    id: this.project,
-                                    self: response.headers.get('Location')
-                                }
-                            }
-                        );
-
+                        this.$router.push({
+                            name: "project",
+                            params: {
+                                id: this.project,
+                                self: response.headers.get("Location"),
+                            },
+                        });
                     },
-                    response => {
-                        this.$confirm(
-                            response.bodyText,
-                            { buttonFalseText: null, buttonTrueText: "OK", color: "error", title: "Error" }
-                        ).then(
-                            confirmed => {
-                                this.wait = false;
-                            }
-                        )
+                    (response) => {
+                        this.$confirm(response.bodyText, {
+                            buttonFalseText: null,
+                            buttonTrueText: "OK",
+                            color: "error",
+                            title: "Error",
+                        }).then((confirmed) => {
+                            this.wait = false;
+                            console.log(confirmed);
+                        });
                     }
                 );
         },
-        buildSelectionVector: function(parameter) {
+        buildSelectionVector: function (parameter) {
             var selectionVector = {};
             for (var i in parameter) {
                 selectionVector[parameter[i].name] = parameter[i].value;
@@ -207,26 +224,36 @@ export const data = {
         },
     },
     computed: {
-        profiles: function() {
+        profiles: function () {
             return this.$store.state.selectionvectors;
         },
-        selectionVectorParameterTranslations: function() {
+        selectionVectorParameterTranslations: function () {
             return this.$store.state.selectionVectorParameterTranslations;
-        }
+        },
     },
-    created: function() {
+    created: function () {
         this.wait = true;
-        this.$store.commit('breadcrumbs', [
-            { text: this.$tc('project', 2),  disabled: false, exact: true, to: { name: 'projects' } },
-            { text: this.$tc('project_new'), disabled: true }
+        this.$store.commit("breadcrumbs", [
+            {
+                text: this.$tc("project", 2),
+                disabled: false,
+                exact: true,
+                to: { name: "projects" },
+            },
+            { text: this.$tc("project_new"), disabled: true },
         ]);
 
-        this.$http.get(this.$store.state.links['catalog'].href).then(
-            response => {
+        this.$http.get(this.$store.state.links["catalog"].href).then(
+            (response) => {
                 this.catalogs = [];
-                for (let i = 0; i<response.body._embedded.baseCatalogVersions.length; i++) {
+                for (
+                    let i = 0;
+                    i < response.body._embedded.baseCatalogVersions.length;
+                    i++
+                ) {
                     var item = response.body._embedded.baseCatalogVersions[i];
-                    var links = response.body._embedded.baseCatalogVersions[i]._links;
+                    var links =
+                        response.body._embedded.baseCatalogVersions[i]._links;
 
                     if (item.valid) {
                         var catalog = {};
@@ -238,10 +265,10 @@ export const data = {
                 }
                 this.wait = false;
             },
-            response => {
+            (response) => {
                 console.log(response);
                 this.wait = false;
             }
         );
     },
-}
+};
