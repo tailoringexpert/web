@@ -49,6 +49,7 @@ export const data = {
             });
         },
         onEditProject: function (project) {
+        console.log("on1");
             this.$router.push({
                 name: "project",
                 params: {
@@ -56,6 +57,8 @@ export const data = {
                     self: project.self,
                 },
             });
+
+            console.log("on2");
         },
         onDeleteProject: function (project) {
             this.$confirm(this.$t("project_delete.text"), {

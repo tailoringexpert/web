@@ -29,13 +29,14 @@ app.use(vuetify);
 
 // router
 app.use(router);
+app.config.globalProperties.$router = router;
 
 // store
 app.use(store);
 
 axios.interceptors.request.use(
   config => {
-    config.headers["X-Tenant"] = "demo";
+    config.headers["X-TENANT"] = "demo";
         return config;
     },
     error => {
@@ -59,7 +60,7 @@ axios
             .then( response => {
                 console.log(response.data._embedded);
                 store.commit('selectionvectors', response.data._embedded.selectionVectorProfiles);
-                 app.mount('#app')
+                app.mount('#app')
             })
     });
 //app.mount('#app')

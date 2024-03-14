@@ -8,28 +8,28 @@ export const data = {
 
             headers: [
                 {
-                    text: this.$tc("name"),
+                    title: this.$t("name"),
                     align: "start",
                     sortable: true,
                     value: "name",
                 },
                 {
-                    text: this.$tc("phase", 2),
+                    title: this.$t("phase", 2),
                     sortable: true,
                     value: "phases",
                 },
                 {
-                    text: this.$tc("state"),
+                    title: this.$t("state"),
                     sortable: true,
                     value: "state",
                 },
                 {
-                    text: this.$tc("catalog"),
+                    title: this.$t("catalog"),
                     sortable: true,
                     value: "catalogVersion",
                 },
                 {
-                    text: this.$tc("action", 2),
+                    title: this.$t("action", 2),
                     value: "actions",
                     sortable: false,
                 },
@@ -47,13 +47,13 @@ export const data = {
             screeningSheetDownload: null,
             screeningSheetHeader: [
                 {
-                    text: this.$tc("name"),
+                    text: this.$t("name"),
                     align: "start",
                     sortable: true,
                     value: "label",
                 },
                 {
-                    text: this.$tc("value"),
+                    text: this.$t("value"),
                     sortable: true,
                     value: "value",
                 },
@@ -62,13 +62,13 @@ export const data = {
             isSelectionVectorOpen: false,
             selectionVectorHeader: [
                 {
-                    text: this.$tc("name"),
+                    text: this.$t("name"),
                     align: "start",
                     sortable: true,
                     value: "label",
                 },
                 {
-                    text: this.$tc("value"),
+                    text: this.$t("value"),
                     value: "action",
                 },
             ],
@@ -79,22 +79,22 @@ export const data = {
             tailoring: null,
             signaturesHeader: [
                 {
-                    text: this.$tc("documents.faculty"),
+                    text: this.$t("documents.faculty"),
                     sortable: true,
                     value: "faculty",
                 },
                 {
-                    text: this.$tc("documents.signee"),
+                    text: this.$t("documents.signee"),
                     sortable: true,
                     value: "signee",
                 },
                 {
-                    text: this.$tc("documents.state"),
+                    text: this.$t("documents.state"),
                     sortable: true,
                     value: "signature_state",
                 },
                 {
-                    text: this.$tc("documents.applicable"),
+                    text: this.$t("documents.applicable"),
                     sortable: true,
                     value: "applicable",
                 },
@@ -117,7 +117,7 @@ export const data = {
             isAttachmentOpen: false,
             attachmentsHeader: [
                 {
-                    text: this.$tc("attachment.file"),
+                    text: this.$t("attachment.file"),
                     sortable: true,
                     value: "name",
                 },
@@ -127,7 +127,7 @@ export const data = {
                     value: "type",
                 },
                 {
-                    text: this.$tc("attachment.checksum"),
+                    text: this.$t("attachment.checksum"),
                     sortable: true,
                     value: "hash",
                 },
@@ -173,16 +173,16 @@ export const data = {
                     this.wait = false;
                     this.snack = true;
                     this.snackColor = "success";
-                    this.snackText = this.$tc(
+                    this.snackText = this.$t(
                         "tailoring_changename.state.success"
                     );
                 })
                 .catch((error) => {
                     this.$confirm(error.bodyText, {
                         buttonFalseText: null,
-                        buttonTrueText: this.$tc("tailoring_changename.ok"),
+                        buttonTrueText: this.$t("tailoring_changename.ok"),
                         color: "warning",
-                        title: this.$tc("tailoring_changename.title"),
+                        title: this.$t("tailoring_changename.title"),
                     }).then((confirmed) => {
                         if (confirmed) {
                             item.name = this.tailoringName;
@@ -195,7 +195,7 @@ export const data = {
         onTailoringNameCancel: function () {
             this.snack = true;
             this.snackColor = "error";
-            this.snackText = this.$tc("tailoring_changename.state.error");
+            this.snackText = this.$t("tailoring_changename.state.error");
         },
 
         onTailoringCatalogEdit: function (tailoring) {
@@ -211,11 +211,11 @@ export const data = {
         },
 
         onTailoringState: function (tailoring) {
-            this.$confirm(this.$tc("tailoring_state.text"), {
-                buttonFalseText: this.$tc("no"),
-                buttonTrueText: this.$tc("yes"),
+            this.$confirm(this.$t("tailoring_state.text"), {
+                buttonFalseText: this.$t("no"),
+                buttonTrueText: this.$t("yes"),
                 color: "warning",
-                title: this.$tc("tailoring_state.title"),
+                title: this.$t("tailoring_state.title"),
             }).then((confirmed) => {
                 if (confirmed) {
                     this.wait = true;
@@ -242,11 +242,11 @@ export const data = {
         },
 
         onTailoringDelete: function (tailoring) {
-            this.$confirm(this.$tc("tailoring_delete.text"), {
-                buttonFalseText: this.$tc("no"),
-                buttonTrueText: this.$tc("yes"),
+            this.$confirm(this.$t("tailoring_delete.text"), {
+                buttonFalseText: this.$t("no"),
+                buttonTrueText: this.$t("yes"),
                 color: "warning",
-                title: this.$tc("tailoring_delete.title"),
+                title: this.$t("tailoring_delete.title"),
             }).then((confirmed) => {
                 if (confirmed) {
                     this.wait = true;
@@ -525,7 +525,7 @@ export const data = {
         },
         onAttachmentUpload: function () {
             if (!this.file) {
-                this.message = this.$tc("file_select");
+                this.message = this.$t("file_select");
                 return;
             }
             this.message = "";
@@ -576,11 +576,11 @@ export const data = {
         },
         onAttachmentDelete: function (item) {
             this.wait = true;
-            this.$confirm(this.$tc("attachment_delete.text"), {
-                buttonFalseText: this.$tc("nein"),
-                buttonTrueText: this.$tc("ja"),
+            this.$confirm(this.$t("attachment_delete.text"), {
+                buttonFalseText: this.$t("nein"),
+                buttonTrueText: this.$t("ja"),
                 color: "warning",
-                title: this.$tc("attachment_delete.title"),
+                title: this.$t("attachment_delete.title"),
             }).then((confirmed) => {
                 if (confirmed) {
                     this.wait = true;
@@ -710,7 +710,7 @@ export const data = {
 
         onImportRequirements: function () {
             if (!this.file) {
-                this.message = this.$tc("file_select");
+                this.message = this.$t("file_select");
                 return;
             }
             this.message = "";
@@ -729,7 +729,7 @@ export const data = {
                     this.file = null;
                     this.snack = true;
                     this.snackColor = "success";
-                    this.snackText = this.$tc(
+                    this.snackText = this.$t(
                         "requirement_import.state.success"
                     );
                     console.log(response);
@@ -753,12 +753,22 @@ export const data = {
         },
     },
     watch: {},
+
+    mounted: function()  {
+
+ console.log(this.$route.props);
+        },
+
     created: function () {
         this.wait = true;
 
+
+console.log("pn4");
+ console.log(this.$route);
+
         this.$store.commit("breadcrumbs", [
             {
-                text: this.$tc("project", 2),
+                text: this.$t("project", 2),
                 disabled: false,
                 exact: true,
                 to: { name: "projects" },
@@ -772,10 +782,13 @@ export const data = {
         ]);
 
         // this.onProjectLoad();
+
+
         this.$axios
             .get(this.$route.params.self)
             .then((response) => {
-                this.project = response.body;
+            console.log(response.data);
+                this.project = response.data;
                 this.wait = false;
             })
             .catch((error) => {

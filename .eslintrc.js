@@ -11,5 +11,8 @@ module.exports = {
     // 'vue/no-unused-vars': 'error'
       'vue/multi-word-component-names': 0,
       'vue/valid-template-root': 0,
+      'vue/valid-v-slot': ['error', {
+        allowModifiers: true,
+      }],
   }
 }

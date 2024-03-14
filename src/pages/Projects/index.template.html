@@ -1,10 +1,4 @@
-<v-container fluid>
-    <v-overlay :value="wait">
-        <v-progress-circular indeterminate size="64"></v-progress-circular>
-    </v-overlay>
-
-    <v-row>
-        <v-col>
+<template>
             <v-data-table
                     :headers="headers"
                     :items="projects"
@@ -12,9 +6,9 @@
                     class="elevation-1">
                 <template v-slot:top>
                     <v-toolbar flat color="white">
-                        <v-toolbar-title>{{$tc('project', 2)}}</v-toolbar-title>
+                        <v-toolbar-title>{{$t('project', 2)}}</v-toolbar-title>
                         <v-divider class="mx-4" inset vertical></v-divider>
-                        <v-btn color="primary" dark class="mb-2" @click="onNewProject()">{{$tc('project_new')}}</v-btn
+                        <v-btn color="primary" dark class="mb-2" @click="onNewProject()">{{$t('project_new')}}</v-btn
                         >
                     </v-toolbar>
                 </template>
@@ -42,16 +36,16 @@
                         <template v-slot:activator="{ on, attrs }">
                             <v-icon small class="mr-2" v-bind="attrs" v-on="on" @click="onEditProject(item)">mdi-pencil</v-icon>
                         </template>
-                        <span>{{$tc('tooltip.project_edit')}}</span>
+                        <span>{{$t('tooltip.project_edit')}}</span>
                     </v-tooltip>
                     <v-tooltip bottom>
                         <template v-slot:activator="{ on, attrs }">
                             <v-icon small class="mr-2" v-bind="attrs" v-on="on" @click="onDeleteProject(item)">mdi-delete</v-icon>
                         </template>
-                        <span>{{$tc('tooltip.project_delete')}}</span>
+                        <span>{{$t('tooltip.project_delete')}}</span>
                     </v-tooltip>
                 </template>
             </v-data-table>
-        </v-col>
-    </v-row>
-</v-container>
+
+
+</template>
