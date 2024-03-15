@@ -1,12 +1,14 @@
-import { createApp } from "vue"
 import App from './App.vue'
+import { createApp } from "vue"
 import router from '@/router'
-
-import i18n from "@/plugins/i18n"
-import vuetify from "@/plugins/vuetify"
 import store from "@/store"
+
 import VueLogger from "vuejs3-logger"
 import axios from "axios"
+import i18n from "@/plugins/i18n"
+import vuetify from "@/plugins/vuetify"
+
+import getEnv from '@/utils/env'
 
 const app = createApp(App);
 
@@ -29,38 +31,25 @@ app.use(vuetify);
 
 // router
 app.use(router);
-app.config.globalProperties.$router = router;
 
 // store
 app.use(store);
+store.commit('tenant', getEnv('VUE_APP_TENANT'));
 
-axios.interceptors.request.use(
-  config => {
-    config.headers["X-TENANT"] = "demo";
-        return config;
-    },
-    error => {
-        return Promise.reject(error);
-    }
-);
-
+// axios
+axios.defaults.headers.common['X-TENANT'] = store.state.tenant;
 app.config.globalProperties.$axios = axios.create({
 })
-
-
 
 var origin = window.location.origin + "/api";
 axios
     .get(origin)
     .then(response => {
-        console.log(response.data)
         store.commit('links', response.data._links);
         axios
             .get(response.data._links['selectionvector'].href)
             .then( response => {
-                console.log(response.data._embedded);
                 store.commit('selectionvectors', response.data._embedded.selectionVectorProfiles);
                 app.mount('#app')
             })
     });
-//app.mount('#app')

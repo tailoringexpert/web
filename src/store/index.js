@@ -2,13 +2,18 @@ import { createStore } from "vuex"
 
 const store = createStore({
     state: {
+            tenant: null,
             links: [],
             catalogs: [],
             breadcrumbs: [],
             selectionvectors: [],
             selectionVectorParameterTranslations: null,
+            project: null,
     },
     mutations: {
+        tenant: function(state, tenant) {
+            state.tenant = tenant;
+        },
         links: function(state, links) {
             state.links = links;
         },
@@ -24,6 +29,9 @@ const store = createStore({
         selectionVectorParameterTranslations: function(state, selectionVectorParameterTranslations) {
             state.selectionVectorParameterTranslations = selectionVectorParameterTranslations;
         },
+        project: function(state, project) {
+            state.project = project;
+        }
     },
 
 })

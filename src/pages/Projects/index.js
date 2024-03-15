@@ -1,25 +1,25 @@
 export const data = {
+
     data: function () {
         return {
             wait: false,
             state: "ONGOING",
-            msg: "Hello!",
             headers: [
                 {
-                    text: this.$t("name"),
+                    title: this.$t("name"),
                     value: "name",
                     sortable: true,
                     align: "start",
                     width: "40%",
                 },
                 {
-                    text: this.$t("created_at"),
+                    title: this.$t("created_at"),
                     value: "creationTimestamp",
                     sortable: true,
                     width: "15%",
                 },
                 {
-                    text: this.$t("state"),
+                    title: this.$t("state"),
                     value: "state",
                     sortable: false,
                     width: "15%",
@@ -32,7 +32,7 @@ export const data = {
                     },
                 },
                 {
-                    text: this.$t("action", 2),
+                    title: this.$t("action", 2),
                     value: "actions",
                     sortable: false,
                     width: "30%",
@@ -43,51 +43,25 @@ export const data = {
     },
 
     methods: {
-        onNewProject: function () {
-            this.$router.push({
-                name: "projectnew",
-            });
-        },
+        // allgenmein
         onEditProject: function (project) {
-        console.log("on1");
+            this.$store.commit('project', project.self);
             this.$router.push({
                 name: "project",
                 params: {
                     id: project.name,
                     self: project.self,
                 },
+                state:  {self: project.self},
             });
+        },
 
-            console.log("on2");
-        },
-        onDeleteProject: function (project) {
-            this.$confirm(this.$t("project_delete.text"), {
-                buttonFalseText: this.$t("no"),
-                buttonTrueText: this.$t("yes"),
-                color: "warning",
-                title: this.$t("project_delete.title"),
-            }).then((confirmed) => {
-                if (confirmed) {
-                    this.wait = true;
-                    this.$axios
-                        .delete(project.self)
-                        .then((response) => {
-                            this.wait = false;
-                            this.onLoadProjects();
-                            console.log(response);
-                        })
-                        .catch((error) => {
-                            console.log("error: " + error);
-                            this.wait = false;
-                        });
-                }
-            });
-        },
+        // setup
         onLoadProjects: function () {
             this.wait = true;
 
             this.$axios
-                .get(origin)
+                .get(this.$store.state.links["project"].href)
                 .then((response) => {
                     this.projects = [];
 
@@ -118,33 +92,10 @@ export const data = {
                     this.wait = false;
                 });
         },
-        onProjectState: function (project) {
-            this.$confirm(this.$t("project_state.text"), {
-                buttonFalseText: this.$t("no"),
-                buttonTrueText: this.$t("yes"),
-                color: "warning",
-                title: this.$t("project_state.title"),
-            }).then((confirmed) => {
-                if (confirmed) {
-                    this.wait = true;
-                    this.$http.put(project.nextstate).then((response) => {
-                        project.state = response.body.state;
-                        project.nextstate = response.body._links.state.href;
-                        this.wait = false;
-                    });
-                }
-            });
-        },
     },
+
     created: function () {
         this.onLoadProjects();
-        this.$store.commit("breadcrumbs", [
-            {
-                text: this.$t("project", 2),
-                disabled: false,
-                exact: true,
-                to: { name: "projects" },
-            },
-        ]);
+        console.log("created");
     },
 };

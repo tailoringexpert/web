@@ -24,9 +24,8 @@ const routes = [
             {
                 path: ':id',
                 component: () => import('@/pages/Project.vue'),
-                //props: route => ({ self: route.params.self }),
                 props: true,
-                name: 'project'
+                name: 'project',
             },
             {
                 path: 'new',

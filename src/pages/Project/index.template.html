@@ -3,6 +3,8 @@
         <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
 
+
+
     <v-dialog v-model="isScreeningSheetOpen" max-width="75%" justify="center">
         <v-card elevation="2">
             <v-card-title>{{$tc('screeningsheet')}}
@@ -278,7 +280,7 @@
     </v-dialog>
 
     <v-row>
-        <v-col cols="1">{{$tc('project')}}</v-col>
+        <v-col cols="1">{{$tc('project')}} :  {{ self }}</v-col>
         <v-col>{{project.name}}
             <v-tooltip bottom>
                 <template v-slot:activator="{ on, attrs }">

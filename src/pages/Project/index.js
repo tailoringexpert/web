@@ -1,6 +1,8 @@
 export const data = {
+
     data: function () {
         return {
+
             wait: false,
             snack: false,
             snackColor: "",
@@ -754,17 +756,8 @@ export const data = {
     },
     watch: {},
 
-    mounted: function()  {
-
- console.log(this.$route.props);
-        },
-
     created: function () {
         this.wait = true;
-
-
-console.log("pn4");
- console.log(this.$route);
 
         this.$store.commit("breadcrumbs", [
             {
@@ -781,11 +774,8 @@ console.log("pn4");
             },
         ]);
 
-        // this.onProjectLoad();
-
-
         this.$axios
-            .get(this.$route.params.self)
+            .get( this.$store.state.project)
             .then((response) => {
             console.log(response.data);
                 this.project = response.data;

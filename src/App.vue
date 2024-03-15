@@ -106,9 +106,6 @@ export default {
   methods: {
     openHelp: function () {
       const route = useRoute();
-
-      // Will return the route name
-      console.log(route.name);
       this.loadHTML("/static", "help/" + route.name + ".html");
     },
     openImpressum: function () {
@@ -117,9 +114,10 @@ export default {
     openDataProtection: function () {
       this.loadHTML("/static", "dataprotection.html");
     },
+
     loadHTML: function (path, file) {
       this.$axios
-        .get(window.location.origin + path + "/demo/" + file)
+        .get(window.location.origin + path + "/" + this.$store.state.tenant + "/" + file)
         .then((response) => {
           this.helpText = response.data;
           this.help = true;
