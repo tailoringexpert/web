@@ -2,20 +2,20 @@
     <v-overlay :value="wait">
         <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
-
-
+    {{ svpt("A") }}
+<!-- 
 
     <v-dialog v-model="isScreeningSheetOpen" max-width="75%" justify="center">
         <v-card elevation="2">
-            <v-card-title>{{$tc('screeningsheet')}}
+            <v-card-title>{{$t('screeningsheet')}}
                 <v-icon @click="onScreeningSheetFileOpen()">mdi-file-pdf-box</v-icon>
             </v-card-title>
             <v-card-text justify="center">
                 <v-tabs centered icons-and-text>
                     <v-tabs-slider></v-tabs-slider>
 
-                    <v-tab>{{$tc('screeningsheet_parameter')}}</v-tab>
-                    <v-tab>{{$tc('selectionvector_calculated')}}</v-tab>
+                    <v-tab>{{$t('screeningsheet_parameter')}}</v-tab>
+                    <v-tab>{{$t('selectionvector_calculated')}}</v-tab>
 
                     <v-tab-item>
                         <v-data-table
@@ -36,14 +36,14 @@
             </v-card-text>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn outlined rounded text @click="isScreeningSheetOpen=false">{{$tc('close')}}</v-btn>
+                <v-btn outlined rounded text @click="isScreeningSheetOpen=false">{{$t('close')}}</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
 
     <v-dialog v-model="isSelectionVectorOpen" max-width="75%">
         <v-card elevation="2">
-            <v-card-title>{{$tc('selectionvector_applied')}}</v-card-title>
+            <v-card-title>{{$t('selectionvector_applied')}}</v-card-title>
             <v-card-text>
                 <v-data-table
                         :headers="selectionVectorHeader"
@@ -53,14 +53,14 @@
             </v-card-text>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn outlined rounded text @click="isSelectionVectorOpen=false">{{$tc('close')}}</v-btn>
+                <v-btn outlined rounded text @click="isSelectionVectorOpen=false">{{$t('close')}}</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
 
     <v-dialog v-model="isDocumentsOpen" max-width="75%" justify="center">
         <v-card elevation="2">
-            <v-card-title>{{$tc('documents.title')}}</v-card-title>
+            <v-card-title>{{$t('documents.title')}}</v-card-title>
             <v-card-text justify="center">
                 <v-data-table :items="signatures"
                               :headers="signaturesHeader"
@@ -118,10 +118,10 @@
                                 <v-card-actions>
                                     <v-spacer></v-spacer>
                                     <v-btn color="blue darken-1" text @click="onSignatureClose">
-                                        {{$tc('cancel')}}
+                                        {{$t('cancel')}}
                                     </v-btn>
                                     <v-btn color="blue darken-1" text @click="onSignatureSave">
-                                        {{$tc('save')}}
+                                        {{$t('save')}}
                                     </v-btn>
                                 </v-card-actions>
                             </v-card>
@@ -134,10 +134,10 @@
             <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn outlined rounded text @click="onCatalogCreate">
-                    {{$tc('documents.catalog')}}
+                    {{$t('documents.catalog')}}
                 </v-btn>
                 <v-btn outlined rounded text @click="onDocumentsCreate">
-                    {{$tc('documents.download')}}
+                    {{$t('documents.download')}}
                 </v-btn>
             </v-card-actions>
         </v-card>
@@ -145,7 +145,7 @@
 
     <v-dialog v-model="isAttachmentOpen" max-width="75%" justify="center">
         <v-card elevation="2">
-            <v-card-title>{{$tc('attachment.title')}}</v-card-title>
+            <v-card-title>{{$t('attachment.title')}}</v-card-title>
             <v-card-text justify="center">
                 <v-row no-gutters justify="center" align="center">
                     <v-col cols="8">
@@ -163,7 +163,7 @@
                                 dark
                                 small
                                 @click="onAttachmentUpload">
-                            {{$tc('upload')}}
+                            {{$t('upload')}}
                             <v-icon right dark>mdi-cloud-upload</v-icon>
                         </v-btn>
                     </v-col>
@@ -181,7 +181,7 @@
                                         @click="onAttachmentDownload(item)">mdi-download-circle
                                 </v-icon>
                             </template>
-                            <span>{{$tc('tooltip.attachment_download')}}</span>
+                            <span>{{$t('tooltip.attachment_download')}}</span>
                         </v-tooltip>
                         <v-tooltip bottom>
                             <template v-slot:activator="{ on, attrs }">
@@ -189,21 +189,21 @@
                                         @click="onAttachmentDelete(item)">mdi-delete
                                 </v-icon>
                             </template>
-                            <span>{{$tc('tooltip.attachment_delete')}}</span>
+                            <span>{{$t('tooltip.attachment_delete')}}</span>
                         </v-tooltip>
                     </template>
                 </v-data-table>
             </v-card-text>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn outlined rounded text @click="isAttachmentOpen=false">{{$tc('close')}}</v-btn>
+                <v-btn outlined rounded text @click="isAttachmentOpen=false">{{$t('close')}}</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
 
     <v-dialog v-model="isImportOpen" max-width="75%" justify="center">
         <v-card elevation="2">
-            <v-card-title>{{$tc('requirement_import.title')}}</v-card-title>
+            <v-card-title>{{$t('requirement_import.title')}}</v-card-title>
             <v-card-text justify="center">
                 <v-row no-gutters justify="center" align="center">
                     <v-col cols="8">
@@ -218,7 +218,7 @@
 
                     <v-col cols="4" class="pl-2">
                         <v-btn color="success" dark small @click="onImportRequirements">
-                            {{$tc('upload')}}
+                            {{$t('upload')}}
                             <v-icon right dark>mdi-cloud-upload</v-icon>
                         </v-btn>
                     </v-col>
@@ -226,7 +226,7 @@
             </v-card-text>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn outlined rounded text @click="isImportOpen=false">{{$tc('close')}}</v-btn>
+                <v-btn outlined rounded text @click="isImportOpen=false">{{$t('close')}}</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -234,7 +234,7 @@
     <v-dialog v-model="isNotesOpen" max-width="75%" justify="center">
         <v-card class="mx-auto" >
             <v-card-title class="blue-grey white--text">
-                <span class="text-h6">{{$tc('tailoring_notes.title')}}</span>
+                <span class="text-h6">{{$t('tailoring_notes.title')}}</span>
                 <v-spacer></v-spacer>
             </v-card-title>
             <v-card-text class="py-0">
@@ -253,7 +253,7 @@
                                 label="New Note"
                                 solo>
                             <template v-slot:append>
-                                <v-btn class="mx-0" depressed @click="onNoteNew">{{$tc('add')}}</v-btn>
+                                <v-btn class="mx-0" depressed @click="onNoteNew">{{$t('add')}}</v-btn>
                             </template>
                         </v-text-field>
                     </v-timeline-item>
@@ -274,13 +274,13 @@
             </v-card-text>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn outlined rounded text @click="onNotesClose">{{$tc('close')}}</v-btn>
+                <v-btn outlined rounded text @click="onNotesClose">{{$t('close')}}</v-btn>
             </v-card-actions>
         </v-card>
-    </v-dialog>
+    </v-dialog> -->
 
     <v-row>
-        <v-col cols="1">{{$tc('project')}} :  {{ self }}</v-col>
+        <v-col cols="1">{{$t('project')}} :  {{ self }}</v-col>
         <v-col>{{project.name}}
             <v-tooltip bottom>
                 <template v-slot:activator="{ on, attrs }">
@@ -289,7 +289,7 @@
                         mdi-card-account-details
                     </v-icon>
                 </template>
-                <span>{{$tc('tooltip.screeningsheet_open')}}</span>
+                <span>{{$t('tooltip.screeningsheet_open')}}</span>
             </v-tooltip>
         </v-col>
     </v-row>
@@ -301,14 +301,14 @@
                           class="elevation-1">
                 <template v-slot:top>
                     <v-toolbar flat color="white">
-                        <v-toolbar-title>{{$tc('tailoring', 2)}}</v-toolbar-title>
+                        <v-toolbar-title>{{$t('tailoring', 2)}}</v-toolbar-title>
                         <v-divider class="mx-4" inset vertical></v-divider>
                         <v-btn
                                 color="primary"
                                 dark
                                 class="mb-2"
                                 @click="onTailoringNew()"
-                        >{{$tc('tailoring_new')}}
+                        >{{$t('tailoring_new')}}
                         </v-btn>
                     </v-toolbar>
                 </template>
@@ -348,7 +348,7 @@
                                     @click="onTailoringCatalogEdit(item)" :disabled="!isTailoringEditable(item)">mdi-pencil-box-outline
                             </v-icon>
                         </template>
-                        <span>{{$tc('tooltip.requirements_edit')}}</span>
+                        <span>{{$t('tooltip.requirements_edit')}}</span>
                     </v-tooltip>
                     <v-tooltip bottom>
                         <template v-slot:activator="{ on, attrs }">
@@ -357,7 +357,7 @@
                                 mdi-download
                             </v-icon>
                         </template>
-                        <span>{{$tc('tooltip.document_open')}}</span>
+                        <span>{{$t('tooltip.document_open')}}</span>
                     </v-tooltip>
                     <v-tooltip bottom>
                         <template v-slot:activator="{ on, attrs }">
@@ -365,7 +365,7 @@
                                     @click="onTailoringCompare(item._links.compare.href)">mdi-vector-difference
                             </v-icon>
                         </template>
-                        <span>{{$tc('tooltip.tailoring_compare')}}</span>
+                        <span>{{$t('tooltip.tailoring_compare')}}</span>
                     </v-tooltip>
                     <v-tooltip bottom>
                         <template v-slot:activator="{ on, attrs }">
@@ -374,7 +374,7 @@
                                 mdi-card-account-details
                             </v-icon>
                         </template>
-                        <span>{{$tc('tooltip.screeningsheet_open')}}</span>
+                        <span>{{$t('tooltip.screeningsheet_open')}}</span>
                     </v-tooltip>
                     <v-tooltip bottom>
                         <template v-slot:activator="{ on, attrs }">
@@ -383,7 +383,7 @@
                                 mdi-head-check-outline
                             </v-icon>
                         </template>
-                        <span>{{$tc('tooltip.selectionvector_open')}}</span>
+                        <span>{{$t('tooltip.selectionvector_open')}}</span>
                     </v-tooltip>
                     <v-tooltip bottom>
                         <template v-slot:activator="{ on, attrs }">
@@ -391,7 +391,7 @@
                                     @click="onAttachmentOpen(item)">mdi-paperclip
                             </v-icon>
                         </template>
-                        <span>{{$tc('tooltip.attachment_open')}}</span>
+                        <span>{{$t('tooltip.attachment_open')}}</span>
                     </v-tooltip>
                     <v-tooltip bottom>
                         <template v-slot:activator="{ on, attrs }">
@@ -399,7 +399,7 @@
                                     @click="onImportOpen(item)" :disabled="!isTailoringEditable(item)">mdi-microsoft-excel
                             </v-icon>
                         </template>
-                        <span>{{$tc('tooltip.requirement_import')}}</span>
+                        <span>{{$t('tooltip.requirement_import')}}</span>
                     </v-tooltip>
 
                     <v-tooltip bottom>
@@ -409,7 +409,7 @@
                                 mdi-message-bulleted
                             </v-icon>
                         </template>
-                        <span>{{$tc('tooltip.tailoring_notes')}}</span>
+                        <span>{{$t('tooltip.tailoring_notes')}}</span>
                     </v-tooltip>
 
                     <v-tooltip bottom>
@@ -419,7 +419,7 @@
                                 mdi-delete
                             </v-icon>
                         </template>
-                        <span>{{$tc('tooltip.tailoring_delete')}}</span>
+                        <span>{{$t('tooltip.tailoring_delete')}}</span>
                     </v-tooltip>
 
                 </template>
@@ -428,7 +428,7 @@
             <v-snackbar v-model="snack" :timeout="3000" :color="snackColor">
                 {{ snackText }}
                 <template v-slot:action="{ attrs }">
-                    <v-btn v-bind="attrs" text @click="snack = false">{{$tc('close')}}</v-btn>
+                    <v-btn v-bind="attrs" text @click="snack = false">{{$t('close')}}</v-btn>
                 </template>
             </v-snackbar>
         </v-col>

@@ -6,7 +6,9 @@ import store from "@/store"
 import VueLogger from "vuejs3-logger"
 import axios from "axios"
 import i18n from "@/plugins/i18n"
+
 import vuetify from "@/plugins/vuetify"
+import {Vuetify3Dialog} from "vuetify3-dialog"
 
 import getEnv from '@/utils/env'
 
@@ -28,6 +30,13 @@ app.use(i18n);
 
 // vuetify
 app.use(vuetify);
+app.use(Vuetify3Dialog, {
+    vuetify: vuetify, 
+    defaults: {
+      //You can pass default options for dialogs, dialog's card, snackbars or bottom-sheets here
+    }
+  }
+);
 
 // router
 app.use(router);
@@ -35,6 +44,10 @@ app.use(router);
 // store
 app.use(store);
 store.commit('tenant', getEnv('VUE_APP_TENANT'));
+
+
+
+
 
 // axios
 axios.defaults.headers.common['X-TENANT'] = store.state.tenant;
