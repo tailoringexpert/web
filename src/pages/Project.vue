@@ -1,11 +1,21 @@
 <template src="@/pages/Project/index.template.html" />
+<!-- <template>
+<ScreeningsheetDialog :link="screeningsheetLink" />    
+</template> -->
+
+
 <script>
-import { ref, reactive } from "vue";
-import { useI18n } from "vue-i18n";
-import { useStore } from 'vuex'
+import { ref, reactive } from "vue"
+import { useI18n } from "vue-i18n"
+import { useStore } from "vuex"
+
+import ScreeningsheetDialog from "./Project/ScreeningsheetDialog"
 
 export default {
     name: "Project",
+    components: {
+        ScreeningsheetDialog
+    },
 
     setup() {
         const { t } = useI18n();
@@ -13,6 +23,7 @@ export default {
         const wait = ref(false);
         const snack = ref(false);
         const snackText = ref("");
+
 
         const headers = reactive([
             {
@@ -43,17 +54,20 @@ export default {
             },
         ]);
 
-        const project = reactive( {
+        const isScreeningsheetOpen = ref(false);
+        const screeningsheetLink = ref("");
+
+        const project = reactive({
             name: null,
-            tailorings: []
+            tailorings: [],
+            _links: [],
         });
 
         // store.commit("selectionVectorParameterTranslations", i18n.t("tenants")[Vue.storage.get('tenant')]['selectionvector']);
 
-
         const store = useStore();
-        const svpt =  (code) => t('tenants.' + store.state.tenant + '.selectionvector.' + code);
-        console.log(svpt("A"));
+        const svpt = (code) =>
+            t("tenants." + store.state.tenant + ".selectionvector." + code);
 
         function isTailoringEditable(item) {
             return "CREATED" == item.state;
@@ -61,6 +75,11 @@ export default {
 
         function isTailoringDeletable(item) {
             return "CREATED" == item.state;
+        }
+
+        function onOpenScreeningSheet(link) {
+            isScreeningsheetOpen.value = true;
+             this.$refs.screeningsheet.openScreeningsheet(link);
         }
 
         return {
@@ -71,7 +90,10 @@ export default {
             headers,
             project,
             isTailoringEditable,
-            isTailoringDeletable
+            isTailoringDeletable,
+            isScreeningsheetOpen,
+            onOpenScreeningSheet,
+            screeningsheetLink,
         };
     },
 
@@ -94,16 +116,15 @@ export default {
         ]);
 
         this.$axios
-            .get( this.$store.state.project)
+            .get(this.$store.state.project)
             .then((response) => {
                 this.project = response.data;
+                console.log(this.project)
                 this.wait = false;
             })
             .catch(() => {
                 this.wait = false;
-                
             });
-
-    }
+    },
 };
 </script>

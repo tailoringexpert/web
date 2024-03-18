@@ -49,6 +49,7 @@ store.commit('tenant', getEnv('VUE_APP_TENANT'));
 
 
 
+
 // axios
 axios.defaults.headers.common['X-TENANT'] = store.state.tenant;
 app.config.globalProperties.$axios = axios.create({
@@ -64,5 +65,6 @@ axios
             .then( response => {
                 store.commit('selectionvectors', response.data._embedded.selectionVectorProfiles);
                 app.mount('#app')
+//                store.commit("selectionVectorParameterTranslations", this.$t("tenants")[store.state.tenant]['selectionvector']);
             })
     });
