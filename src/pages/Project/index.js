@@ -298,6 +298,7 @@ export const data = {
         },
 
         onScreeningSheetOpen: function (link) {
+            
             this.wait = true;
 
             this.$axios
@@ -759,6 +760,12 @@ export const data = {
     created: function () {
         this.wait = true;
 
+//        this.$t("name"),
+console.log("Tenant: " + this.$store.state.tenant);
+console.log(this.$tm( this.$store.state.tenant)["selctionvector"]);
+        this.$store.commit("selectionVectorParameterTranslations", this.$t("name"));
+//        [this.$store.state.tenant]['selectionvector']);
+
         this.$store.commit("breadcrumbs", [
             {
                 text: this.$t("project", 2),
@@ -777,7 +784,6 @@ export const data = {
         this.$axios
             .get( this.$store.state.project)
             .then((response) => {
-            console.log(response.data);
                 this.project = response.data;
                 this.wait = false;
             })

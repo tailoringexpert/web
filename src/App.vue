@@ -95,6 +95,8 @@
 <script>
 import { useRoute } from "vue-router";
 
+
+
 export default {
   data: () => ({
     help: false,
@@ -103,6 +105,7 @@ export default {
       inset: false,
     },
   }),
+
   methods: {
     openHelp: function () {
       const route = useRoute();
