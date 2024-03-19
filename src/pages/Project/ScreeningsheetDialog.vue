@@ -1,4 +1,8 @@
 <template>
+    <v-overlay v-model="wait">
+        <v-progress-circular indeterminate size="64"></v-progress-circular>
+    </v-overlay>
+
     <v-dialog max-width="75%" justify="center" v-model="active">
         <v-card>
             <v-card-title
@@ -93,9 +97,8 @@ export default {
         ];
         const selectionVectorParameter = reactive([]);
 
-        function openScreeningsheet(link) {
+        function onActivate(link) {
             this.wait = true;
-
             const parameterTranslation = (code) =>
                 t("tenants." + store.state.tenant + ".selectionvector." + code);
 
@@ -118,8 +121,8 @@ export default {
                     );
 
 
-                    this.wait = false;
                     this.tab = null;
+                    this.wait = false;
                     this.active = true;
                 })
                 .catch(() => {
@@ -154,11 +157,11 @@ export default {
         }
 
         defineExpose({
-            openScreeningsheet,
+            onActivate,
         });
 
         return {
-            openScreeningsheet,
+            onActivate,
             wait,
             active,
             tab,

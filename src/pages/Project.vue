@@ -8,13 +8,16 @@
 import { ref, reactive } from "vue"
 import { useI18n } from "vue-i18n"
 import { useStore } from "vuex"
+import axios from "axios";
 
 import ScreeningsheetDialog from "./Project/ScreeningsheetDialog"
+import SelectionvectorDialog from "./Project/SelectionvectorDialog"
 
 export default {
     name: "Project",
     components: {
-        ScreeningsheetDialog
+        ScreeningsheetDialog,
+        SelectionvectorDialog
     },
 
     setup() {
@@ -79,7 +82,11 @@ export default {
 
         function onOpenScreeningSheet(link) {
             isScreeningsheetOpen.value = true;
-             this.$refs.screeningsheet.openScreeningsheet(link);
+            this.$refs.screeningsheet.onActivate(link);
+        }
+
+        function onOpenSelectionVector(link) {
+            this.$refs.selectionvector.onActivate(link);
         }
 
         return {
@@ -93,6 +100,7 @@ export default {
             isTailoringDeletable,
             isScreeningsheetOpen,
             onOpenScreeningSheet,
+            onOpenSelectionVector,
             screeningsheetLink,
         };
     },
@@ -115,7 +123,7 @@ export default {
             },
         ]);
 
-        this.$axios
+        axios
             .get(this.$store.state.project)
             .then((response) => {
                 this.project = response.data;
