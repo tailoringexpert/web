@@ -12,12 +12,14 @@ import axios from "axios";
 
 import ScreeningsheetDialog from "./Project/ScreeningsheetDialog"
 import SelectionvectorDialog from "./Project/SelectionvectorDialog"
+import CompareDialog from "./Project/CompareDialog"
 
 export default {
     name: "Project",
     components: {
         ScreeningsheetDialog,
-        SelectionvectorDialog
+        SelectionvectorDialog,
+        CompareDialog
     },
 
     setup() {
@@ -89,6 +91,11 @@ export default {
             this.$refs.selectionvector.onActivate(link);
         }
 
+        function onTailoringCompare(link) {
+            this.$refs.compare.onActivate(link);
+        }
+
+
         return {
             wait,
             snack,
@@ -101,6 +108,7 @@ export default {
             isScreeningsheetOpen,
             onOpenScreeningSheet,
             onOpenSelectionVector,
+            onTailoringCompare,
             screeningsheetLink,
         };
     },
