@@ -110,7 +110,7 @@ export default {
                     this.selectionVectorParameter = [];
                     for (var name in this.screeningSheet.selectionVector
                         .levels) {
-                        this.selectionVectorParameter.push({
+                        selectionVectorParameter.push({
                             label: parameterTranslation(name),
                             name: name,
                             value: screeningSheet.selectionVector.levels[name],

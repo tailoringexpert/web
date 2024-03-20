@@ -1,11 +1,12 @@
 <v-container fluid>
-    <v-overlay :value="wait">
+    <v-overlay v-model="wait">
         <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
 
     <ScreeningsheetDialog ref="screeningsheet"  max-width="75%" justify="center" />
     <SelectionvectorDialog ref="selectionvector"  max-width="75%" justify="center" />
     <CompareDialog ref="compare" />
+    <DocumentsDialog ref="documents" max-width="75%" justify="center" />
 
     <v-row>
         <v-col cols="1">{{$t('project')}} :  {{ self }}</v-col>
@@ -81,7 +82,7 @@
                     <v-tooltip bottom>
                         <template v-slot:activator="{ on, attrs }">
                             <v-icon small class="mr-2" v-on="on" v-bind="attrs"
-                                    @click="onDocumentOpen(item)">
+                                    @click="onDocuments(item)">
                                 mdi-download
                             </v-icon>
                         </template>
