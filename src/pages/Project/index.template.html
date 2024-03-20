@@ -7,6 +7,7 @@
     <SelectionvectorDialog ref="selectionvector"  max-width="75%" justify="center" />
     <CompareDialog ref="compare" />
     <DocumentsDialog ref="documents" max-width="75%" justify="center" />
+    <AttachmentsDialog ref="attachments" max-width="75%" justify="center" />
 
     <v-row>
         <v-col cols="1">{{$t('project')}} :  {{ self }}</v-col>
@@ -117,7 +118,7 @@
                     <v-tooltip bottom>
                         <template v-slot:activator="{ on, attrs }">
                             <v-icon small class="mr-2" v-on="on" v-bind="attrs"
-                                    @click="onAttachmentOpen(item)">mdi-paperclip
+                                    @click="onAttachments(item)">mdi-paperclip
                             </v-icon>
                         </template>
                         <span>{{$t('tooltip.attachment_open')}}</span>

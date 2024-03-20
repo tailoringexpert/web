@@ -13,7 +13,8 @@ import axios from "axios";
 import ScreeningsheetDialog from "./Project/ScreeningsheetDialog"
 import SelectionvectorDialog from "./Project/SelectionvectorDialog"
 import CompareDialog from "./Project/CompareDialog"
-import DocumentsDialog from "./Project/DocumentsDialog.vue"
+import DocumentsDialog from "./Project/DocumentsDialog"
+import AttachmentsDialog from "./Project/AttachmentsDialog"
 
 export default {
     name: "Project",
@@ -21,7 +22,8 @@ export default {
         ScreeningsheetDialog,
         SelectionvectorDialog,
         CompareDialog,
-        DocumentsDialog
+        DocumentsDialog,
+        AttachmentsDialog
     },
 
     setup() {
@@ -101,6 +103,10 @@ export default {
         function onDocuments(item) {
             this.$refs.documents.onActivate(item._links);
         }
+
+        function onAttachments(item) {
+            this.$refs.attachments.onActivate(item._links);
+        }
         return {
             wait,
             snack,
@@ -115,6 +121,7 @@ export default {
             onOpenSelectionVector,
             onTailoringCompare,
             onDocuments,
+            onAttachments,
             screeningsheetLink,
         };
     },
