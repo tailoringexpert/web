@@ -99,7 +99,7 @@ export default {
 
 
         function onDocuments(item) {
-            this.$refs.documents.onActivate(item._links.signature.href);
+            this.$refs.documents.onActivate(item._links);
         }
         return {
             wait,

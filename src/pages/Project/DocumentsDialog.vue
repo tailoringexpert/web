@@ -101,10 +101,10 @@
             </v-card-text>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn outlined rounded text @click="onCatalogCreate">
+                <v-btn outlined rounded text @click="onDownloadCatalog()">
                     {{ $t("documents.catalog") }}
                 </v-btn>
-                <v-btn outlined rounded text @click="onDocumentsCreate">
+                <v-btn outlined rounded text @click="onDownloadZip()">
                     {{ $t("documents.download") }}
                 </v-btn>
             </v-card-actions>
@@ -126,7 +126,7 @@ export default {
         const active = ref(false);
         const activeSignature = ref(false);
         const signature = reactive({});
-        const self = ref("");        
+        const links = reactive([]);
 
         const headers = [
             {
@@ -157,12 +157,13 @@ export default {
         ];
         const signatures = reactive([]);
 
-        function onActivate(link) {
+        function onActivate(links) {
             this.wait = true;
-            
-            this.self = link;
+            console.log(links);
+
+            this.links = links;
             axios
-                .get(this.self)
+                .get(this.links.signature.href)
                 .then((response) => {
                     Object.assign(
                         signatures,
@@ -177,12 +178,96 @@ export default {
         }
 
         function onEditSignature(item) {
-            Object.assign(signature, item);            
+            Object.assign(signature, item);
             this.activeSignature = true;
         }
 
         function onCloseSignature() {
             this.activeSignature = false;
+        }
+
+        function onDownloadCatalog() {
+            this.active = false;
+            this.wait = true;
+
+            axios
+                .get(this.links.tailoringcatalog.href, {
+                    responseType: "arraybuffer",
+                })
+                .then((response) => {
+                    const link = document.createElement("a");
+                    const name = response.headers
+                        .get("Content-Disposition")
+                        .split("filename=")[1]
+                        .replaceAll('"', "");
+                    const blob = new Blob([response.data], {
+                        type: response.headers.get("Content-Type"),
+                    });
+                    link.href = URL.createObjectURL(blob);
+                    link.download = name;
+                    link.click();
+                    URL.revokeObjectURL(link.href);
+                    this.wait = false;
+                })
+                .catch((error) => {
+                    this.$dialog
+                        .confirm({
+                            title: t("project_delete.title"),
+                            text: new TextDecoder("utf-8").decode(
+                                new Uint8Array(error.data)
+                            ),
+                            cancelText: "No",
+                            confirmationText: "Yes",
+                        })
+                        .then((confirmed) => {
+                            if (confirmed) {
+                                this.wait = true;
+                            }
+                        });
+                });
+        }
+
+        function onDownloadZip() {
+            this.active = false;
+            this.wait = true;
+
+            console.log("onDownloadZip");
+
+            axios
+                .get(this.links.document.href, {
+                    responseType: "arraybuffer",
+                })
+                .then((response) => {
+                    const link = document.createElement("a");
+                    const name = response.headers
+                        .get("Content-Disposition")
+                        .split("filename=")[1]
+                        .replaceAll('"', "");
+                    const blob = new Blob([response.data], {
+                        type: response.headers.get("Content-Type"),
+                    });
+                    link.href = URL.createObjectURL(blob);
+                    link.download = name;
+                    link.click();
+                    URL.revokeObjectURL(link.href);
+                    this.wait = false;
+                })
+                .catch((error) => {
+                    this.$dialog
+                        .confirm({
+                            title: t("project_delete.title"),
+                            text: new TextDecoder("utf-8").decode(
+                                new Uint8Array(error.data)
+                            ),
+                            cancelText: "No",
+                            confirmationText: "Yes",
+                        })
+                        .then((confirmed) => {
+                            if (confirmed) {
+                                this.wait = true;
+                            }
+                        });
+                });
         }
 
         function onSaveSignature() {
@@ -226,7 +311,9 @@ export default {
             signature,
             onCloseSignature,
             onSaveSignature,
-            self
+            onDownloadCatalog,
+            onDownloadZip,
+            links,
         };
     },
 };
