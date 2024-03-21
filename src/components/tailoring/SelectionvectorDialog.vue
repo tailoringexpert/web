@@ -9,7 +9,7 @@
             <v-card-text>
                 <v-data-table
                     :headers="headers"
-                    :items="selectionVectorParameter"
+                    :items="items"
                     class="elevation-1"
                 >
                 </v-data-table>
@@ -34,8 +34,9 @@ export default {
     name: "SelectionvectorDialog",
 
     setup() {
+        const tailoring = reactive({});
+        
         const { t } = useI18n();
-
         const wait = ref(false);
         const active = ref(false);
 
@@ -51,37 +52,36 @@ export default {
                 value: "value",
             },
         ]);
+        const items = reactive([]);
 
-        const selectionVectorParameter = reactive([]);
-
-        function onActivate(link) {
+        function onActivate(_tailoring) {
             this.wait = true;
+            Object.assign(tailoring, _tailoring);
 
             const parameterTranslation = (code) =>
                 t("tenants." + store.state.tenant + ".selectionvector." + code);
 
             axios
-                .get(link)
+                .get(tailoring._links.selectionvector.href)
                 .then((response) => {
                     var selectionVector = response.data;
 
-                    this.selectionVectorParameter = [];
+                    this.items = [];
                     for (var name in selectionVector.levels) {
-                        this.selectionVectorParameter.push({
+                        this.items.push({
                             label: parameterTranslation(name),
                             name: name,
                             value: selectionVector.levels[name],
                         });
                     }
-                    this.selectionVectorParameter.sort((a, b) =>
+                    this.items.sort((a, b) =>
                         a.label > b.label ? 1 : -1
                     );
 
                     this.wait = false;
                     this.active = true;
                 })
-                .catch((error) => {
-                    console.log(error);
+                .catch(() => {
                     this.wait = false;
                 });
         }
@@ -95,7 +95,7 @@ export default {
             wait,
             active,
             headers,
-            selectionVectorParameter
+            items,
         };
     },
 };

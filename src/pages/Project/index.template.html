@@ -4,7 +4,7 @@
     </v-overlay>
 
     <ScreeningsheetDialog ref="screeningsheet"  max-width="75%" justify="center" />
-    <SelectionvectorDialog ref="selectionvector"  max-width="75%" justify="center" />
+    <SelectionvectorDialog ref="selectionvector" max-width="75%" justify="center" />
     <CompareDialog ref="compare" />
     <DocumentsDialog ref="documents" max-width="75%" justify="center" />
     <AttachmentsDialog ref="attachments" max-width="75%" justify="center" />
@@ -15,7 +15,7 @@
             <v-tooltip bottom>
                 <template v-slot:activator="{ on, attrs }">
                     <v-icon small class="mr-2" v-on="on" v-bind="attrs"
-                            @click="onOpenScreeningSheet(project._links.screeningsheet.href)">
+                            @click="onOpenScreeningSheet(project)">
                         mdi-card-account-details
                     </v-icon>
                 </template>
@@ -92,7 +92,7 @@
                     <v-tooltip bottom>
                         <template v-slot:activator="{ on, attrs }">
                             <v-icon small class="mr-2" v-on="on" v-bind="attrs"
-                                    @click="onTailoringCompare(item._links.compare.href)">mdi-vector-difference
+                                    @click="onTailoringCompare(item)">mdi-vector-difference
                             </v-icon>
                         </template>
                         <span>{{$t('tooltip.tailoring_compare')}}</span>
@@ -100,7 +100,7 @@
                     <v-tooltip bottom>
                         <template v-slot:activator="{ on, attrs }">
                             <v-icon small class="mr-2" v-on="on" v-bind="attrs"
-                                    @click="onOpenScreeningSheet(item._links.screeningsheet.href)">
+                                    @click="onOpenScreeningSheet(item)">
                                 mdi-card-account-details
                             </v-icon>
                         </template>
@@ -109,7 +109,7 @@
                     <v-tooltip bottom>
                         <template v-slot:activator="{ on, attrs }">
                             <v-icon small class="mr-2" v-on="on" v-bind="attrs"
-                                    @click="onOpenSelectionVector(item._links.selectionvector.href)">
+                                    @click="onOpenSelectionVector(item)">
                                 mdi-head-check-outline
                             </v-icon>
                         </template>

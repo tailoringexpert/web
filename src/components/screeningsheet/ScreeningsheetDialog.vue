@@ -65,6 +65,8 @@ export default {
         const active = ref(false);
         const tab = ref(null);
 
+        const item = reactive({});
+
         const screeningSheetHeader = reactive([
             {
                 title: t("name"),
@@ -97,13 +99,17 @@ export default {
         ];
         const selectionVectorParameter = reactive([]);
 
-        function onActivate(link) {
+        function onActivate(_item) {
             this.wait = true;
+
+            Object.assign(item, _item);
+            console.log(item)
+
             const parameterTranslation = (code) =>
                 t("tenants." + store.state.tenant + ".selectionvector." + code);
 
             axios
-                .get(link)
+                .get(item._links.screeningsheet.href)
                 .then((response) => {
                     Object.assign(screeningSheet, response.data);
 

@@ -5,20 +5,24 @@
 </template>
 
 <script>
-import { ref, defineExpose } from "vue";
+import { ref, reactive, defineExpose } from "vue";
 import axios from "axios";
 
 export default {
     name: "CompareDialog",
 
     setup() {
+        const tailoring = reactive({});
+
         const wait = ref(false);
 
-        function onActivate(link) {
+        function onActivate(_tailoring) {
             this.wait = true;
 
+            Object.assign(tailoring, _tailoring);
+
             axios
-                .get(link, { responseType: "arraybuffer" })
+                .get(tailoring._links.compare.href, { responseType: "arraybuffer" })
                 .then((response) => {
                     const link = document.createElement("a");
                     const blob = new Blob([response.data], {

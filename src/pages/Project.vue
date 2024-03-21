@@ -10,11 +10,11 @@ import { useI18n } from "vue-i18n"
 import { useStore } from "vuex"
 import axios from "axios";
 
-import ScreeningsheetDialog from "./Project/ScreeningsheetDialog"
-import SelectionvectorDialog from "./Project/SelectionvectorDialog"
-import CompareDialog from "./Project/CompareDialog"
-import DocumentsDialog from "./Project/DocumentsDialog"
-import AttachmentsDialog from "./Project/AttachmentsDialog"
+import ScreeningsheetDialog from "@/components/screeningsheet/ScreeningsheetDialog"
+import SelectionvectorDialog from "@/components/tailoring/SelectionvectorDialog"
+import CompareDialog from "@/components/tailoring/CompareDialog"
+import DocumentsDialog from "@/components/tailoring/DocumentsDialog"
+import AttachmentsDialog from "@/components/tailoring/AttachmentsDialog"
 
 export default {
     name: "Project",
@@ -32,6 +32,7 @@ export default {
         const wait = ref(false);
         const snack = ref(false);
         const snackText = ref("");
+        const tailoring = reactive(null);
 
 
         const headers = reactive([
@@ -72,8 +73,6 @@ export default {
             _links: [],
         });
 
-        // store.commit("selectionVectorParameterTranslations", i18n.t("tenants")[Vue.storage.get('tenant')]['selectionvector']);
-
         const store = useStore();
         const svpt = (code) =>
             t("tenants." + store.state.tenant + ".selectionvector." + code);
@@ -86,17 +85,21 @@ export default {
             return "CREATED" == item.state;
         }
 
-        function onOpenScreeningSheet(link) {
+        function onOpenScreeningSheet(item) {
+            console.log("onOpenScreeningSheet");
             isScreeningsheetOpen.value = true;
-            this.$refs.screeningsheet.onActivate(link);
+            console.log(item);
+            this.$refs.screeningsheet.onActivate(item);
         }
 
-        function onOpenSelectionVector(link) {
-            this.$refs.selectionvector.onActivate(link);
+        function onOpenSelectionVector(item) {
+
+            console.log(item);
+             this.$refs.selectionvector.onActivate(item);
         }
 
-        function onTailoringCompare(link) {
-            this.$refs.compare.onActivate(link);
+        function onTailoringCompare(item) {
+            this.$refs.compare.onActivate(item);
         }
 
 
@@ -123,6 +126,7 @@ export default {
             onDocuments,
             onAttachments,
             screeningsheetLink,
+            tailoring
         };
     },
 
