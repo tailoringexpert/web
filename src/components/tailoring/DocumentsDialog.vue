@@ -1,115 +1,145 @@
 <template>
-    <v-overlay v-model="wait">
-        <v-progress-circular indeterminate size="64"></v-progress-circular>
-    </v-overlay>
+  <v-overlay v-model="wait">
+    <v-progress-circular
+      indeterminate
+      size="64"
+    />
+  </v-overlay>
 
-    <v-dialog v-model="active" max-width="75%" justify="center">
-        <v-card elevation="2">
-            <v-card-title>{{ $t("documents.title") }}</v-card-title>
-            <v-card-text justify="center">
-                <v-data-table
-                    :items="signatures"
-                    :headers="headers"
-                    class="elevation-1"
+  <v-dialog
+    v-model="active"
+    max-width="75%"
+    justify="center"
+  >
+    <v-card elevation="2">
+      <v-card-title>{{ $t("documents.title") }}</v-card-title>
+      <v-card-text justify="center">
+        <v-data-table
+          :items="signatures"
+          :headers="headers"
+          class="elevation-1"
+        >
+          <template #item="{ item }">
+            <tr>
+              <td>{{ item.faculty }}</td>
+              <td>{{ item.signee }}</td>
+              <td class="text-xs-right">
+                {{ item.state }}
+              </td>
+              <td class="text-xs-right">
+                <v-simple-checkbox
+                  v-model="item.applicable"
+                  label=""
+                  disabled
+                />
+              </td>
+              <td>
+                <v-icon
+                  small
+                  class="mr-2"
+                  @click="onEditSignature(item)"
                 >
-                    <template v-slot:item="{ item }">
-                        <tr>
-                            <td>{{ item.faculty }}</td>
-                            <td>{{ item.signee }}</td>
-                            <td class="text-xs-right">{{ item.state }}</td>
-                            <td class="text-xs-right">
-                                <v-simple-checkbox
-                                    label=""
-                                    v-model="item.applicable"
-                                    disabled
-                                >
-                                </v-simple-checkbox>
-                            </td>
-                            <td>
-                                <v-icon
-                                    small
-                                    class="mr-2"
-                                    @click="onEditSignature(item)"
-                                >
-                                    mdi-pencil-box-outline
-                                </v-icon>
-                            </td>
-                        </tr>
-                    </template>
+                  mdi-pencil-box-outline
+                </v-icon>
+              </td>
+            </tr>
+          </template>
 
-                    <template v-slot:top>
-                        <v-dialog v-model="activeSignature" max-width="500px">
-                            <v-card>
-                                <v-card-title>
-                                    <span class="headline">{{
-                                        signature.faculty
-                                    }}</span>
-                                </v-card-title>
+          <template #top>
+            <v-dialog
+              v-model="activeSignature"
+              max-width="500px"
+            >
+              <v-card>
+                <v-card-title>
+                  <span class="headline">{{
+                    signature.faculty
+                  }}</span>
+                </v-card-title>
 
-                                <v-card-text>
-                                    <v-container>
-                                        <v-row>
-                                            <v-col cols="12" sm="6" md="4">
-                                                <v-text-field
-                                                    v-model="signature.signee"
-                                                    label="Name"
-                                                >
-                                                </v-text-field>
-                                            </v-col>
-                                            <v-col cols="12" sm="6" md="4">
-                                                <v-text-field
-                                                    v-model="signature.state"
-                                                    label="State"
-                                                >
-                                                </v-text-field>
-                                            </v-col>
+                <v-card-text>
+                  <v-container>
+                    <v-row>
+                      <v-col
+                        cols="12"
+                        sm="6"
+                        md="4"
+                      >
+                        <v-text-field
+                          v-model="signature.signee"
+                          label="Name"
+                        />
+                      </v-col>
+                      <v-col
+                        cols="12"
+                        sm="6"
+                        md="4"
+                      >
+                        <v-text-field
+                          v-model="signature.state"
+                          label="State"
+                        />
+                      </v-col>
 
-                                            <v-col cols="12" sm="6" md="4">
-                                                <v-checkbox
-                                                    v-model="
-                                                        signature.applicable
-                                                    "
-                                                    label="applicable"
-                                                >
-                                                </v-checkbox>
-                                            </v-col>
-                                        </v-row>
-                                    </v-container>
-                                </v-card-text>
+                      <v-col
+                        cols="12"
+                        sm="6"
+                        md="4"
+                      >
+                        <v-checkbox
+                          v-model="
+                            signature.applicable
+                          "
+                          label="applicable"
+                        />
+                      </v-col>
+                    </v-row>
+                  </v-container>
+                </v-card-text>
 
-                                <v-card-actions>
-                                    <v-spacer></v-spacer>
-                                    <v-btn
-                                        color="blue darken-1"
-                                        text
-                                        @click="onCloseSignature()"
-                                    >
-                                        {{ $t("cancel") }}
-                                    </v-btn>
-                                    <v-btn
-                                        color="blue darken-1"
-                                        text
-                                        @click="onSaveSignature()"
-                                    >
-                                        {{ $t("save") }}
-                                    </v-btn>
-                                </v-card-actions>
-                            </v-card>
-                        </v-dialog>
-                    </template>
-                </v-data-table>
-            </v-card-text>
-            <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn outlined rounded text @click="onDownloadCatalog()">
-                    {{ $t("documents.catalog") }}
-                </v-btn>
-                <v-btn outlined rounded text @click="onDownloadZip()">
-                    {{ $t("documents.download") }}
-                </v-btn>
-            </v-card-actions>
-        </v-card>
-    </v-dialog>
+                <v-card-actions>
+                  <v-spacer />
+                  <v-btn
+                    color="blue darken-1"
+                    text
+                    @click="onCloseSignature()"
+                  >
+                    {{ $t("cancel") }}
+                  </v-btn>
+                  <v-btn
+                    color="blue darken-1"
+                    text
+                    @click="onSaveSignature()"
+                  >
+                    {{ $t("save") }}
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+          </template>
+        </v-data-table>
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer />
+        <v-btn
+          outlined
+          rounded
+          text
+          @click="onDownloadCatalog()"
+        >
+          {{ $t("documents.catalog") }}
+        </v-btn>
+        <v-btn
+          outlined
+          rounded
+          text
+          @click="onDownloadZip()"
+        >
+          {{ $t("documents.download") }}
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script>

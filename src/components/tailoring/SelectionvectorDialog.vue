@@ -1,27 +1,39 @@
 <template>
-    <v-overlay v-model="wait">
-        <v-progress-circular indeterminate size="64"></v-progress-circular>
-    </v-overlay>
+  <v-overlay v-model="wait">
+    <v-progress-circular
+      indeterminate
+      size="64"
+    />
+  </v-overlay>
 
-    <v-dialog v-model="active" max-width="75%">
-        <v-card elevation="2">
-            <v-card-title>{{ $t("selectionvector_applied") }}</v-card-title>
-            <v-card-text>
-                <v-data-table
-                    :headers="headers"
-                    :items="items"
-                    class="elevation-1"
-                >
-                </v-data-table>
-            </v-card-text>
-            <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn outlined rounded text @click="active = false">{{
-                    $t("close")
-                }}</v-btn>
-            </v-card-actions>
-        </v-card>
-    </v-dialog>
+  <v-dialog
+    v-model="active"
+    max-width="75%"
+  >
+    <v-card elevation="2">
+      <v-card-title>{{ $t("selectionvector_applied") }}</v-card-title>
+      <v-card-text>
+        <v-data-table
+          :headers="headers"
+          :items="items"
+          class="elevation-1"
+        />
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer />
+        <v-btn
+          outlined
+          rounded
+          text
+          @click="active = false"
+        >
+          {{
+            $t("close")
+          }}
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script>

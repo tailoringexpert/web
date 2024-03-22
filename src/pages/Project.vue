@@ -7,8 +7,9 @@
 <script>
 import { ref, reactive } from "vue"
 import { useI18n } from "vue-i18n"
-import { useStore } from "vuex"
+import { useRoute  } from "vue-router"
 import axios from "axios";
+import store from "@/store";
 
 import ScreeningsheetDialog from "@/components/screeningsheet/ScreeningsheetDialog"
 import SelectionvectorDialog from "@/components/tailoring/SelectionvectorDialog"
@@ -73,7 +74,6 @@ export default {
             _links: [],
         });
 
-        const store = useStore();
         const svpt = (code) =>
             t("tenants." + store.state.tenant + ".selectionvector." + code);
 
@@ -93,8 +93,6 @@ export default {
         }
 
         function onOpenSelectionVector(item) {
-
-            console.log(item);
              this.$refs.selectionvector.onActivate(item);
         }
 
@@ -133,26 +131,29 @@ export default {
     created() {
         this.wait = true;
 
-        this.$store.commit("breadcrumbs", [
+        const route = useRoute();
+        const { t } = useI18n();
+
+        
+        store.commit("breadcrumbs", [
             {
-                text: this.$t("project", 2),
+                title: t("project", 2),
                 disabled: false,
                 exact: true,
                 to: { name: "projects" },
             },
             {
-                text: this.$route.params.id,
+                title: route.params.id,
                 disabled: false,
                 exact: true,
-                to: { name: "project", params: { id: this.$route.params.id } },
+                to: { name: "project", params: { id: route.params.id } },
             },
         ]);
 
         axios
-            .get(this.$store.state.project)
+            .get(store.state.project)
             .then((response) => {
                 this.project = response.data;
-                console.log(this.project)
                 this.wait = false;
             })
             .catch(() => {

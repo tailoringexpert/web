@@ -50,6 +50,8 @@
 
     <v-main>
       <v-container fluid>
+        <v-breadcrumbs :items="$store.state.breadcrumbs"></v-breadcrumbs>
+
         <router-view />
 
         <v-btn

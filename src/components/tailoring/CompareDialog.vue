@@ -1,7 +1,10 @@
 <template>
-    <v-overlay v-model="wait">
-        <v-progress-circular indeterminate size="64"></v-progress-circular>
-    </v-overlay>
+  <v-overlay v-model="wait">
+    <v-progress-circular
+      indeterminate
+      size="64"
+    />
+  </v-overlay>
 </template>
 
 <script>
