@@ -6,6 +6,7 @@
         </v-overlay>
 
         <ScreeningsheetDialog ref="screeningsheet" />
+        <NameDialog ref="name"/>
         <SelectionvectorDialog ref="selectionvector" />
         <CompareDialog ref="compare" />
         <DocumentsDialog ref="documents" />
@@ -309,6 +310,7 @@ import axios from "axios";
 import store from "@/store";
 
 import ScreeningsheetDialog from "@/components/screeningsheet/ScreeningsheetDialog";
+import NameDialog from "@/components/tailoring/NameDialog";
 import SelectionvectorDialog from "@/components/tailoring/SelectionvectorDialog";
 import CompareDialog from "@/components/tailoring/CompareDialog";
 import DocumentsDialog from "@/components/tailoring/DocumentsDialog";
@@ -318,6 +320,7 @@ export default {
     name: "Project",
     components: {
         ScreeningsheetDialog,
+        NameDialog,
         SelectionvectorDialog,
         CompareDialog,
         DocumentsDialog,
@@ -329,6 +332,7 @@ export default {
 
         // components
         const screeningsheet = ref(null);
+        const name = ref(null);
         const selectionvector = ref(null);
         const compare = ref(null);
         const documents = ref(null);
@@ -393,26 +397,24 @@ export default {
         }
 
         function onOpenSelectionVector(item) {
-            this.$refs.selectionvector.onActivate(item);
+            this.selectionvector.onActivate(item);
         }
 
         function onTailoringCompare(item) {
-            this.$refs.compare.onActivate(item);
+            this.compare.onActivate(item);
         }
 
         function onDocuments(item) {
-            this.$refs.documents.onActivate(item._links);
+            this.documents.onActivate(item._links);
         }
 
         function onAttachments(item) {
-            this.$refs.attachments.onActivate(item._links);
+            this.attachments.onActivate(item._links);
         }
 
-        function onTailoringName(item) {
-            this.tailoringName = item.name;
-            this.active = true;
+         function onTailoringName(item) {
             console.log("onTailoringName");
-            console.log(this.tailoringName);
+            this.name.onActivate(item);
         }
 
         return {
@@ -421,7 +423,7 @@ export default {
             snackText,
             svpt,
             headers,
-            prMauel1883!oject,
+            project,
             isTailoringEditable,
             isTailoringDeletable,
             onOpenScreeningSheet,
@@ -438,6 +440,7 @@ export default {
             compare,
             documents,
             attachments,
+            name
         };
     },
 
