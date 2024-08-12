@@ -1,110 +1,136 @@
-<template>
-    <v-app>
-        <v-app-bar app>
-            <router-link to="/project">
-                <v-img src="logo.png" max-width="36" max-heigt="36" ></v-img>
-            </router-link>
-            <v-spacer></v-spacer>
-            <v-toolbar-title>TailoringExpert | Tailoring</v-toolbar-title>
-            <v-btn class="mx-2" fab dark small color="grey lighten-2" @click="openHelp()">
-                <v-icon dark>mdi-help</v-icon>
-            </v-btn>
+<script setup>
+import { ref, inject } from "vue";
+import { useRoute } from "vue-router";
+import axios from "axios";
 
-            <v-menu left bottom rounded="lg">
-                <template v-slot:activator="{ on, attrs }">
-                    <v-btn icon v-bind="attrs" v-on="on">
-                        <v-icon>mdi-dots-vertical</v-icon>
-                    </v-btn>
-                </template>
-                <v-list>
-                    <v-list-item to="/project">
-                        Projects
-                    </v-list-item>
-                    <v-list-item to="/catalog">
-                        Catalogs
-                    </v-list-item>
-                </v-list>
-            </v-menu>
+import { mdiDotsVertical, mdiHelp } from "@mdi/js";
 
-        </v-app-bar>
+import Help from "@/components/help/Help";
 
-        <v-main>
-            <v-container fluid>
-                <v-breadcrumbs :items="$store.state.breadcrumbs">
-                </v-breadcrumbs>
+// provided interfaces
 
-                <router-view></router-view>
+// injects
+const store = inject("store");
+const logger = inject("logger");
 
-                <v-btn plain @click="openImpressum()">Impressum</v-btn>
-                <v-btn plain @click="openDataProtection()">Data Protection</v-btn>
+const help = ref(false);
+const helpText = ref("");
 
-                <v-bottom-sheet v-model="help">
-                    <v-card class="overflow-y-auto" max-height="400">
-                        <v-banner class="justify-end headline font-weight-light" sticky>
-                            <v-icon @click="help=false">mdi-close-circle-outline</v-icon>
-                        </v-banner>
+const route = useRoute();
 
-                        <v-card-text>
-                            <div class="mb-4" v-html="helpText"></div>
-                        </v-card-text>
-                    </v-card>
-                </v-bottom-sheet>
-            </v-container>
-        </v-main>
-    </v-app>
-</template>
+const onHelp = () => {
+    loadHTML("/static", "help/" + route.name + ".html");
+};
 
-<script>
-export default {
-  data: () => (
-    {
-        help: false,
-        helpText: '',
-        footer: {
-            inset: false,
-        },
-    }
-  ),
-  methods: {
-    openHelp : function() {
-        this.loadHTML("/static", "help/" + this.$route.name + ".html");
-        //window.open(origin);
-        //window.location = origin;
-        //location.replace(origin);
+const onImpressum = () => {
+    loadHTML("/static", "impressum.html");
+};
 
-        /*this.$http.get(origin).then(
-            response => {
-                console.log(response.body);
-                this.helpText = response.body;
-                this.help = true;
-            }
-        );*/
-    },
-    openImpressum: function() {
-        this.loadHTML("/static", "impressum.html");
-    },
-    openDataProtection: function() {
-        this.loadHTML("/static", "dataprotection.html");
-    },
-    loadHTML : function(path, file) {
-        this.$http.get(window.location.origin + path + "/" + this.$storage.get('tenant') + "/" + file).then(
-            response => {
-                this.helpText = response.body;
-                this.help = true;
-            },
-            response => {
-                if(404 === response.status) {
-                    this.$http.get( window.location.origin +  path + "/" + file).then(
-                        response => {
-                            this.helpText = response.body;
-                            this.help = true;
-                        }
-                   );
-                }
-            }
-        );
-    },
-  }
+const onDataProtection = () => {
+    loadHTML("/static", "dataprotection.html");
+};
 
+function loadHTML(path, file) {
+    axios
+        .get(
+            window.location.origin +
+                path +
+                "/" +
+                store.state.tenant +
+                "/" +
+                file
+        )
+        .then((response) => {
+            helpText.value = response.data;
+            help.value = true;
+        })
+        .catch((error) => {
+            logger.error(error);
+        });
 }
 </script>
+
+<template>
+  <v-app class="app">
+    <v-app-bar class="app-bar">
+      <router-link to="/project">
+        <img
+          src="logo.png"
+          width="36px"
+          height="36px"
+          alt="Home"
+        >
+      </router-link>
+      <v-toolbar-title>TailoringExpert | Tailoring</v-toolbar-title>
+      <v-spacer />
+      <v-btn
+        class="mx-2"
+        color="grey-lighten-2"
+        @click="onHelp()"
+      >
+        <v-icon :icon="mdiHelp" />
+      </v-btn>
+
+
+      <v-menu>
+        <template #activator="{ props }">
+          <v-btn
+            icon="mdi-dots-vertical"
+            v-bind="props"
+          >
+            <v-icon :icon="mdiDotsVertical" />
+          </v-btn>
+        </template>
+
+        <v-list>
+          <v-list-item to="/project">
+            Projects
+          </v-list-item>
+          <v-list-item to="/catalog">
+            Catalogs
+          </v-list-item>
+        </v-list>
+      </v-menu>
+    </v-app-bar>
+
+    <v-system-bar window>
+      <v-breadcrumbs :items="store.state.breadcrumbs" />
+      <v-spacer />
+    </v-system-bar>
+
+    <v-main>
+      <!-- style="height: 100vh;display: flex;flex-direction: column; overflow: hidden"> -->
+      <v-container
+        fluid
+        style="flex-grow: 1; "
+      >
+        <router-view />
+      </v-container>
+    </v-main>
+
+    <v-footer app>
+      <v-btn
+        variant="plain"
+        @click="onImpressum()"
+      >
+        Impressum
+      </v-btn>
+      <v-btn
+        variant="plain"
+        @click="onDataProtection()"
+      >
+        Data Protection
+      </v-btn>
+
+      <Help
+        :html="helpText"
+        :active="help"
+        @close:closed="help = false"
+      />
+    </v-footer>
+  </v-app>
+</template>
+
+<style>
+@import "@/assets/styles/css/tailoringexpert.css";
+</style>
