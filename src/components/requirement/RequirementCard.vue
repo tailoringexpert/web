@@ -78,7 +78,7 @@ const onNew = () => {
     </v-card-subtitle>
     <v-divider />
     <v-card-text>
-      <span v-html="requirement.raw.text" />
+      <span v-html="$sanitize(requirement.raw.text)" />
     </v-card-text>
     <v-card-actions>
       <v-row justify="end">
