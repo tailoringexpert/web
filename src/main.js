@@ -29,7 +29,9 @@ app.provide("logger", app.config.globalProperties.$log);
 app.use(i18n);
 
 // sanitite
-app.use(Vue3Sanitize);
+app.use(Vue3Sanitize,  {
+    allowedTags: ['img']
+});
 
 // vuetify
 app.use(vuetify);
