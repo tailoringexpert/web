@@ -1,5 +1,6 @@
 <script setup>
 import { ref, reactive, computed, toValue, inject } from "vue";
+import { useI18n } from "vue-i18n";
 
 import { useExcel2JSONConverter } from "@/composables/catalog/Excel2JSONConverter";
 
@@ -8,6 +9,8 @@ import {
     mdiMicrosoftExcel,
 } from "@mdi/js";
 
+const { t } = useI18n();
+import { warnDialog } from "vuetify3-dialog";
 import Wait from "@/components/wait/Wait";
 
 // provided interfaces
@@ -56,8 +59,13 @@ const onConvert = () => {
             wait.active = false;
         })
         .catch((error) => {
-            wait.active = false;
-            logger.error(error);
+            warnDialog({
+                title: t("error"),
+                text: String.fromCharCode.apply(null, new Uint8Array(error)),
+                confirmationText: t("ok"),
+            }).then(() => {
+                wait.active = false;
+            });
         });
 };
 

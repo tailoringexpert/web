@@ -30,7 +30,7 @@ export function useExcel2JSONConverter() {
                     })
                     .catch((error) => {
                         console.log(error);
-                        reject(error.data);
+                        reject(error.response.data);
                     });
             });
         },
