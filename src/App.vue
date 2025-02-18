@@ -51,7 +51,7 @@ function loadHTML(path, file) {
 </script>
 
 <template>
-  <v-app class="app">
+  <v-app>
     <v-app-bar class="app-bar">
       <router-link to="/project">
         <img
@@ -62,7 +62,28 @@ function loadHTML(path, file) {
         >
       </router-link>
       <v-toolbar-title>TailoringExpert | Tailoring</v-toolbar-title>
+
       <v-spacer />
+
+      <v-btn
+        variant="plain"
+        @click="onImpressum()"
+      >
+        Impress
+      </v-btn>
+      <v-btn
+        variant="plain"
+        @click="onDataProtection()"
+      >
+        Data Protection
+      </v-btn>
+
+      <Help
+        :html="helpText"
+        :active="help"
+        @close:closed="help = false"
+      />
+
       <v-btn
         class="mx-2"
         color="grey-lighten-2"
@@ -99,38 +120,12 @@ function loadHTML(path, file) {
     </v-system-bar>
 
     <v-main>
-      <!-- style="height: 100vh;display: flex;flex-direction: column; overflow: hidden"> -->
       <v-container
         fluid
-        style="flex-grow: 1; "
       >
         <router-view />
       </v-container>
     </v-main>
-
-    <v-footer app>
-      <v-btn
-        variant="plain"
-        @click="onImpressum()"
-      >
-        Impressum
-      </v-btn>
-      <v-btn
-        variant="plain"
-        @click="onDataProtection()"
-      >
-        Data Protection
-      </v-btn>
-
-      <Help
-        :html="helpText"
-        :active="help"
-        @close:closed="help = false"
-      />
-    </v-footer>
   </v-app>
 </template>
 
-<style>
-@import "@/assets/styles/css/tailoringexpert.css";
-</style>
