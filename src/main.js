@@ -1,84 +1,70 @@
-import Vue from 'vue'
-import VueResource from 'vue-resource';
-import App from '@/App.vue'
-import router from '@/router'
-import store from '@/store'
-import i18n from '@/plugins/i18n'
-import md from "@mdi/font/css/materialdesignicons.min.css";
-import Storage from 'vue-ls';
-import getEnv from '@/utils/env';
-import Vuetify from "vuetify";
-import VuetifyConfirm from "vuetify-confirm";
+import { createApp } from "vue";
+import VueLogger from "vuejs3-logger";
+import axios from "axios";
+import Vue3Sanitize from "vue-3-sanitize";
+import { Vuetify3Dialog } from "vuetify3-dialog";
 
-import VueLogger from 'vuejs-logger';
+import App from "@/App.vue";
+import router from "@/router";
+import store from "@/store";
+import i18n from "@/plugins/i18n";
+import vuetify from "@/plugins/vuetify";
+import { useEnv } from "@/composables/env";
 
+const app = createApp(App);
 
-// CREATE VUETIFY INSTANCE
-const vuetify = new Vuetify({
-  theme: { dark: false }
-});
-
-
-// THIS IS IMPORTANT TO INSTALL DIALOGS
-// YOU NEED TO SEND VUETIFY INSTANCE INTO DIALOG CONTEXT
-Vue.use(Vuetify);
-Vue.use(VuetifyConfirm, {
-  vuetify
-});
-
-Vue.use(VueResource);
-
-Vue.config.productionTip = false;
-Vue.use(VueLogger, {
+// logger
+app.use(VueLogger, {
     isEnabled: true,
-    logLevel : Vue.config.productionTip  ? 'error' : 'debug',
-    stringifyArguments : false,
-    showLogLevel : true,
-    showMethodName : true,
-    separator: '|',
-    showConsoleColors: true
-}
+    logLevel: process.env.NODE_ENV === "production" ? "error" : "debug",
+    stringifyArguments: false,
+    showLogLevel: true,
+    showMethodName: false,
+    separator: "|",
+    showConsoleColors: true,
+});
+app.provide("logger", app.config.globalProperties.$log);
+
+// i8n
+app.use(i18n);
+
+// sanitite
+app.use(Vue3Sanitize,  {
+    allowedTags: ['img']
+});
+
+// vuetify
+app.use(vuetify);
+app.use(Vuetify3Dialog, {
+    vuetify: vuetify,
+    defaults: {
+        //You can pass default options for dialogs, dialog's card, snackbars or bottom-sheets here
+    },
+});
+
+// router
+app.use(router);
+
+// store
+app.config.globalProperties.$log.debug(
+    "Setting tenant " + useEnv().get("VUE_APP_TENANT")
 );
+app.provide("store", store);
+store.mutations.tenant(useEnv().get("VUE_APP_TENANT"));
 
-Vue.use(Storage, {
-    namespace: 'tailoringexpert__', // key prefix
-    name: 'storage', // name variable Vue.[ls] or this.[$ls],
-    storage: 'local', // storage name session, local, memory
-});
-
-Vue.storage.set('tenant', getEnv('VUE_APP_TENANT'));
-Vue.http.interceptors.push(function(request) {
-    request.headers.set('X-Tenant', Vue.storage.get('tenant'));
-});
-
-store.commit("selectionVectorParameterTranslations", i18n.t("tenants")[Vue.storage.get('tenant')]['selectionvector']);
+// axios
+axios.defaults.headers.common["X-TENANT"] = store.state.tenant;
+axios.defaults.headers.common["Content-Type"] =
+    "application/json;charset=utf-8";
+app.config.globalProperties.$axios = axios.create({});
 
 var origin = window.location.origin + "/api";
-Vue.http.get(origin).then(
-    response => {
-        store.commit('links', response.body._links);
-
-        Vue.http.get(response.body._links['selectionvector'].href).then(
-            response => {
-                store.commit('selectionvectors', response.body._embedded.selectionVectorProfiles);
-            },
-            response => {
-                console.log(response);
-            }
+axios.get(origin).then((response) => {
+    store.mutations.links(response.data._links);
+    axios.get(response.data._links["selectionvector"].href).then((response) => {
+        store.mutations.selectionvectors(
+            response.data._embedded.selectionVectorProfiles
         );
-
-        new Vue({
-            vuetify,
-            i18n,
-            router,
-            store,
-            render: h => h(App)
-        }).$mount('#app')
-
-
-    },
-    response => {
-        console.log(response);
-    }
-);
-
+        app.mount("#app");
+    });
+});

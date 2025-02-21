@@ -1,67 +1,51 @@
 {
-  "name": "TailoringExpert",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
-  },
-  "resolutions": {
-    "glob-parent": "^6.0.1"
-  },
-  "dependencies": {
-    "@mdi/font": "^6.5.95",
-    "core-js": "^3.20.3",
-    "dependencies": "0.0.1",
-    "file-saver": "^2.0.5",
-    "pdfjs-dist": "^2.12.313",
-    "tiptap": "^1.32.2",
-    "tiptap-extensions": "^1.35.2",
-    "vue": "^2.7.14",
-    "vue-i18n": "^8.27.0",
-    "vue-resource": "^1.5.3",
-    "vue-router": "^3.5.3",
-    "vuejs-logger": "^1.5.5",
-    "vuetify": "^2.6.3",
-    "vuetify-confirm": "^2.0.6",
-    "vuex": "^3.6.2",
-    "vue-ls": "^4.2.0"
-  },
-  "devDependencies": {
-    "@nuxtjs/vuetify": "^1.12.1",
-    "@vue/cli-plugin-babel": "^5.0.8",
-    "@vue/cli-plugin-eslint": "^5.0.8",
-    "@vue/cli-plugin-router": "^5.0.8",
-    "@vue/cli-plugin-vuex": "^5.0.8",
-    "@vue/cli-service": "^5.0.8",
-    "babel-eslint": "^10.1.0",
-    "eslint": "7.30.0",
-    "eslint-plugin-vue": "^8.4.0",
-    "sass": "~1.32.6",
-    "sass-loader": "^8.0.0",
-    "vue-cli-plugin-i18n": "^2.3.2",
-    "vue-cli-plugin-vuetify": "~2.4.5",
-    "vue-separate-files-webpack-loader": "^1.7.6",
-    "vue-template-compiler": "^2.6.14",
-    "vuetify-loader": "^1.7.3"
-  },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
+    "name": "Tailoringexpert",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "serve": "vue-cli-service serve",
+        "build": "vue-cli-service build",
+        "lint": "vue-cli-service lint"
     },
-    "extends": [
-      "plugin:vue/base"
-    ],
-    "parserOptions": {
-      "parser": "babel-eslint"
+    "dependencies": {
+        "@mdi/js": "^7.4.47",
+        "axios": "^1.7.7",
+        "vue": "^3.5.8",
+        "vue-i18n": "^10.0.3",
+        "vue-router": "^4.4.5",
+        "vue-3-sanitize": "^0.1.4",
+        "vuejs3-logger": "^1.0.0",
+        "vuetify": "^3.7.2",
+        "vuetify3-dialog": "^1.5.3",
+        "vue3-tree": "^0.11.5",
+        "@tiptap/vue-3": "^2.7.2",
+        "@tiptap/pm": "^2.7.2",
+        "@tiptap/starter-kit": "^2.7.2",
+        "@tiptap/extension-underline": "^2.7.2",
+        "@tiptap/extension-image": "^2.7.2",
+        "@tiptap/extension-table": "^2.7.2",
+        "@tiptap/extension-table-row": "^2.7.2",
+        "@tiptap/extension-table-header": "^2.7.2",
+        "@tiptap/extension-table-cell": "^2.7.2"
     },
-    "rules": {}
-  },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not dead"
-  ]
+    "devDependencies": {
+        "@babel/core": "^7.24.4",
+        "@babel/eslint-parser": "^7.24.1",
+        "@vue/cli-plugin-babel": "^5.0.8",
+        "@vue/cli-plugin-eslint": "^5.0.8",
+        "@vue/cli-plugin-router": "^5.0.8",
+        "@vue/cli-plugin-vuex": "^5.0.8",
+        "@vue/cli-service": "^5.0.8",
+        "eslint-plugin-vue": "^9.25.0",
+        "eslint-plugin-vuetify": "^2.4.0",
+        "css-loader": "^7.1.2",
+        "sass": "^1.75.0",
+        "sass-loader": "^14.2.1",
+        "vue-eslint-parser": "^9.4.2"
+    },
+    "browserslist": [
+        "> 1%",
+        "last 2 versions",
+        "not dead"
+    ]
 }
