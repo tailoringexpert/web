@@ -25,7 +25,7 @@ pipeline {
         GPG_SIGNKEY = credentials('GITHUB_GPG_SIGNKEY')
         NEXUS_CREDENTIALS = credentials('NEXUS_CREDENTIALS')
         SONAR_TOKEN = credentials('TAILORINGEXPERT_SONAR_TOKEN')
-        GIT_REPOSITORY = 'tailoringexpert/platform.git' 
+        GIT_REPOSITORY = 'tailoringexpert/web.git'
         
         // other (external) defined env vars
         // M2_VOLUME maven      repoository volume
@@ -41,7 +41,8 @@ pipeline {
             image 'tailoringexpert/maven:3.9-eclipse-23'
             args '''  
                 -u 1001
-                -v $GPG_VOLUME:/.gnupg\
+                -v $GPG_VOLUME:/.gnupg \
+				-v $SONAR_USER_HOME:/.sonar \
                 -v $PWD:/data \
                 -v $M2_VOLUME:/home/maven \
                 -v $SONAR_USER_HOME:/.sonar \
@@ -77,10 +78,9 @@ pipeline {
              }
         }
 
-       
         stage('install') {
             steps {
-                sh "mvn --settings .jenkins/settings.xml -Dmaven.repo.local=${M2_VOLUME}/repository -DskipTests clean install"
+                sh "mvn --settings .jenkins/settings.xml -Dmaven.repo.local=${M2_VOLUME}/repository -DskipTests install"
             }
         }
 
@@ -97,7 +97,7 @@ pipeline {
                 sh('git config commit.gpgsign true')
                 sh('git config user.signingkey $GPG_SIGNKEY')
                 
-                sh "mvn --settings .jenkins/settings.xml -Dmaven.repo.local=${M2_VOLUME}/repository -B -Dresume=false -DargLine='-DprocessAllModules -Dmaven.repo.local=${M2_VOLUME}/repository' -DskipTestProject=true  -DgpgSignTag=true -DgpgSignCommit=true -DpostReleaseGoals=deploy gitflow:release" 
+                sh "mvn --settings .jenkins/settings.xml -Dmaven.repo.local=${M2_VOLUME}/repository -B -Dresume=false -DargLine='-DprocessAllModules -Dmaven.repo.local=/home/maven/.m2 --settings .jenkins/settings.xml' -DskipTestProject=true  -DgpgSignTag=true -DgpgSignCommit=true -DpostReleaseGoals=deploy gitflow:release"
 
                 // remove credentials
                 sh('git remote set-url origin $GIT_URL')
