@@ -1,31 +1,30 @@
 <script setup>
-import { ref, inject, computed, watch } from "vue";
-import { useI18n } from "vue-i18n";
+import { computed, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 
-import { useSelectionvectorComparison } from "@/composables/selectionvector/SselectionvectorComparison";
+import { useSelectionvectorComparison } from '@/composables/selectionvector/SelectionvectorComparison';
 
 // provided interfaces
 const props = defineProps({
     project: {
         type: String,
-        default: "",
+        default: ''
     },
     selectionVector: {
         type: Object,
         default: () => {
             return { levels: {} };
-        },
+        }
     },
     editedSelectionVector: {
         type: Object,
         default: () => {
             return { levels: {} };
-        },
-    },
+        }
+    }
 });
 
 // injects
-const store = inject("store");
 
 // internal
 const { state, mutations, actions } = useSelectionvectorComparison();
@@ -49,22 +48,7 @@ watch(
 );
 
 const { t } = useI18n();
-const headers = ref([
-    {
-        title: t("name"),
-        align: "start",
-        sortable: true,
-        value: "label",
-    },
-    {
-        title: t("selectionvector_calculated"),
-        value: "calculated",
-    },
-    {
-        title: t("selectionvector_applied"),
-        value: "modified",
-    },
-]);
+
 const items = computed(() => state.comparedSelectionvectors);
 
 // event handlers
@@ -73,24 +57,27 @@ const items = computed(() => state.comparedSelectionvectors);
 </script>
 
 <template>
-  <v-row>
-    <v-col class="col">
-      {{ $t("project") }}
-    </v-col>
-    <v-col>{{ project }}</v-col>
-  </v-row>
-  <v-row>
-    <v-col>
-      <v-card>
-        <v-card-title>
-          {{ $t("selectionvector_comparison") }}
-        </v-card-title>
-        <v-data-table
-          :headers="headers"
-          :items="items"
-          class="elevation-1"
-        />
-      </v-card>
-    </v-col>
-  </v-row>
+    <Card>
+        <template #title>
+            <div class="flex items-center justify-left mb-0">
+                <span>{{ t('SelectionVectorComparison.project') }}: &nbsp;</span><span>{{ project }}</span>
+            </div>
+        </template>
+
+        <template #content>
+            <DataTable
+                :value="items"
+                data-key="label"
+                striped-rows
+                scrollable
+                scroll-height="400px"
+                table-style="min-width: 50rem"
+                class="col-span-full"
+            >
+                <Column field="label" :header="t('SelectionVectorComparison.name')" />
+                <Column field="calculated" :header="t('SelectionVectorComparison.calculatedSelectionvector')" />
+                <Column field="modified" :header="t('SelectionVectorComparison.appliedSelectionvector')" />
+            </DataTable>
+        </template>
+    </Card>
 </template>

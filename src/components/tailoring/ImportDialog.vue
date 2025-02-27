@@ -1,33 +1,30 @@
 <script setup>
-import { ref, reactive, computed, inject, watch } from "vue";
-import { useI18n } from "vue-i18n";
+import { ref, computed, toValue, watch, inject } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useToast } from 'primevue/usetoast';
 
-import { useImportDialog } from "@/composables/tailoring/ImportDialog";
-
-import { notifySuccess, warnDialog } from "vuetify3-dialog";
-import { mdiUpdate } from "@mdi/js";
-
-import Wait from "@/components/wait/Wait";
+import { useImportDialog } from '@/composables/tailoring/ImportDialog';
 
 // provided interfaces
-const emit = defineEmits(["close:closed"]);
+const emit = defineEmits(['close:closed']);
 const props = defineProps({
     active: {
         type: Boolean,
-        default: false,
+        default: false
     },
     tailoring: {
         type: Object,
-        default: null,
-    },
+        default: null
+    }
 });
 
 // injects
-const logger = inject("logger");
+const logger = inject('logger');
 
 // internal
 const { mutations, actions } = useImportDialog();
 const { t } = useI18n();
+const toast = useToast();
 
 watch(
     () => props.tailoring,
@@ -36,115 +33,62 @@ watch(
     }
 );
 
-const wait = reactive({
-    active: false,
-    config: {
-        title: "Importing requirments...",
-        icon: mdiUpdate,
-    },
-});
-
-const isActive = computed(() => {
-    return props.active && !wait.active;
+const active = computed(() => {
+    return props.active;
 });
 
 const file = ref(null);
-const onSelectFile = (files) => {
-    file.value = files.target.files[0];
-};
 
 // event handlers
-const onImport = () => {
+const onSelect = (event) => {
+    logger.debug('onSelect');
+    file.value = event?.files[0];
+};
+
+const onUpload = () => {
+    logger.debug('onUpload');
     if (!file.value) {
         return;
     }
 
-    var data = new FormData();
-    data.append("datei", file.value);
-
-    wait.active = true;
+    let data = new FormData();
+    data.append('datei', toValue(file.value));
 
     actions
         .importRequirements(data)
         .then(() => {
-            wait.active = false;
-            emit("close:closed");
-            notifySuccess(t("requirement_import.state.success"), {
-                location: "bottom center",
-            }).then(() => {});
+            emit('close:closed');
+            toast.add({
+                severity: 'info',
+                summary: t('ImportDialog.title'),
+                detail: 'ImportDialog.state.success',
+                life: 3000
+            });
         })
         .catch((error) => {
             console.error(error);
-            warnDialog({
-                title: t("error"),
-                text: error,
-                confirmationText: t("ok"),
-            }).then(() => {
-                wait.active = false;
-            });
         });
 };
 
 const onClose = () => {
-    emit("close:closed");
+    emit('close:closed');
 };
 
 // hooks
 </script>
 
 <template>
-  <Wait :wait />
+    <Dialog :visible="active" :header="t('ImportDialog.title')" :modal="true" @update:visible="onClose">
+        <template #footer>
+            <Button :label="$t('close')" @click="onClose" />
+        </template>
 
-  <v-dialog
-    v-model="isActive"
-    max-width="75%"
-    justify="center"
-  >
-    <v-card elevation="2">
-      <v-card-title>{{ $t("requirement_import.title") }}</v-card-title>
-      <v-card-text justify="center">
-        <v-row
-          no-gutters
-          justify="center"
-          align="center"
-        >
-          <v-col cols="8">
-            <v-file-input
-              show-size
-              label="File input"
-              accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-              @change="onSelectFile"
-            />
-          </v-col>
-
-          <v-col
-            cols="4"
-            class="pl-2"
-          >
-            <v-btn
-              color="success"
-              size="small"
-              @click="onImport"
-            >
-              {{ $t("upload") }}
-              <v-icon
-                :icon="mdiCloudUpload"
-                end
-              />
-            </v-btn>
-          </v-col>
-        </v-row>
-      </v-card-text>
-      <v-card-actions>
-        <v-spacer />
-        <v-btn
-          rounded
-          variant="text"
-          @click="onClose()"
-        >
-          {{ $t("close") }}
-        </v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
+        <div v-if="active" class="flex flex-col gap-1">
+            <FileUpload mode="advanced" custom-upload="true" :upload-label="t('ImportDialog.upload')" multiple="false" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" @select="onSelect" @uploader="onUpload">
+                <template #empty>
+                    <span>{{ t('ImportDialog.files') }}</span>
+                </template>
+            </FileUpload>
+        </div>
+    </Dialog>
 </template>

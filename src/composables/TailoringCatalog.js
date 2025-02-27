@@ -1,13 +1,13 @@
-import { reactive, readonly, toRef, toValue } from "vue";
-import axios from "axios";
+import { reactive, readonly, toRef, toValue } from 'vue';
+import axios from 'axios';
 
-import store from "@/store";
+import store from '@/store';
 
 export function useTailoringCatalog() {
-    var number2Chapter = {};
+    let number2Chapter = {};
 
     const createRequirementText = (text) => {
-        var url = toValue(state.requirement)._links.self.href;
+        const url = toValue(state.requirement)._links.self.href;
         if (url == null) {
             return Promise.resolve();
         }
@@ -15,7 +15,7 @@ export function useTailoringCatalog() {
         return new Promise((resolve, reject) => {
             return axios
                 .post(url, text, {
-                    emulateJSON: true,
+                    emulateJSON: true
                 })
                 .then((response) => {
                     mutations.requirement(response.data);
@@ -29,7 +29,7 @@ export function useTailoringCatalog() {
     };
 
     const updateRequirementText = (text) => {
-        var url = toValue(state.requirement)._links.text.href;
+        const url = toValue(state.requirement)._links.text.href;
         if (url == null) {
             return Promise.resolve();
         }
@@ -37,16 +37,10 @@ export function useTailoringCatalog() {
         return new Promise((resolve, reject) => {
             axios
                 .put(url, text, {
-                    headers: { "Content-Type": "text/plain" },
+                    headers: { 'Content-Type': 'text/plain' }
                 })
                 .then((response) => {
-                    var _requirement = getters
-                        .requirements()
-                        .find(
-                            (requirement) =>
-                                requirement.position ===
-                                toValue(state.requirement).position
-                        );
+                    const _requirement = getters.requirements().find((requirement) => requirement.position === toValue(state.requirement).position);
                     _requirement.text = response.data.text;
                     resolve(state.requirement);
                 })
@@ -57,7 +51,7 @@ export function useTailoringCatalog() {
     };
 
     const loadRequirements = () => {
-        var url = toValue(state.chapter)._links.self.href;
+        const url = toValue(state.chapter)._links.self.href;
         if (url == null) {
             return Promise.resolve();
         }
@@ -65,7 +59,7 @@ export function useTailoringCatalog() {
         axios
             .get(url)
             .then((response) => {
-                mutations.setChapterRequirements(toValue(state.chapter).id, response.data.requirements);
+                mutations.setChapterRequirements(toValue(state.chapter).key, response.data.data);
             })
             .catch((error) => {
                 console.log(error);
@@ -73,47 +67,57 @@ export function useTailoringCatalog() {
     };
 
     const addChapterMapping = (chapter) => {
-        number2Chapter[chapter.id] = chapter.name;
-        mutations.setChapterRequirements(chapter.id, chapter.requirements);
+        number2Chapter[chapter.key] = chapter.name;
+        mutations.setChapterRequirements(chapter.key, chapter.data);
 
-        chapter.nodes.forEach((subchapter) => addChapterMapping(subchapter));
+        chapter.children.forEach((subchapter) => addChapterMapping(subchapter));
     };
 
     const state = reactive({
         catalog: {
             toc: {
                 nodes: [],
-                chapters: [],
-            },
+                chapters: []
+            }
         },
         chapter: null,
         chapter2Requirements: {},
         requirement: null,
+        breadcrumbs: []
     });
 
     const getters = {
-        requirements: () =>
-            toValue(state.chapter) != null
-                ? state.chapter2Requirements[toValue(state.chapter).id]
-                : [],
-        name: (number) => number2Chapter[number],
+        requirements: () => (toValue(state.chapter) != null ? state.chapter2Requirements[toValue(state.chapter).key] : []),
+        name: (number) => number2Chapter[number]
     };
 
     const mutations = {
         catalog: (catalog) => (state.catalog = toRef(catalog)),
-        chapter: (chapter) => (state.chapter = toRef(chapter)),
-        requirement: (requirement) => (state.requirement = toRef(requirement)),
+        chapter: (chapter) => {
+            state.chapter = toRef(chapter);
 
-        setChapterRequirements: (id, requirements) =>
-            (state.chapter2Requirements[id] = toRef(requirements)),
-        updateChapterRequirements: (requirements) => {
-            state.chapter2Requirements[state.chapter.id] = requirements;
+            state.breadcrumbs = [];
+            [...chapter.key.matchAll(/\./g)].map((match) => {
+                const number = chapter.key.substring(0, match.index);
+                state.breadcrumbs.push({
+                    label: number + ' ' + getters.name(number),
+                    disabled: true
+                });
+            });
+
+            state.breadcrumbs.push({
+                label: chapter.key + ' ' + chapter.name,
+                disabled: true
+            });
         },
+        requirement: (requirement) => (state.requirement = toRef(requirement)),
+        setChapterRequirements: (key, requirements) => (state.chapter2Requirements[key] = toRef(requirements)),
+        updateChapterRequirements: (requirements) => (state.chapter2Requirements[state.chapter.key] = requirements)
     };
 
     const actions = {
         initialize: () => {
-            var url = toValue(store.state.tailoring)._links.catalog.href;
+            const url = toValue(store.state.tailoring)._links.catalog.href;
             if (url == null) {
                 return Promise.resolve();
             }
@@ -133,14 +137,14 @@ export function useTailoringCatalog() {
             });
         },
         save: (text) => {
-            if (toValue(state.requirement).hasOwnProperty("position")) {
-                return updateRequirementText(text);
+            if (toValue(state.requirement).hasOwnProperty('position')) {
+                return updateRequirementText(toValue(text));
             } else {
-                return createRequirementText(text);
+                return createRequirementText(toValue(text));
             }
         },
         state: () => {
-            var url = toValue(state.requirement)._links.selected.href;
+            const url = toValue(state.requirement)._links.selected.href;
             if (url == null) {
                 return Promise.resolve();
             }
@@ -148,13 +152,7 @@ export function useTailoringCatalog() {
                 return axios
                     .put(url)
                     .then((response) => {
-                        var _requirement = getters
-                            .requirements()
-                            .find(
-                                (requirement) =>
-                                    requirement.position ===
-                                    toValue(state.requirement).position
-                            );
+                        const _requirement = getters.requirements().find((requirement) => requirement.position === toValue(state.requirement).position);
                         _requirement.selected = response.data.selected;
                         _requirement._links = response.data._links;
                         mutations.requirement(_requirement);
@@ -167,16 +165,16 @@ export function useTailoringCatalog() {
             });
         },
         states: (selected) => {
-            var url = toValue(state.chapter)._links.selection.href;
+            const url = toValue(state.chapter)._links.selection.href;
             if (url == null) {
                 return Promise.resolve();
             }
 
             return new Promise((resolve, reject) => {
                 return axios
-                    .put(url.replace("{selected}", toValue(selected)))
+                    .put(url.replace('{selected}', toValue(selected)))
                     .then((response) => {
-                        mutations.setChapterRequirements(toValue(state.chapter).id, response.data.requirements);
+                        mutations.setChapterRequirements(toValue(state.chapter).key, response.data.data);
                         resolve(getters.requirements);
                     })
                     .catch((error) => {
@@ -184,14 +182,13 @@ export function useTailoringCatalog() {
                         reject(error.data);
                     });
             });
-        },
+        }
     };
 
-    //export function useTailoringCatalog() {
     return {
-        state, //: readonly(state) => tree not working!,
+        state: readonly(state),
         getters,
         mutations,
-        actions,
+        actions
     };
 }

@@ -1,271 +1,151 @@
 <script setup>
-import { ref, reactive, computed, inject } from "vue";
-import { useI18n } from "vue-i18n";
+import { ref, computed, inject, onBeforeMount } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useConfirm } from 'primevue/useconfirm';
 
-import { useBaseCatalog } from "@/composables/BaseCatalog";
+import Excel2JSONConverterDialog from '@/components/catalog/Excel2JSONConverterDialog.vue';
+import JSON2PdfConverterDialog from '@/components/catalog/JSON2PdfConverterDialog.vue';
 
-import {
-    mdiUpdate,
-    mdiFilePdfBox,
-    mdiCodeJson,
-    mdiMicrosoftExcel,
-    mdiFolderZip,
-} from "@mdi/js";
-
-import Wait from "@/components/wait/Wait";
-import Excel2JsonConverter from "@/components/catalog/Excel2JsonConverter";
-import Json2PdfConverter from "@/components/catalog/Json2PdfConverter";
-
+import { useBaseCatalog } from '@/composables/BaseCatalog';
 // provided interfaces
 
 // injects
-const logger = inject("logger");
+const store = inject('store');
+const logger = inject('logger');
 
 // internal
 const { state, actions } = useBaseCatalog();
 const { t } = useI18n();
 
-const waits = reactive({
-    default: {
-        title: "Loading data...",
-        icon: mdiUpdate,
-    },
-    pdf: {
-        title: "Downloading PDF",
-        icon: mdiFilePdfBox,
-    },
-    json: {
-        title: "Downloading JSON",
-        icon: mdiCodeJson,
-    },
-    excel: {
-        title: "Downloading Excel",
-        icon: mdiMicrosoftExcel,
-    },
-    zip: {
-        title: "Downloading archive",
-        icon: mdiFolderZip,
-    },
-});
-const wait = reactive({
-    active: false,
-    config: waits.default,
-});
+const confirm = useConfirm();
+const dialog = ref('none');
 
-const dialog = ref("none");
-
-const headers = ref([
-    {
-        text: t("catalog"),
-        sortable: true,
-        value: "version",
-    },
-    {
-        text: t("validFrom"),
-        sortable: true,
-        value: "validFrom",
-    },
-    {
-        text: t("validUntil"),
-        sortable: true,
-        value: "validUntil",
-    },
-    {
-        text: t("action", 2),
-        value: "actions",
-        sortable: false,
-    },
-]);
 const catalogs = computed(() => state.catalogs);
 
 const initialize = () => {
-    wait.active = true;
-    wait.config = waits.default;
-
-    actions
-        .initialize()
-        .then(() => {
-            wait.active = false;
-        })
-        .catch((error) => {
-            wait.active = false;
-            logger.error(error);
-        });
+    actions.initialize().catch((error) => {
+        logger.error(error);
+    });
 };
 
 // event handlers
 const onPDF = (item) => {
-    wait.active = true;
-    wait.config = waits.pdf;
-
-    actions
-        .pdf(item)
-        .then(() => {
-            wait.active = false;
-        })
-        .catch((error) => {
-            wait.active = false;
-            logger.error(error);
-        });
+    logger.debug('onPDF');
+    actions.pdf(item).catch((error) => {
+        logger.error(error);
+        onError(t('BaseCatalog.error.download'), error);
+    });
 };
 
 const onJSON = (item) => {
-    wait.active = true;
-    wait.config = waits.json;
-
-    actions
-        .json(item)
-        .then(() => {
-            wait.active = false;
-        })
-        .catch((error) => {
-            wait.active = false;
-            logger.error(error);
-        });
+    logger.debug('onJSON');
+    actions.json(item).catch((error) => {
+        logger.error(error);
+        onError(t('BaseCatalog.error.download'), error);
+    });
 };
 
 const onExcel = (item) => {
-    wait.active = true;
-    wait.config = waits.excel;
-
-    actions
-        .excel(item)
-        .then(() => {
-            wait.active = false;
-        })
-        .catch((error) => {
-            wait.active = false;
-            logger.error(error);
-        });
+    logger.debug('onExcel');
+    actions.excel(item).catch((error) => {
+        logger.error(error);
+        onError(t('BaseCatalog.error.download'), error);
+    });
 };
 
 const onZip = (item) => {
-    wait.active = true;
-    wait.config = waits.zip;
-
-    actions
-        .zip(item)
-        .then(() => {
-            wait.active = false;
-        })
-        .catch((error) => {
-            wait.active = false;
-            logger.error(error);
-        });
+    actions.zip(item).catch((error) => {
+        logger.error(error);
+        onError(t('BaseCatalog.error.download'), error);
+    });
 };
 
 const onConvert = () => {
-    logger.debug("onConvert");
-    dialog.value = "excel2Json";
+    logger.debug('onConvert');
+    dialog.value = 'excel2Json';
 };
 
 const onPreview = () => {
-    logger.debug("onPreview");
-    dialog.value = "json2pdf";
+    logger.debug('onPreview');
+    dialog.value = 'json2pdf';
+};
+
+const onError = (title, message) => {
+    confirm.require({
+        header: title,
+        message: message,
+        icon: 'pi pi-exclamation-triangle',
+        rejectProps: {
+            style: 'visibility:hidden'
+        },
+        acceptProps: {
+            label: t('ok'),
+            severity: 'secondary'
+        }
+    });
 };
 
 // hooks
-initialize();
+onBeforeMount(() => {
+    store.mutations.breadcrumbs([
+        {
+            label: t('catalog', 2),
+            disabled: false,
+            exact: true,
+            route: { name: 'basecatalog' }
+        }
+    ]);
+    initialize();
+});
 </script>
 
 <template>
-  <Wait :wait />
+    <Excel2JSONConverterDialog :active="dialog === 'excel2Json'" @close:closed="dialog = 'none'" />
 
-  <Excel2JsonConverter
-    :active="dialog === 'excel2Json'"
-    @close:closed="dialog = 'none'"
-  />
+    <JSON2PdfConverterDialog :active="dialog === 'json2pdf'" @close:closed="dialog = 'none'" />
 
-  <Json2PdfConverter
-    :active="dialog === 'json2pdf'"
-    @close:closed="dialog = 'none'"
-  />
+    <Card>
+        <template #content>
+            <DataTable
+                :value="catalogs"
+                data-key="version"
+                striped-rows
+                table-style="min-width: 50rem"
+                class="col-span-full"
+                paginator
+                :rows="10"
+                :rows-per-page-options="[10, 15, 20, 25]"
+                paginator-template="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
+                current-page-report-template="{first} to {last} of {totalRecords}"
+            >
+                <template #empty>
+                    {{ t('BaseCatalog.empty') }}
+                </template>
+                <template #loading>
+                    {{ t('BaseCatalog.loading') }}
+                </template>
 
-  <section class="view">
-    <v-card class="card-top">
-      <v-toolbar flat>
-        <v-toolbar-title>
-          {{ $t("catalog", 2) }}
-        </v-toolbar-title>
-        <v-divider
-          class="mx-4"
-          inset
-          vertical
-        />
-        <v-btn
-          color="primary"
-          class="mb-2"
-          @click="onConvert"
-        >
-          {{ $t("basecatalog.convert") }}
-        </v-btn>
-        <v-btn
-          color="primary"
-          class="mb-2"
-          @click="onPreview"
-        >
-          {{ $t("basecatalog.preview") }}
-        </v-btn>
-      </v-toolbar>
-    </v-card>
+                <template #header>
+                    <div class="flex flex-wrap items-center justify-between gap-2">
+                        <span class="text-xl font-bold">{{ t('BaseCatalog.catalog') }}</span>
+                        <div class="flex flex-wrap items-end justify-between gap-2">
+                            <Button v-tooltip.bottom="t('BaseCatalog.convert')" icon="pi pi-file-import" rounded raised @click="onConvert" />
+                            <Button v-tooltip.bottom="t('BaseCatalog.preview')" icon="pi pi-file-export" rounded raised @click="onPreview" />
+                        </div>
+                    </div>
+                </template>
 
-    <v-card class="table-container">
-      <v-data-table
-        :headers="headers"
-        :items="catalogs"
-        :items-per-page="20"
-        fixed-header
-        class="elevation-10 flex-table"
-      >
-        <template #item.actions="{ item }">
-          <v-tooltip location="bottom">
-            <template #activator="{ props }">
-              <v-icon
-                :icon="mdiFilePdfBox"
-                class="me-2"
-                v-bind="props"
-                @click="onPDF(item)"
-              />
-            </template>
-            <span>{{ $t("tooltip.catalog_download_pdf") }}</span>
-          </v-tooltip>
-          <v-tooltip location="bottom">
-            <template #activator="{ props }">
-              <v-icon
-                :icon="mdiCodeJson"
-                class="me-2"
-                v-bind="props"
-                @click="onJSON(item)"
-              />
-            </template>
-            <span>{{ $t("tooltip.catalog_download_json") }}</span>
-          </v-tooltip>
-          <v-tooltip location="bottom">
-            <template #activator="{ props }">
-              <v-icon
-                :icon="mdiMicrosoftExcel"
-                class="me-2"
-                v-bind="props"
-                @click="onExcel(item)"
-              />
-            </template>
-            <span>{{ $t("tooltip.catalog_download_excel") }}</span>
-          </v-tooltip>
-          <v-tooltip location="bottom">
-            <template #activator="{ props }">
-              <v-icon
-                :icon="mdiFolderZip"
-                class="me-2"
-                v-bind="props"
-                @click="onZip(item)"
-              />
-            </template>
-            <span>{{
-              $t("tooltip.catalog_download_documents")
-            }}</span>
-          </v-tooltip>
+                <Column field="version" :header="t('BaseCatalog.catalog')" />
+                <Column field="validFrom" :header="t('BaseCatalog.validFrom')" />
+                <Column :header="t('BaseCatalog.action')">
+                    <template #body="slotProps">
+                        <Button v-tooltip.bottom="t('BaseCatalog.tooltip.downloadPDF')" variant="text" icon="pi pi-file-pdf" severity="secondary" rounded @click="onPDF(slotProps.data)" />
+                        <Button v-tooltip.bottom="t('BaseCatalog.tooltip.downloadJSON')" variant="text" icon="pi pi-file" severity="secondary" rounded @click="onJSON(slotProps.data)" />
+                        <Button v-tooltip.bottom="t('BaseCatalog.tooltip.downloadExcel')" variant="text" icon="pi pi-file-excel" severity="secondary" rounded @click="onExcel(slotProps.data)" />
+                        <Button v-tooltip.bottom="t('BaseCatalog.tooltip.downloadZip')" variant="text" icon="pi pi-folder" severity="secondary" rounded @click="onZip(slotProps.data)" />
+                    </template>
+                </Column>
+            </DataTable>
         </template>
-      </v-data-table>
-    </v-card>
-  </section>
+    </Card>
 </template>

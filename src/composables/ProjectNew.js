@@ -1,7 +1,7 @@
-import { reactive, readonly, toRef, toValue } from "vue";
-import axios from "axios";
+import { reactive, readonly, toRef, toValue } from 'vue';
+import axios from 'axios';
 
-import store from "@/store";
+import store from '@/store';
 
 export function useProjectNew() {
     const state = reactive({
@@ -9,7 +9,7 @@ export function useProjectNew() {
         note: null,
         project: null,
         screeningsheet: { levels: {} },
-        selectionvector: null,
+        selectionvector: null
     });
 
     const mutations = {
@@ -27,7 +27,7 @@ export function useProjectNew() {
         },
         selectionvector: (selectionvector) => {
             state.selectionvector = toRef(selectionvector);
-        },
+        }
     };
 
     const actions = {
@@ -36,22 +36,22 @@ export function useProjectNew() {
                 catalog: toValue(state.catalog.version),
                 note: toValue(state.note),
                 screeningSheet: toValue(state.screeningsheet),
-                selectionVector: toValue(state.selectionvector),
+                selectionVector: toValue(state.selectionvector)
             };
 
             return new Promise((resolve, reject) => {
                 return axios
                     .post(toValue(state.catalog).project, data, {
                         headers: {
-                            "Content-Type": "application/json;charset=utf-8",
-                        },
+                            'Content-Type': 'application/json;charset=utf-8'
+                        }
                     })
                     .then((response) => {
                         store.mutations.project({
                             name: toValue(state.screeningsheet).project,
                             _links: {
-                                self: { href: response.headers.location },
-                            },
+                                self: { href: response.headers.location }
+                            }
                         });
                         resolve(response.data);
                     })
@@ -59,12 +59,12 @@ export function useProjectNew() {
                         reject(error.response);
                     });
             });
-        },
+        }
     };
 
     return {
         state: readonly(state),
         mutations,
-        actions,
+        actions
     };
 }

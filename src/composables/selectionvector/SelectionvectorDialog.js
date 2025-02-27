@@ -1,12 +1,13 @@
-import { reactive, toValue, readonly, toRef } from "vue";
-
-import axios from "axios";
-import i18n from "@/plugins/i18n";
+import { reactive, toValue, readonly, toRef } from 'vue';
+import axios from 'axios';
+import { useI18n } from 'vue-i18n';
 
 export function useSelectionvectorDialog() {
+    const { t } = useI18n();
+
     const state = reactive({
         tailoring: null,
-        levels: [],
+        levels: []
     });
 
     const mutations = {
@@ -15,28 +16,25 @@ export function useSelectionvectorDialog() {
         },
         levels: (levels) => {
             state.levels = toRef(levels);
-        },
+        }
     };
 
     const actions = {
         initialize: () => {
-            var url = toValue(state.tailoring)._links.selectionvector.href;
+            let url = toValue(state.tailoring)._links.selectionvector.href;
             if (url == null) {
                 return Promise.resolve();
             }
-
             return new Promise((resolve, reject) => {
                 return axios
                     .get(url)
                     .then((response) => {
-                        var items = [];
-                        for (var name in response.data.levels) {
+                        let items = [];
+                        for (let name in response.data.levels) {
                             items.push({
-                                label: i18n.global.t(
-                                    "tenant.selectionvector." + name
-                                ),
+                                label: t('tenant.selectionvector.' + name),
                                 name: name,
-                                value: response.data.levels[name],
+                                value: response.data.levels[name]
                             });
                         }
                         items.sort((a, b) => (a.label > b.label ? 1 : -1));
@@ -49,12 +47,12 @@ export function useSelectionvectorDialog() {
                         reject(error.data);
                     });
             });
-        },
+        }
     };
 
     return {
         state: readonly(state),
         mutations,
-        actions,
+        actions
     };
 }

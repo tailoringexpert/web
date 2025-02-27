@@ -1,553 +1,318 @@
 <script setup>
-import { ref, reactive, computed, toValue, inject, toRef } from "vue";
-import { confirmDialog } from "vuetify3-dialog";
-import { useI18n } from "vue-i18n";
-import { useRoute } from "vue-router";
-import router from "@/router";
+import { ref, computed, inject, onBeforeMount } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useRoute } from 'vue-router';
+import { useConfirm } from 'primevue/useconfirm';
+import { useToast } from 'primevue/usetoast';
 
-import { useProject } from "@/composables/Project";
+import TailoringNameDialog from '@/components/tailoring/TailoringNameDialog.vue';
+import DownloadDialog from '@/components/tailoring/DownloadDialog.vue';
+import ScreeningsheetDialog from '@/components/screeningsheet/ScreeningsheetDialog.vue';
+import SelectionVectorDialog from '@/components/selectionvector/SelectionVectorDialog.vue';
+import AttachmentsDialog from '@/components/tailoring/AttachmentsDialog.vue';
+import ImportDialog from '@/components/tailoring/ImportDialog.vue';
+import NotesDialog from '@/components/tailoring/NotesDialog.vue';
 
-import {
-    mdiUpdate,
-    mdiFilePdfBox,
-    mdiPencil,
-    mdiPencilBoxOutline,
-    mdiDownload,
-    mdiCardAccountDetails,
-    mdiVectorDifference,
-    mdiHeadCheckOutline,
-    mdiPaperclip,
-    mdiMicrosoftExcel,
-    mdiMessageBulleted,
-    mdiDeleteAlert,
-    mdiAlertCircleOutline,
-} from "@mdi/js";
-
-import Wait from "@/components/wait/Wait";
-import ScreeningsheetDialog from "@/components/screeningsheet/ScreeningsheetDialog";
-import NameDialog from "@/components/name/NameDialog";
-import SelectionVectorDialog from "@/components/selectionvector/SelectionVectorDialog";
-import CompareDialog from "@/components/compare/CompareDialog";
-import DocumentsDialog from "@/components/documents/DocumentsDialog";
-import AttachmentsDialog from "@/components/attachment/AttachmentsDialog";
-import ImportDialog from "@/components/tailoring/ImportDialog";
-import NotesDialog from "@/components/note/NotesDialog";
+import router from '@/router';
+import { useProject } from '@/composables/Project';
 
 // provided interfaces
 
 // injects
-const store = inject("store");
-const logger = inject("logger");
+const store = inject('store');
+const logger = inject('logger');
 
 // internal
-const { state, actions } = useProject();
+const { state, getters, actions } = useProject();
 const { t } = useI18n();
 
-const waits = {
-    default: {
-        title: "Loading tailoring...",
-        icon: mdiUpdate,
-    },
-    state: {
-        title: "Updating project state...",
-        icon: mdiUpdate,
-    },
-    basecatalog: {
-        title: "Downloading basecatalog",
-        icon: mdiFilePdfBox,
-    },
-    delete: {
-        title: "Deleting tailoring...",
-        icon: mdiUpdate,
-    },
-};
-
-const wait = reactive({
-    active: false,
-    config: waits.default,
-});
+const confirm = useConfirm();
+const toast = useToast();
 
 const route = useRoute();
 
-const headers = reactive([
-    {
-        title: t("name"),
-        align: "start",
-        sortable: true,
-        value: "name",
-    },
-    {
-        title: t("phase", 2),
-        sortable: true,
-        value: "phases",
-    },
-    {
-        title: t("state"),
-        sortable: true,
-        value: "state",
-    },
-    {
-        title: t("catalog"),
-        sortable: true,
-        value: "catalogVersion",
-    },
-    {
-        title: t("action", 2),
-        value: "actions",
-        sortable: false,
-    },
-]);
-
 const project = computed(() => state.project);
-const dialog = ref("none");
+const dialog = ref('none');
 const data = ref(null);
 
-const created = () => {
-    wait.active = true;
-    wait.config = waits.default;
-    dialog.value = "none";
+const initialize = () => {
+    dialog.value = 'none';
 
-    actions
-        .initialize()
-        .then(() => {
-            wait.active = false;
-        })
-        .catch(() => {
-            wait.active = false;
-        });
-    logger.debug("created");
+    actions.initialize();
 };
 
-const isTailoringEditable = (tailoring) => "CREATED" == tailoring.state;
-const isTailoringDeletable = (tailoring) => "CREATED" == tailoring.state;
+const isTailoringEditable = (tailoring) => getters.isEditable(tailoring);
+const isTailoringDeletable = (tailoring) => getters.isDeletable(tailoring);
 
 // event handlers
-function onNew() {
+const onNew = () => {
+    logger.debug('onNew');
     router.push({
-        name: "tailoringnew",
+        name: 'tailoringnew',
         params: {
-            id: project.value.name,
+            id: project.value.name
         },
         state: {
             previous: route.params.self,
             self: project.value._links.tailoring.href,
-            referer: project.value._links.self.href,
-        },
+            referer: project.value._links.self.href
+        }
     });
-}
+};
 
-function onState(tailoring) {
-    confirmDialog({
-        title: "Warning",
-        text: t("tailoring_state.text"),
-        cancelText: t("no"),
-        cancelButtonOptions: {
-            active: true,
+const onState = (tailoring) => {
+    logger.debug('onState');
+    confirm.require({
+        header: t('Project.updateState.title'),
+        message: t('Project.updateState.text'),
+        icon: 'pi pi-exclamation-triangle',
+        rejectProps: {
+            label: t('no'),
+            outlined: true
         },
-        confirmationText: t("yes"),
-        confirmButtonOptions: {
-            active: false,
+        acceptProps: {
+            label: t('yes'),
+            severity: 'danger'
         },
-        icon: mdiAlertCircleOutline,
-    }).then((confirmed) => {
-        if (confirmed) {
-            wait.config = waits.state;
-            wait.active = true;
-
+        accept: () => {
             actions
                 .updateState(tailoring)
                 .then(() => {
-                    wait.active = false;
+                    onSuccess(t('Project.updateState.state.title'), t('Project.updateState.state.success'));
                 })
                 .catch(() => {
-                    wait.active = false;
+                    onError(t('Project.updateState.title'), t('Project.updateState.error'));
                 });
         }
     });
-}
+};
 
-function onBaseCatalog(tailoring) {
-    wait.config = waits.basecatalog;
-    wait.active = true;
+const onBaseCatalog = (tailoring) => {
+    logger.debug('onBaseCatalog');
+    actions.getBaseCatalog(tailoring).catch(() => {
+        onError(t('Project.downloadBasecatalog.title'), new TextDecoder('utf-8').decode(new Uint8Array(error.data)));
+    });
+};
 
-    actions
-        .getBaseCatalog(tailoring)
-        .then(() => {
-            wait.active = false;
-        })
-        .catch(() => {
-            wait.active = false;
-            confirmDialog({
-                title: "Error",
-                text: new TextDecoder("utf-8").decode(
-                    new Uint8Array(error.data)
-                ),
-                cancelText: t("OK"),
-            });
-        });
-}
-
-function onEdit(tailoring) {
+const onEdit = (tailoring) => {
     store.mutations.tailoring({
         name: project.value.name,
-        _links: tailoring._links,
+        _links: tailoring._links
     });
 
     router.push({
-        name: "catalog",
+        name: 'catalog',
         params: {
             id: project.value.name,
-            tailoring: tailoring.name,
-        },
+            tailoring: tailoring.name
+        }
     });
-}
+};
 
-function onDelete(tailoring) {
-    confirmDialog({
-        title: t("tailoring_delete.title"),
-        text: t("tailoring_delete.text"),
-        cancelText: t("no"),
-        confirmationText: t("yes"),
-        icon: mdiAlertCircleOutline,
-    }).then((confirmed) => {
-        if (confirmed) {
-            wait.config = waits.delete;
-            wait.active = true;
+const onDelete = (tailoring) => {
+    confirm.require({
+        message: t('Project.deleteTailoring.text'),
+        header: t('Project.deleteTailoring.title'),
+        icon: 'pi pi-exclamation-triangle',
+        rejectProps: {
+            label: t('no'),
+            outlined: true
+        },
+        acceptProps: {
+            label: t('yes'),
+            severity: 'danger'
+        },
+        accept: () => {
             actions
                 .delete(tailoring)
                 .then(() => {
-                    wait.active = false;
+                    onSuccess(t('Project.deleteTailoring.title'), t('Project.deleteTailoring.state.success'));
                 })
-                .catch(() => {
-                    wait.active = false;
+                .catch((error) => {
+                    onError(t('Project.deleteTailoring.title'), t('Project.deleteTailoring.state.error'));
                 });
         }
     });
-}
+};
 
-function onScreeningsheet(screeningsheet) {
-    console.log("onScreeningsheet");
-    data.value = screeningsheet;
-    dialog.value = "screeningsheet";
-}
+const onScreeningsheet = (screeningsheet) => {
+    onDialog('screeningsheet', screeningsheet);
+};
 
-function onSelectionvector(tailoring) {
+const onSelectionvector = (tailoring) => {
+    onDialog('selectionvector', tailoring);
+};
+
+const onCompare = (tailoring) => {
+    actions.getComparison(tailoring);
+};
+
+const onName = (tailoring) => {
+    onDialog('name', tailoring);
+};
+
+const onDownload = (tailoring) => {
+    onDialog('download', tailoring);
+};
+
+const onAttachments = (tailoring) => {
+    onDialog('attachments', tailoring);
+};
+
+const onNotes = (tailoring) => {
+    onDialog('notes', tailoring);
+};
+
+const onImport = (tailoring) => {
+    onDialog('import', tailoring);
+};
+
+const onDialog = (name, tailoring) => {
+    dialog.value = name;
     data.value = tailoring;
-    dialog.value = "selectionvector";
-}
+};
 
-function onCompare(tailoring) {
-    data.value = tailoring;
-    dialog.value = "compare";
-}
+const onSuccess = (title, message) => {
+    toast.add({
+        severity: 'success',
+        summary: title,
+        detail: message,
+        life: 3000
+    });
+};
 
-function onName(tailoring) {
-    console.log("onName");
-    data.value = tailoring;
-    dialog.value = "name";
-}
-
-function onDocuments(tailoring) {
-    data.value = tailoring;
-    dialog.value = "documents";
-}
-
-function onAttachments(tailoring) {
-    data.value = tailoring;
-    dialog.value = "attachments";
-}
-
-function onNotes(tailoring) {
-    data.value = tailoring;
-    dialog.value = "notes";
-}
-
-function onImport(tailoring) {
-    data.value = tailoring;
-    dialog.value = "import";
-}
+const onError = (title, message) => {
+    confirm.require({
+        header: title,
+        message: message,
+        icon: 'pi pi-exclamation-triangle',
+        rejectProps: {
+            style: 'visibility:hidden'
+        },
+        acceptProps: {
+            label: t('ok'),
+            severity: 'secondary'
+        }
+    });
+};
 
 // hooks
-store.mutations.breadcrumbs([
-    {
-        title: t("project", 2),
-        disabled: false,
-        exact: true,
-        to: { name: "projects" },
-    },
-    {
-        title: route.params.id,
-        disabled: false,
-        exact: true,
-        to: { name: "project", params: { id: route.params.id } },
-    },
-]);
+onBeforeMount(() => {
+    store.mutations.breadcrumbs([
+        {
+            label: t('Project.project', 2),
+            disabled: false,
+            exact: true,
+            route: { name: 'projects' }
+        },
+        {
+            label: route.params.id,
+            disabled: false,
+            exact: true,
+            route: { name: 'project', params: { id: route.params.id } }
+        }
+    ]);
 
-created();
+    initialize();
+});
+
+const onUpdatedName = (name) => {
+    data.value.name = name;
+    dialog.value = 'none';
+};
 </script>
 
 <template>
-  <Wait :wait />
+    <TailoringNameDialog :tailoring="data" :active="dialog === 'name'" @close:cancel="dialog = 'none'" @close:close="initialize" />
 
-  <v-container fluid>
-    <v-row>
-      <v-col cols="1">
-        {{ $t("project") }} : {{ self }}
-      </v-col>
-      <v-col>
-        {{ project.name }}
-        <v-tooltip location="bottom">
-          <template #activator="{ props }">
-            <v-icon
-              :icon="mdiCardAccountDetails"
-              v-bind="props"
-              @click="onScreeningsheet(project)"
-            />
-          </template>
-          <span>{{ $t("tooltip.screeningsheet_open") }}</span>
-        </v-tooltip>
-      </v-col>
-    </v-row>
-  </v-container>
+    <DownloadDialog :tailoring="data" :active="dialog === 'download'" @close:closed="dialog = 'none'" />
 
-  <section class="view">
-    <v-card class="card-top">
-      <v-toolbar flat>
-        <v-toolbar-title>
-          {{ $t("tailoring", 2) }}
-          <v-divider
-            class="mx-4"
-            inset
-            vertical
-          />
-          <v-btn
-            class="mb-2"
-            @click="onNew()"
-          >
-            {{ $t("tailoring_new") }}
-          </v-btn>
-        </v-toolbar-title>
-      </v-toolbar>
-    </v-card>
+    <ScreeningsheetDialog :screeningsheet="data" :active="dialog === 'screeningsheet'" @close:closed="dialog = 'none'" />
 
-    <v-card class="table-container">
-      <v-data-table
-        :headers="headers"
-        :items="project.tailorings"
-        :items-per-page="20"
-        :loading="wait.active"
-        fixed-header
-        class="elevation-10 flex-table"
-      >
-        <template #loading>
-          <v-skeleton-loader type="table-row@5" />
-        </template>
-        <template #top>
-          <ScreeningsheetDialog
-            :screeningsheet="data"
-            :active="dialog === 'screeningsheet'"
-            @close:closed="dialog = 'none'"
-          />
-          <NameDialog
-            :tailoring="data"
-            :active="dialog === 'name'"
-            @close:cancel="dialog = 'none'"
-            @close:close="created()"
-          />
-          <SelectionVectorDialog
-            :tailoring="data"
-            :active="dialog === 'selectionvector'"
-            @close:closed="dialog = 'none'"
-          />
-          <CompareDialog
-            :tailoring="data"
-            :active="dialog === 'compare'"
-            @close:closed="dialog = 'none'"
-          />
-          <DocumentsDialog
-            :tailoring="data"
-            :active="dialog === 'documents'"
-            @close:closed="dialog = 'none'"
-          />
-          <AttachmentsDialog
-            :tailoring="data"
-            :active="dialog === 'attachments'"
-            @close:closed="dialog = 'none'"
-          />
-          <ImportDialog
-            :tailoring="data"
-            :active="dialog === 'import'"
-            @close:closed="dialog = 'none'"
-          />
-          <NotesDialog
-            :tailoring="data"
-            :active="dialog === 'notes'"
-            @close:closed="dialog = 'none'"
-          />
+    <SelectionVectorDialog :tailoring="data" :active="dialog === 'selectionvector'" @close:closed="dialog = 'none'" />
+
+    <AttachmentsDialog :tailoring="data" :active="dialog === 'attachments'" @close:closed="dialog = 'none'" />
+
+    <ImportDialog :tailoring="data" :active="dialog === 'import'" @close:closed="dialog = 'none'" />
+
+    <NotesDialog :tailoring="data" :active="dialog === 'notes'" @close:closed="dialog = 'none'" />
+
+    <Card>
+        <template #title>
+            <div class="flex items-center justify-left mb-0">
+                <span>{{ t('Project.project', 1) }}: &nbsp;</span><span>{{ project.name }}</span>
+                <Button v-tooltip.bottom="t('Project.tooltip.openScreeningsheet')" variant="text" icon="pi pi-id-card" severity="secondary" rounded @click="onScreeningsheet(project)" />
+            </div>
         </template>
 
-        <template #item.name="{ item }">
-          <span>
-            {{ item.name }}
-            <v-icon
-              :icon="mdiPencil"
-              class="me-2"
-              size="small"
-              @click="onName(item)"
-            />
-          </span>
-        </template>
+        <template #content>
+            <DataTable
+                :value="project.tailorings"
+                data-key="name"
+                striped-rows
+                table-style="min-width: 50rem"
+                class="col-span-full"
+                paginator
+                :rows="10"
+                :rows-per-page-options="[10, 15, 20, 25]"
+                paginator-template="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
+                current-page-report-template="{first} to {last} of {totalRecords}"
+            >
+                <template #empty> No tailoring found. </template>
+                <template #loading>
+                    {{ $t('Project.loading') }}
+                </template>
 
-        <template #item.phases="{ item }">
-          <span>
-            {{ item.phases.join(", ") }}
-          </span>
-        </template>
+                <template #header>
+                    <div class="flex flex-wrap items-center justify-between gap-2">
+                        <span class="text-xl font-bold">{{ $t('Project.tailoring') }}</span>
+                        <Button v-tooltip.bottom="t('Project.tooltip.newTailoring')" icon="pi pi-plus" rounded raised @click="onNew()" />
+                    </div>
+                </template>
 
-        <template #item.state="{ item }">
-          <span @click="onState(item)">{{ item.state }}
-            <v-icon
-              :icon="mdiPencilBoxOutline"
-              class="me-2"
-              size="small"
-            />
-          </span>
+                <Column :header="t('Project.name')">
+                    <template #body="slotProps">
+                        <span @click="onName(slotProps.data)"
+                            >{{ slotProps.data.name }}
+                            <Button v-tooltip.bottom="t('Project.tooltip.changeName')" icon="pi pi-pencil" variant="text" rounded @click="onName(slotProps.data)" />
+                        </span>
+                    </template>
+                </Column>
+                <Column field="phases" :header="t('Project.phases')">
+                    <template #body="slotProps">
+                        <span>{{ slotProps.data.phases.join(', ') }}</span>
+                    </template>
+                </Column>
+                <Column :header="t('Project.state')">
+                    <template #body="slotProps">
+                        <span @click="onState(slotProps.data)"
+                            >{{ slotProps.data.state }}
+                            <Button v-tooltip.bottom="t('Project.tooltip.updateState')" icon="pi pi-pencil" variant="text" rounded @click="onState(slotProps.data)" />
+                        </span>
+                    </template>
+                </Column>
+                <Column field="catalogVersion" :header="t('Project.catalog')">
+                    <template #body="slotProps">
+                        <span @click="onBaseCatalog(slotProps.data)"
+                            >{{ slotProps.data.catalogVersion }}
+                            <Button v-tooltip.bottom="t('Project.tooltip.downloadBasecatalog')" icon="pi pi-pencil" variant="text" rounded @click="onBaseCatalog(slotProps.data)" />
+                        </span>
+                    </template>
+                </Column>
+                <Column :header="t('Project.action')">
+                    <template #body="slotProps">
+                        <Button v-tooltip.bottom="t('Project.tooltip.editRequirements')" :disabled="!isTailoringEditable(slotProps.data)" variant="text" icon="pi pi-pen-to-square" severity="secondary" rounded @click="onEdit(slotProps.data)" />
+                        <Button v-tooltip.bottom="t('Project.tooltip.downloadDocuments')" :disabled="!isTailoringEditable(slotProps.data)" variant="text" icon="pi pi-download" severity="secondary" rounded @click="onDownload(slotProps.data)" />
+                        <Button v-tooltip.bottom="t('Project.tooltip.compareTailoring')" :disabled="!isTailoringEditable(slotProps.data)" variant="text" icon="pi pi-verified" severity="secondary" rounded @click="onCompare(slotProps.data)" />
+                        <Button v-tooltip.bottom="t('Project.tooltip.openScreeningsheet')" variant="text" icon="pi pi-id-card" severity="secondary" rounded @click="onScreeningsheet(slotProps.data)" />
+                        <Button v-tooltip.bottom="t('Project.tooltip.openSelectionvector')" variant="text" icon="pi pi-lightbulb" severity="secondary" rounded @click="onSelectionvector(slotProps.data)" />
+                        <Button v-tooltip.bottom="t('Project.tooltip.openAttachments')" variant="text" icon="pi pi-paperclip" severity="secondary" rounded @click="onAttachments(slotProps.data)" />
+                        <Button v-tooltip.bottom="t('Project.tooltip.importRequirements')" variant="text" :disabled="!isTailoringEditable(slotProps.data)" icon="pi pi-file-excel" severity="secondary" rounded @click="onImport(slotProps.data)" />
+                        <Button v-tooltip.bottom="t('Project.tooltip.openNotes')" variant="text" icon="pi pi-comments" severity="secondary" rounded @click="onNotes(slotProps.data)" />
+                        <Button v-tooltip.bottom="t('Project.tooltip.deleteTailoring')" :disabled="!isTailoringDeletable(slotProps.data)" variant="text" icon="pi pi-trash" severity="secondary" rounded @click="onDelete(slotProps.data)" />
+                    </template>
+                </Column>
+            </DataTable>
         </template>
-
-        <template #item.catalogVersion="{ item }">
-          <span @click="onBaseCatalog(item)">{{ item.catalogVersion }}
-            <v-icon
-              :icon="mdiDownload"
-              class="me-2"
-              size="small"
-            />
-          </span>
-        </template>
-
-        <template #item.actions="{ item }">
-          <v-tooltip location="bottom">
-            <template #activator="{ props }">
-              <v-icon
-                :icon="mdiPencilBoxOutline"
-                size="small"
-                class="mr-2"
-                :disabled="!isTailoringEditable(item)"
-                v-bind="props"
-                @click="onEdit(item)"
-              />
-            </template>
-            <span>{{ $t("tooltip.requirements_edit") }}</span>
-          </v-tooltip>
-          <v-tooltip location="bottom">
-            <template #activator="{ props }">
-              <v-icon
-                :icon="mdiDownload"
-                size="small"
-                class="mr-2"
-                :disabled="!isTailoringEditable(item)"
-                v-bind="props"
-                @click="onDocuments(item)"
-              />
-            </template>
-            <span>{{ $t("tooltip.document_open") }}</span>
-          </v-tooltip>
-          <v-tooltip location="bottom">
-            <template #activator="{ props }">
-              <v-icon
-                :icon="mdiVectorDifference"
-                size="small"
-                class="mr-2"
-                v-bind="props"
-                @click="onCompare(item)"
-              />
-            </template>
-            <span>{{ $t("tooltip.tailoring_compare") }}</span>
-          </v-tooltip>
-          <v-tooltip location="bottom">
-            <template #activator="{ props }">
-              <v-icon
-                :icon="mdiCardAccountDetails"
-                size="small"
-                class="mr-2"
-                v-bind="props"
-                @click="onScreeningsheet(item)"
-              />
-            </template>
-            <span>{{ $t("tooltip.screeningsheet_open") }}</span>
-          </v-tooltip>
-          <v-tooltip location="bottom">
-            <template #activator="{ props }">
-              <v-icon
-                :icon="mdiHeadCheckOutline"
-                size="small"
-                class="mr-2"
-                v-bind="props"
-                @click="onSelectionvector(item)"
-              />
-            </template>
-            <span>{{ $t("tooltip.selectionvector_open") }}</span>
-          </v-tooltip>
-          <v-tooltip location="bottom">
-            <template #activator="{ props }">
-              <v-icon
-                :icon="mdiPaperclip"
-                size="small"
-                class="mr-2"
-                v-bind="props"
-                @click="onAttachments(item)"
-              />
-            </template>
-            <span>{{ $t("tooltip.attachment_open") }}</span>
-          </v-tooltip>
-          <v-tooltip location="bottom">
-            <template #activator="{ props }">
-              <v-icon
-                :icon="mdiMicrosoftExcel"
-                size="small"
-                class="mr-2"
-                :disabled="!isTailoringEditable(item)"
-                v-bind="props"
-                @click="onImport(item)"
-              />
-            </template>
-            <span>{{ $t("tooltip.requirement_import") }}</span>
-          </v-tooltip>
-          <v-tooltip location="bottom">
-            <template #activator="{ props }">
-              <v-icon
-                :icon="mdiMessageBulleted"
-                size="small"
-                class="mr-2"
-                v-bind="props"
-                @click="onNotes(item)"
-              />
-            </template>
-            <span>{{ $t("tooltip.tailoring_notes") }}</span>
-          </v-tooltip>
-
-          <v-tooltip location="bottom">
-            <template #activator="{ props }">
-              <v-icon
-                :icon="mdiDeleteAlert"
-                size="small"
-                class="mr-2"
-                :disabled="!isTailoringDeletable(item)"
-                v-bind="props"
-                @click="onDelete(item)"
-              />
-            </template>
-            <span>{{ $t("tooltip.tailoring_delete") }}</span>
-          </v-tooltip>
-        </template>
-      </v-data-table>
-    </v-card>
-  </section>
+    </Card>
 </template>
-
-<style scoped>
-.v-icon__svg {
-    fill: currentColor;
-    width: 100%;
-    height: 100%;
-}
-</style>

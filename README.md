@@ -12,6 +12,7 @@ and deploy zip artefact.
 ## Development
 
 ### npm
+
 The module uses a npm maven wrapper.
 If npm is installed on a system, it is also possible to use npm directly instead
 of using the prepared maven executions.
@@ -32,13 +33,12 @@ npm run build
 
     npm run lint
 
-
 ### maven
+
 To start development server simply run
-    
-    mvn -DskipTests frontend:npm@npm-run-serve -P serve    
+
+    mvn -DskipTests frontend:npm@npm-run-serve -P serve
 
 ### Customize configuration
+
 See [Configuration Reference](https://cli.vuejs.org/config/).
-
-

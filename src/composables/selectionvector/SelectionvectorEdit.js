@@ -1,14 +1,14 @@
-import { reactive, toValue, readonly, toRef } from "vue";
-
-import i18n from "@/plugins/i18n";
-
-import store from "@/store";
+import { reactive, toValue, readonly, toRef } from 'vue';
+import { useI18n } from 'vue-i18n';
+import store from '@/store';
 
 export function useSelectionvectorEdit() {
+    const { t } = useI18n();
+
     const state = reactive({
         profiles: store.state.selectionvectors,
         selectionvector: null,
-        levels: [],
+        levels: []
     });
 
     const mutations = {
@@ -17,19 +17,19 @@ export function useSelectionvectorEdit() {
         },
         levels: (levels) => {
             state.levels = toRef(levels);
-        },
+        }
     };
 
     const actions = {
         initialize: () => {
             return new Promise((resolve, reject) => {
-                var data = { levels: {} };
-                var items = [];
-                for (var name in toValue(state.selectionvector).levels) {
-                    var item = {
-                        label: i18n.global.t("tenant.selectionvector." + name),
+                let data = { levels: {} };
+                let items = [];
+                for (let name in toValue(state.selectionvector).levels) {
+                    let item = {
+                        label: t('tenant.selectionvector.' + name),
                         name: name,
-                        value: toValue(state.selectionvector).levels[name],
+                        value: toValue(state.selectionvector).levels[name]
                     };
                     items.push(item);
                     data.levels[item.name] = item.value;
@@ -51,12 +51,12 @@ export function useSelectionvectorEdit() {
                 });
                 resolve(data);
             });
-        },
+        }
     };
 
     return {
         state: readonly(state),
         mutations,
-        actions,
+        actions
     };
 }

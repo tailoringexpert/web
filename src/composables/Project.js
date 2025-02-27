@@ -1,8 +1,8 @@
-import { reactive, readonly, toRef, toValue } from "vue";
-import axios from "axios";
+import { reactive, readonly, toRef, toValue } from 'vue';
+import axios from 'axios';
 
-import store from "@/store";
-import { useHttp } from "@/composables/http";
+import store from '@/store';
+import { useHttp } from '@/composables/http';
 
 export function useProject() {
     const { download } = useHttp();
@@ -12,14 +12,19 @@ export function useProject() {
         project: {
             name: null,
             tailorings: [],
-            _links: [],
+            _links: []
         },
-        tailoring: null,
+        tailoring: null
     });
+
+    const getters = {
+        isEditable: (tailoring) => 'CREATED' == toValue(tailoring.state),
+        isDeletable: (tailoring) => 'CREATED' == toValue(tailoring.state)
+    };
 
     const mutations = {
         project: (project) => (state.project = toRef(project)),
-        tailoring: (tailoring) => (state.tailoring = toRef(tailoring)),
+        tailoring: (tailoring) => (state.tailoring = toRef(tailoring))
     };
 
     const actions = {
@@ -38,15 +43,13 @@ export function useProject() {
         },
         updateState: (tailoring) => {
             return new Promise((resolve, reject) => {
+                console.log('updateState');
+                console.log(tailoring);
                 return axios
                     .put(toValue(tailoring)._links.state.href)
                     .then((response) => {
                         var index = state.project.tailorings.indexOf(tailoring);
-                        state.project.tailorings.splice(
-                            index,
-                            1,
-                            response.data
-                        );
+                        state.project.tailorings.splice(index, 1, response.data);
                         resolve(response.data);
                     })
                     .catch((error) => {
@@ -59,10 +62,7 @@ export function useProject() {
                 return axios
                     .delete(toValue(tailoring)._links.self.href)
                     .then((response) => {
-                        state.project.tailorings.splice(
-                            state.project.tailorings.indexOf(tailoring),
-                            1
-                        );
+                        state.project.tailorings.splice(state.project.tailorings.indexOf(tailoring), 1);
                         resolve(response.data);
                     })
                     .catch((error) => {
@@ -74,11 +74,16 @@ export function useProject() {
             var url = toValue(tailoring)._links.basecatalog.href;
             return download(url);
         },
+        getComparison: (tailoring) => {
+            var url = toValue(tailoring)._links.compare.href;
+            return download(url);
+        }
     };
 
     return {
         state: readonly(state),
+        getters,
         mutations,
-        actions,
+        actions
     };
 }

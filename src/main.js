@@ -1,70 +1,104 @@
-import { createApp } from "vue";
-import VueLogger from "vuejs3-logger";
-import axios from "axios";
-import Vue3Sanitize from "vue-3-sanitize";
-import { Vuetify3Dialog } from "vuetify3-dialog";
+import { createApp } from 'vue';
+import axios from 'axios';
+import { createI18n } from 'vue-i18n';
+import Aura from '@primevue/themes/aura';
+import PrimeVue from 'primevue/config';
+import ConfirmationService from 'primevue/confirmationservice';
+import ToastService from 'primevue/toastservice';
+import '@/assets/styles.scss';
+import '@/assets/tailwind.css';
+import VueLogger from 'vuejs3-logger';
 
-import App from "@/App.vue";
-import router from "@/router";
-import store from "@/store";
-import i18n from "@/plugins/i18n";
-import vuetify from "@/plugins/vuetify";
-import { useEnv } from "@/composables/env";
+import App from '@/App.vue';
+import router from '@/router';
+import store from '@/store';
+import { useLocales } from '@/composables/locales'
 
 const app = createApp(App);
 
 // logger
 app.use(VueLogger, {
     isEnabled: true,
-    logLevel: process.env.NODE_ENV === "production" ? "error" : "debug",
+    logLevel: process.env.NODE_ENV === 'production' ? 'error' : 'debug',
     stringifyArguments: false,
     showLogLevel: true,
     showMethodName: false,
-    separator: "|",
-    showConsoleColors: true,
+    separator: '|',
+    showConsoleColors: true
 });
-app.provide("logger", app.config.globalProperties.$log);
+app.provide('logger', app.config.globalProperties.$log);
 
-// i8n
+// store
+app.provide('store', store);
+store.mutations.tenant(window?.configs?.PAGE_APP_TENANT || APP_TENANT);
+
+// i18n
+const { get } = useLocales()
+const systemLocales = import.meta.glob('./locales/*.json');
+const i18n = createI18n({
+    locale: 'en',
+    legacy: false,
+    allowComposition: true,
+    fallbackLocale: 'en',
+    globalInjection: true,
+    messages: get(systemLocales)
+});
 app.use(i18n);
-
-// sanitite
-app.use(Vue3Sanitize,  {
-    allowedTags: ['img']
-});
-
-// vuetify
-app.use(vuetify);
-app.use(Vuetify3Dialog, {
-    vuetify: vuetify,
-    defaults: {
-        //You can pass default options for dialogs, dialog's card, snackbars or bottom-sheets here
-    },
-});
 
 // router
 app.use(router);
 
-// store
-app.config.globalProperties.$log.debug(
-    "Setting tenant " + useEnv().get("VUE_APP_TENANT")
-);
-app.provide("store", store);
-store.mutations.tenant(useEnv().get("VUE_APP_TENANT"));
-
 // axios
-axios.defaults.headers.common["X-TENANT"] = store.state.tenant;
-axios.defaults.headers.common["Content-Type"] =
-    "application/json;charset=utf-8";
 app.config.globalProperties.$axios = axios.create({});
+axios.defaults.headers.common['X-TENANT'] = store.state.tenant;
+axios.defaults.headers.common['Content-Type'] = 'application/json;charset=utf-8';
+axios.interceptors.request.use(
+    (config) => {
+        store.mutations.loading(true);
+        return config;
+    },
+    (error) => {
+        setTimeout((error) => {
+            store.mutations.loading(false);
+        }, 10);
+        return Promise.reject(error)
+    }
+);
+axios.interceptors.response.use(
+    (response) => {
+        setTimeout((response) => {
+            store.mutations.loading(false);
+        }, 10);
+        return response;
+    },
+    (error) => {
+        setTimeout((error) => {
+            store.mutations.loading(false);
+        }, 10);
+        return Promise.reject(error);
+    }
+);
 
-var origin = window.location.origin + "/api";
+// primevue
+app.use(PrimeVue, {
+    theme: {
+        preset: Aura,
+        options: {
+            darkModeSelector: '.app-dark'
+        }
+    }
+});
+app.use(ToastService);
+app.use(ConfirmationService);
+
+// initialize
+const origin = window.location.origin + '/api';
 axios.get(origin).then((response) => {
     store.mutations.links(response.data._links);
-    axios.get(response.data._links["selectionvector"].href).then((response) => {
-        store.mutations.selectionvectors(
-            response.data._embedded.selectionVectorProfiles
-        );
-        app.mount("#app");
+    axios.get(response.data._links['selectionvector'].href).then((response) => {
+        store.mutations.selectionvectors(response.data._embedded.selectionVectorProfiles);
+        app.mount('#app');
     });
 });
+
+

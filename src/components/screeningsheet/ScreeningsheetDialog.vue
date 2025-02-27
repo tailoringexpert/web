@@ -1,27 +1,25 @@
 <script setup>
-import { ref, reactive, inject, watch, computed } from "vue";
-import { useI18n } from "vue-i18n";
+import { ref, watch, computed, inject } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useConfirm } from 'primevue/useconfirm';
 
-import { useScreeningsheetDialog } from "@/composables/screeningsheet/ScreeningsheetDialog";
-import Dialog from "@/layouts/WaitingDialog";
-
-import { mdiUpdate, mdiFilePdfBox } from "@mdi/js";
+import { useScreeningsheetDialog } from '@/composables/screeningsheet/ScreeningsheetDialog';
 
 // provided interfaces
-const emit = defineEmits(["close:closed"]);
+const emit = defineEmits(['close:closed']);
 const props = defineProps({
     active: {
         type: Boolean,
-        default: false,
+        default: false
     },
     screeningsheet: {
         type: Object,
-        default: null,
-    },
+        default: null
+    }
 });
 
 // injects
-const logger = inject("logger");
+const logger = inject('logger');
 
 // internal
 const { state, mutations, actions } = useScreeningsheetDialog();
@@ -38,145 +36,92 @@ watch(
 );
 
 const { t } = useI18n();
-
-const waits = {
-    default: {
-        title: "Loading screeningsheet data...",
-        icon: mdiUpdate,
-    },
-    download: {
-        title: "Downloading PDF",
-        icon: mdiFilePdfBox,
-    },
-};
-const wait = reactive({
-    active: false,
-    config: waits.default,
-});
-
+const confirm = useConfirm();
 const tab = ref(null);
 
-const screeningSheetHeader = reactive([
-    {
-        title: t("name"),
-        sortable: true,
-        value: "label",
-    },
-    {
-        title: t("value"),
-        sortable: true,
-        value: "value",
-    },
-]);
 const screeningSheet = computed(() => state.screeningsheet);
-const selectionVectorHeader = [
-    {
-        title: t("screeningsheet_parameter"),
-        align: "start",
-        sortable: true,
-        value: "label",
-    },
-    {
-        title: t("value"),
-        value: "value",
-    },
-];
 const selectionVectorParameter = computed(() => state.selectionvectorParameter);
 
 const initialize = () => {
-    wait.config = waits.default;
-    wait.active = true;
-
     actions
         .initialize()
         .then(() => {
             tab.value = null;
-            wait.active = false;
         })
         .catch((error) => {
-            wait.active = false;
             logger.error(error);
         });
 };
 
 // event handlers
 const onDownload = () => {
-    wait.config = waits.download;
-    wait.active = true;
-
-    actions
-        .download()
-        .then(() => {
-            wait.active = false;
-        })
-        .catch((error) => {
-            logger.error(error);
-            wait.active = false;
-        });
+    actions.download().catch((error) => {
+        onError(t('error'), error);
+    });
 };
 
 const onClose = () => {
-    emit("close:closed");
+    emit('close:closed');
 };
 
+const onError = (title, message) => {
+    confirm.require({
+        header: title,
+        message: message,
+        icon: 'pi pi-exclamation-triangle',
+        rejectProps: {
+            style: 'visibility:hidden'
+        },
+        acceptProps: {
+            label: t('ok'),
+            severity: 'secondary'
+        }
+    });
+};
 // hooks
 </script>
 
 <template>
-  <Dialog
-    :title="$t('screeningsheet')"
-    :wait
-    :active
-  >
-    <template #title>
-      {{ $t("screeningsheet") }}
-      <v-icon
-        :icon="mdiFilePdfBox"
-        @click="onDownload()"
-      />
-    </template>
+    <Dialog :visible="active" :header="t('ScreeningsheetDialog.title')" :modal="true" @update:visible="onClose">
+        <template #footer>
+            <Button :label="$t('close')" @click="onClose" />
+        </template>
 
-    <template #default>
-      <v-tabs v-model="tab">
-        <v-tab value="screeningsheet">
-          {{ $t("screeningsheet_parameter") }}
-        </v-tab>
-        <v-tab value="selectionvector">
-          {{ $t("selectionvector_calculated") }}
-        </v-tab>
-      </v-tabs>
+        <Tabs value="1">
+            <TabList>
+                <Tab value="1">
+                    {{ $t('ScreeningsheetDialog.parameter') }}
+                </Tab>
+                <Tab value="2">
+                    {{ $t('ScreeningsheetDialog.calculatedSelectionvector') }}
+                </Tab>
+            </TabList>
 
-      <v-window v-model="tab">
-        <v-window-item value="screeningsheet">
-          <v-data-table
-            :headers="screeningSheetHeader"
-            :items="screeningSheet.parameters"
-            class="elevation-1"
-          />
-        </v-window-item>
+            <TabPanels>
+                <TabPanel value="1">
+                    <DataTable :value="screeningSheet.parameters" data-key="label" striped-rows scrollable scroll-height="400px" table-style="min-width: 50rem">
+                        <template #loading>
+                            {{ t('ScreeningsheetDialog.loading') }}
+                        </template>
 
-        <v-window-item value="selectionvector">
-          <v-data-table
-            :headers="selectionVectorHeader"
-            :items="selectionVectorParameter"
-            class="elevation-1"
-          />
-        </v-window-item>
-      </v-window>
-    </template>
-
-    <template #actions>
-      <v-spacer />
-      <v-btn
-        rounded
-        variant="text"
-        @click="onClose()"
-      >
-        {{ $t("close") }}
-      </v-btn>
-    </template>
-  </Dialog>
+                        <Column field="label" :header="t('ScreeningsheetDialog.name')" />
+                        <Column field="value" :header="t('ScreeningsheetDialog.value')" />
+                    </DataTable>
+                </TabPanel>
+                <TabPanel value="2">
+                    <DataTable
+                        :value="selectionVectorParameter"
+                        data-key="label"
+                        striped-rows
+                        scrollable
+                        scroll-height="400px"
+                        table-style="min-width: 50rem"
+                    >
+                        <Column field="label" :header="t('ScreeningsheetDialog.parameter')" />
+                        <Column field="value" :header="t('ScreeningsheetDialog.value')" />
+                    </DataTable>
+                </TabPanel>
+            </TabPanels>
+        </Tabs>
+    </Dialog>
 </template>
-
-<styles scoped>
-</styles>

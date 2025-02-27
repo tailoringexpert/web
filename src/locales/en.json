@@ -2,221 +2,301 @@
     "yes": "Yes",
     "no": "No",
     "error": "Error",
-    "project": "Project | Projects",
-    "project_new": "New project",
-    "project_create": "Create project",
-    "project_copy": "Project copy",
-    "name": "Name",
-    "created_at": "Created at",
-    "catalog": "Catalog | Catalogs",
-    "action": "Action | Actions",
-    "tailoring": "Tailoring | Tailorings",
-    "tailoring_new": "New tailoring",
-    "tailoring_name": "Edit tailoring name",
-    "create_tailoring": "Create tailoring",
-    "phase": "Phase | Phases",
-    "screeningsheet": "ScreeningSheet",
-    "selectionvector": "Selectionvector",
-    "selectionvector_comparison": "Selectionvector comparison",
-    "selectionvector_calculated": "Calculated selectionvector",
-    "selectionvector_applied": "Applied selectionvector",
-    "screeningsheet_parameter": "ScreeningSheet parameters",
-    "documents_download": "Download documents",
-    "summary": "Summary",
-    "next": "Next",
-    "back": "Back",
     "cancel": "Cancel",
     "close": "Close",
     "save": "Save",
-    "add": "Add",
-    "file_select": "Please select a file!",
-    "validFrom": "Valid from",
-    "validUntil": "Valid until",
-    "requirements": "Requirements",
-    "changed": "changed",
-    "upload": "Upload",
-    "state": "State",
-    "requirement_edit": {
-        "title": "Edit requirement",
-        "cancel": "Cancel",
-        "save": "Save"
+
+    "Projects": {
+        "project": "Project | Projects",
+        "loading": "Loading projects. Please wait.",
+        "name": "Name",
+        "createdAt": "Created at",
+        "state": "State",
+        "action": "Actions",
+        "updateState": {
+            "title": "Next project state",
+            "text": "Do you really want to set next state of project?",
+            "state": {
+                "title": "Update project state",
+                "success": "State changed",
+                "error": "State could not be changed"
+            }
+        },
+        "delete": {
+            "title": "Delete project",
+            "text": "Shall project be deleted?",
+            "state": {
+                "success": "Project deleted",
+                "error": "Project could not be deleted"
+            }
+        },
+        "tooltip": {
+            "new": "New project",
+            "state": "Change project state",
+            "edit": "Edit project",
+            "delete": "Delete project"
+        }
     },
-    "basecatalog": {
+    "Project": {
+        "loading": "Loading tailorings. Please wait",
+        "project": "Project | Projects",
+        "tailoring": "Tailoring",
+        "name": "Name",
+        "phases": "Phases",
+        "state": "State",
+        "catalog": "Catalog",
+        "action": "Actions",
+        "updateState": {
+            "title": "Next tailoring state",
+            "text": "Do you really want to set next state of tailoring?<br/>After setting to next state neither requirements can be changed nor tailoring be deleted!<br/><br/>In case you need to downstate call your administrator",
+            "state": {
+                "success": "State changed",
+                "error": "State could not be changed"
+            }
+        },
+        "downloadBasecatalog": {
+            "title": "Download Basecatalog"
+        },
+        "deleteTailoring": {
+            "title": "Delete tailoring",
+            "text": "Shall tailoring be deleted?",
+            "state": {
+                "success": "Tailoring deleted",
+                "error": "Tailoring could not be deleted"
+            }
+        },
+        "tooltip": {
+            "openScreeningsheet": "Open screeningsheet",
+            "newTailoring": "Create new tailoring",
+            "changeName": "Change tailoring name",
+            "updateState": "Update tailoring state",
+            "downloadBasecatalog": "Download basecatalog",
+            "editRequirements": "Edit requirements",
+            "downloadDocuments": "Download documents",
+            "compareTailoring": "Show tailoring diffs",
+            "openSelectionvector": "Open selectionvector",
+            "openAttachments": "Open attachments",
+            "importRequirements": "Import tailored requirements",
+            "openNotes": "Show and add notes to tailoring",
+            "deleteTailoring": "Delete tailoring"
+        }
+    },
+    "ScreeningsheetDialog": {
+        "title": "Screeningsheet",
+        "loading": "Loading screeningsheet data.",
+        "name": "Name",
+        "value": "Value",
+        "parameter": "Screeningsheet parameters",
+        "calculatedSelectionvector": "Calculated selectionvector"
+    },
+    "SelectionVectorDialog": {
+        "loading": "Loading selectionvector data. Please wait.",
+        "name": "Name",
+        "value": "Value",
+        "applied": "Applied selectionvector"
+    },
+    "ProjectNew": {
+        "title": "Create project",
+        "catalog": "Catalog",
+        "screeningsheet": "Screeningsheet",
+        "selectionvector": "Selectionvector",
+        "next": "Next",
+        "previous": "Back",
+        "summary": "Summary",
+        "state": {
+            "success": "Project created",
+            "error": "Project could not be created"
+        },
+        "editSelectionvector": {
+            "title": "Parameter",
+            "state": {
+                "success": "Level updated"
+            }
+        }
+    },
+    "CatalogSelection": {
+        "note": "Note",
+        "placeholder": "Choose a catalog"
+    },
+    "ScreeningsheetUpload": {
+        "title": "Upload screeningsheet",
+        "loading": "Loading screeningsheeet parameters",
+        "files": "Drag and drop PDF screeningsheet to here to convert.",
+        "name": "Name",
+        "value": "Value"
+    },
+    "SelectionVectorEdit": {
+        "loading": "Loading parameter. Please wait.",
+        "empty": "No parameters found",
+        "project": "Project",
+        "profilePlaceholder": "Choose a profile",
+        "name": "Name",
+        "value": "Value",
+        "parameterdialog": {
+            "title": "Edit parameter",
+            "required": {
+                "value": "A value is required"
+            },
+            "state": {
+                "success": "Level updated",
+                "cancel": "Level not updated"
+            }
+        }
+    },
+    "SelectionVectorComparison": {
+        "project": "Project",
+        "name": "name",
+        "calculatedSelectionvector": "Calculated selectionvector",
+        "appliedSelectionvector": "Applied selectionvector"
+    },
+    "TailoringCatalog": {
+        "project": "Project | Projects",
+        "search": "Search",
+        "changed": "changed",
+        "setState": {
+            "title": "Requirement state",
+            "state": {
+                "success": "State sucessfully changed"
+            }
+        },
+        "setStates": {
+            "title": "Requirements state",
+            "state": {
+                "success": "States of {chapter} sucessfully changed to {state}"
+            }
+        },
+        "saveText": {
+            "title": "Requirement text",
+            "state": {
+                "success": "Text sucessfully saved"
+            }
+        },
+        "tooltip": {
+            "setRequirementsApplicable": "Mark all chapter requirements applicable",
+            "unsetRequirementsApplicable": "Mark all chapter requirements not applicable",
+            "editRequirement": "Edit requirement",
+            "createRequirement": "Crete new requirement after"
+        }
+    },
+    "EditorDialog": {
+        "title": "Edit requirement"
+    },
+    "TailoringNew": {
+        "title": "Create tailoring",
+        "catalog": "Catalog",
+        "screeningsheet": "Screeningsheet",
+        "selectionvector": "Selectionvector",
+        "next": "Next",
+        "previous": "Back",
+        "summary": "Summary",
+        "state": {
+            "success": "Project created",
+            "error": "Project could not be created"
+        },
+        "editSectionvector": {
+            "title": "Parameter",
+            "state": {
+                "success": "Level updated"
+            }
+        }
+    },
+    "BaseCatalog": {
+        "loading": "Loading basecatalogs. Please wait.",
+        "empty": "No basecatalogs found",
         "convert": "Convert",
-        "preview": "Preview"
+        "preview": "Preview",
+        "catalog": "Catalog",
+        "validFrom": "Valid from",
+        "action": "Actions",
+        "error": {
+            "download": "Download error"
+        },
+        "tooltip": {
+            "downloadJSON": "Download JSON",
+            "downloadPDF": "Download PDF",
+            "downloadExcel": "Download Excel",
+            "downloadZip": "Download documents"
+        }
+    },
+    "Excel2JSONConverterDialog": {
+        "title": "Convert Excel file to JSON catalog",
+        "convert": "Convert",
+        "files": "Drag and drop an Excel catalog file here to be converted into JSON."
     },
 
-    "basecatalog_convert": {
-        "title": "Convert Excel file to JSON catalog",
-        "convert": "Convert"
-    },
-    "basecatalog_preview": {
+    "JSON2PdfconverterDialog": {
         "title": "Preview PDF catalog",
-        "convert": "Preview"
+        "convert": "Preview",
+        "files": "Drag and drop a JSON catalog file here to be converted into PDF."
     },
-    "tailoring_delete": {
-        "title": "Delete tailoring",
-        "text": "Shall tailoring be deleted?"
-    },
-    "chapter_selection": {
-        "title": "Information",
-        "text": "No chapter selected. <br>Please select chapter first.",
-        "ok": "OK"
-    },
-    "documents": {
+    "DownloadDialog": {
         "title": "Download documents",
-        "signatures": "Document signments",
-        "faculty": "Bereich",
-        "signature_state": "State",
+        "loading": " Loading signatures data. Please wait.",
+        "signatures": "Document signatures",
+        "faculty": "Faculty",
+        "signatureState": "State",
         "signee": "User",
         "download": "Download",
         "catalog": "Catalog",
         "json": "JSON",
         "applicable": "Applicable",
+        "action": "Actions",
         "state": {
             "success": "",
             "error": ""
+        },
+        "tooltip": {
+            "editSignature": "Edit signature"
         }
     },
-    "dokument_zeichnung": {
-        "status": {
-            "fehlerfrei": "Value applied"
-        }
-    },
-    "attachment": {
-        "title": "Upload file",
-        "file": "File",
-        "checksum": "Checksum"
-    },
-    "attachment_delete": {
-        "title": "Delete attachment",
-        "text": "Shall attachment be deleted?"
-    },
-    "project_delete": {
-        "title": "Delete project",
-        "text": "Shall project be deleted?"
-    },
-    "tailoring_changename": {
-        "title": "Change tailoring name",
-        "ok": "OK",
+    "SignatureDialog": {
+        "name": "Name",
+        "applicable": "Applicable",
+        "signaturestate": "State",
         "state": {
-            "success": "Name changed sucessfully",
-            "error": "Name could not be changed"
+            "success": "Signature updated"
         }
     },
-    "requirement_import": {
+    "TailoringNameDialog": {
+        "title": "Edit tailoring name",
+        "name": "Name",
+        "state": {
+            "title": "Tailoring",
+            "success": "Name updated"
+        }
+    },
+    "AttachmentsDialog": {
+        "title": "Attachments",
+        "file": "File",
+        "files": "Drag and drop files to here to upload",
+        "checksum": "Checksum",
+        "type": "Type",
+        "loading": "Loading attachments list. Please wait.",
+        "action": "Actions",
+        "delete": {
+            "title": "Delete attachment",
+            "text": "Shall attachment be deleted?",
+            "state": {
+                "success": "Attachment deleted",
+                "error": "Attachment could not be deleted"
+            }
+        },
+        "tooltip": {
+            "download": "Download file",
+            "delete": "Delete file"
+        }
+    },
+    "ImportDialog": {
         "title": "Import tailored requirements",
+        "files": "Drag and drop Excel file to here to update requirements.",
+        "upload": "Convert",
         "state": {
             "success": "Requirements changed",
             "error": "Requirements could not be imported"
         }
     },
-    "tailoring_state": {
-        "title": "Next tailoring state",
-        "text": "Do you really want to set next state of tailoring?<br/>After setting to next state neither requirements can be changed nor tailoring be deleted!<br/><br/>In case you need to downstate call your administrator",
-        "state": {
-            "success": "State changed",
-            "error": "State could not be changed"
-        }
-    },
-    "selectionvector_edit": {
-        "state": {
-            "success": "Level updated",
-            "cancel": "Level not updated"
-        }
-    },
-    "tailoring_notes": {
-        "title": "Notes"
-    },
-    "project_state": {
-        "title": "Next project state",
-        "text": "Do you really want to set next state of project?",
-        "state": {
-            "success": "State changed",
-            "error": "State could not be changed"
-        }
-    },
-    "tooltip": {
-        "tailoring_state": "Next state",
-        "requirements_edit": "Edit requirements",
-        "selectionvector_open": "Open selectionvector",
-        "screeningsheet_open": "Open screeningsheet",
-        "document_open": "Create documents",
-        "attachment_open": "Attachments",
-        "attachment_download": "Download",
-        "attachment_delete": "Delete attachment",
-        "tailoring_delete": "Delete tailoring",
-        "project_edit": "Edit project",
-        "project_copy": "Copy project",
-        "project_delete": "Delete project",
-        "requirement_edit": "Edit requirement",
-        "requirement_create": "Create new requirement after",
-        "applicabilty_change": "Change applicabilty",
-        "tailoring_compare": "Show tailoring diffs",
-        "requirement_import": "Import tailored requirements",
-        "tailoring_notes": "Show and add notes to tailoring",
-        "catalogdefinition_oeffnen": "Open base catalogue document",
-        "catalog_download_json": "Download JSON",
-        "catalog_download_excel": "Download Excel",
-        "catalog_download_pdf": "Download PDF",
-        "catalog_download_documents": "Download documents"
-    },
-    "wait:": {
-        "create_project": "Create project...",
-        "load_tailoringcatalog": "Loading tailoring catalog...",
-        "update_requirement": "Updating requirement...",
-        "update_requirementstate": "Updating requirements state..."
-    },
-    "projectcopy_create": "Create project copy",
-    "select_all": "Select all",
-    "deselect_all": "Deselect all",
-    "value": "Value | Values",
-    "produktsicherung": "Produktsicherung",
-    "qualitaetssicherung": "Qualitätssicherung",
-    "planetaryProtection": "Planetenschutz",
-    "eee": "EEE Komponenten",
-    "pmmp": "PMMP",
-    "zuverlaessigkeit": "Zuverlässigkeit",
-    "safety": "Safety",
-    "software": "Software",
-    "spaceDebris": "Weltraummüll",
-    "cybersecurity": "Cyber- und Datensicherheit",
-    "tenants": {
-        "arsu": {
-            "selectionvector": {
-                "A": "Produktsicherung",
-                "Q": "Qualitätssicherung",
-                "M": "Maintainability",
-                "E": "EEE Komponenten",
-                "P": "PMMP",
-                "R": "Zuverlässigkeit",
-                "S": "Safety",
-                "W": "Software",
-                "C": "Cyber- und Datensicherheit",
-                "J": "Space Debris",
-                "F": "Planetary Protection",
-                "B": "Bodensegment",
-                "G": "Engineering",
-                "N": "Management"
-            }
-        },
-        "demo": {
-            "selectionvector": {
-                "A": "Produktsicherung",
-                "Q": "Qualitätssicherung",
-                "M": "Maintainability",
-                "E": "EEE Komponenten",
-                "P": "PMMP",
-                "R": "Zuverlässigkeit",
-                "S": "Safety",
-                "W": "Software",
-                "C": "Cyber- und Datensicherheit",
-                "J": "Space Debris",
-                "F": "Planetary Protection",
-                "B": "Bodensegment",
-                "G": "Engineering",
-                "N": "Management"
-            }
-        }
+    "NotesDialog": {
+        "title": "Notes",
+        "add": "Add"
     }
 }

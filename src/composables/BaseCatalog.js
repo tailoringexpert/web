@@ -1,15 +1,15 @@
-import { reactive, readonly, toRef, toValue } from "vue";
-import axios from "axios";
+import { reactive, readonly, toRef, toValue } from 'vue';
+import axios from 'axios';
 
-import store from "@/store";
-import { useHttp } from "@/composables/http";
+import store from '@/store';
+import { useHttp } from '@/composables/http';
 
 export function useBaseCatalog() {
     const { download } = useHttp();
 
     const state = reactive({
         catalogs: [],
-        conversionLink: null,
+        conversionLink: null
     });
 
     const mutations = {
@@ -18,7 +18,7 @@ export function useBaseCatalog() {
         },
         conversionLink: (conversionLink) => {
             state.conversionLink = toRef(conversionLink);
-        },
+        }
     };
 
     const actions = {
@@ -32,12 +32,8 @@ export function useBaseCatalog() {
                 return axios
                     .get(url)
                     .then((response) => {
-                        mutations.catalogs(
-                            response.data._embedded.baseCatalogVersions
-                        );
-                        mutations.conversionLink(
-                            response.data._links.convert.href
-                        );
+                        mutations.catalogs(response.data._embedded.baseCatalogVersions);
+                        mutations.conversionLink(response.data._links.convert.href);
                         resolve(state.catalogs);
                     })
                     .catch((error) => {
@@ -61,12 +57,12 @@ export function useBaseCatalog() {
         zip: (catalog) => {
             var url = toValue(catalog)._links.document.href;
             return download(url);
-        },
+        }
     };
 
     return {
         state: readonly(state),
         mutations,
-        actions,
+        actions
     };
 }

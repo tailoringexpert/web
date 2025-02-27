@@ -1,11 +1,11 @@
-import { reactive, readonly, toRef, toValue } from "vue";
-import axios from "axios";
+import { reactive, readonly, toRef, toValue } from 'vue';
+import axios from 'axios';
 
-import store from "@/store";
+import store from '@/store';
 
 export function useScreeningsheetUpload() {
     const state = reactive({
-        screeningsheet: { parameters: [] },
+        screeningsheet: { parameters: [] }
     });
 
     const mutations = {
@@ -14,7 +14,7 @@ export function useScreeningsheetUpload() {
         },
         selectionvectorParameter: (selectionvectorParameter) => {
             state.selectionvectorParameter = toRef(selectionvectorParameter);
-        },
+        }
     };
 
     const actions = {
@@ -26,7 +26,7 @@ export function useScreeningsheetUpload() {
             return new Promise((resolve, reject) => {
                 axios
                     .post(url, data, {
-                        headers: { "Content-Type": "multipart/form-data" },
+                        headers: { 'Content-Type': 'multipart/form-data' }
                     })
                     .then((response) => {
                         mutations.screeningsheet(response.data);
@@ -38,12 +38,12 @@ export function useScreeningsheetUpload() {
                         throw error;
                     });
             });
-        },
+        }
     };
 
     return {
         state: readonly(state),
         mutations,
-        actions,
+        actions
     };
 }

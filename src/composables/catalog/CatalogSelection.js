@@ -1,13 +1,16 @@
-import { reactive, readonly, toRef, toValue } from "vue";
-import axios from "axios";
+import { reactive, readonly, toRef, toValue } from 'vue';
+import axios from 'axios';
 
-import store from "@/store";
+import store from '@/store';
 
 export function useCatalogSelection() {
     const state = reactive({
         catalogs: [],
-        catalog: null,
-        note: null,
+        catalog: {
+            version: null,
+            project: null
+        },
+        note: null
     });
 
     const mutations = {
@@ -19,7 +22,7 @@ export function useCatalogSelection() {
         },
         note: (note) => {
             state.note = toRef(note);
-        },
+        }
     };
 
     const actions = {
@@ -35,25 +38,19 @@ export function useCatalogSelection() {
                     .get(url)
                     .then((response) => {
                         var _catalogs = [];
-                        for (
-                            let i = 0;
-                            i <
-                            response.data._embedded.baseCatalogVersions.length;
-                            i++
-                        ) {
-                            var item =
-                                response.data._embedded.baseCatalogVersions[i];
+                        for (let i = 0; i < response.data._embedded.baseCatalogVersions.length; i++) {
+                            var item = response.data._embedded.baseCatalogVersions[i];
                             var links = item._links;
 
                             if (item.valid) {
                                 mutations.catalog({
                                     version: item.version,
-                                    project: links.project.href,
+                                    project: links.project.href
                                 });
 
                                 _catalogs.push({
                                     version: item.version,
-                                    project: links.project.href,
+                                    project: links.project.href
                                 });
                             }
                         }
@@ -65,12 +62,12 @@ export function useCatalogSelection() {
                         reject(error);
                     });
             });
-        },
+        }
     };
 
     return {
         state: readonly(state),
         mutations,
-        actions,
+        actions
     };
 }

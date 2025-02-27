@@ -1,13 +1,13 @@
-import { reactive, toValue, readonly, toRef } from "vue";
-import axios from "axios";
+import { reactive, toValue, readonly, toRef } from 'vue';
+import axios from 'axios';
 
 export function useImportDialog() {
     const state = reactive({
-        tailoring: null,
+        tailoring: null
     });
 
     const mutations = {
-        tailoring: (tailoring) => (state.tailoring = toRef(tailoring)),
+        tailoring: (tailoring) => (state.tailoring = toRef(tailoring))
     };
 
     const actions = {
@@ -20,22 +20,22 @@ export function useImportDialog() {
             return new Promise((resolve, reject) => {
                 return axios
                     .post(url, toValue(data), {
-                        headers: { "Content-Type": "multipart/form-data" },
+                        headers: { 'Content-Type': 'multipart/form-data' }
                     })
 
                     .then(() => {
-                        resolve("Accepted");
+                        resolve('Accepted');
                     })
                     .catch((error) => {
                         reject(error.response.data);
                     });
             });
-        },
+        }
     };
 
     return {
         state: readonly(state),
         mutations,
-        actions,
+        actions
     };
 }
