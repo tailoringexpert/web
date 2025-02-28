@@ -11,21 +11,20 @@ export function useProjects() {
     });
 
     const mutations = {
-        projects: (projects) => (state.projects = toRef(projects)),
-        state: (state) => (state.state = toRef(state))
+        projects: (projects) => state.projects = toRef(projects),
+        state: (state) => state.state = toRef(state)
     };
 
     const actions = {
         initialize: () => {
             return new Promise((resolve, reject) => {
-                var _projects = [];
+                const _projects = [];
                 return axios
                     .get(toValue(store.state).links.project.href)
                     .then((response) => {
                         if (response.data._embedded != undefined) {
-                            for (var i = 0; i < response.data._embedded.projects.length; i++) {
-                                var item = response.data._embedded.projects[i];
-                                var links = response.data._embedded.projects[i]._links;
+                            for (const item of response.data._embedded.projects) {
+                                const links = item._links;
                                 _projects.push(
                                     reactive({
                                         name: item.name,
@@ -41,7 +40,6 @@ export function useProjects() {
                         resolve(_projects);
                     })
                     .catch((error) => {
-                        logger.error(error);
                         reject(error.response);
                     });
             });
@@ -64,7 +62,6 @@ export function useProjects() {
 
         delete: (project) => {
             return new Promise((resolve, reject) => {
-                console.log(project);
                 return axios
                     .delete(toValue(project)._links.self.href)
                     .then(() => {

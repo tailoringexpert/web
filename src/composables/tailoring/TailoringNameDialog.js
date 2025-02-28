@@ -7,9 +7,7 @@ export function useNameDialog() {
     });
 
     const mutations = {
-        tailoring: (tailoring) => {
-            state.tailoring = toRef(tailoring);
-        }
+        tailoring: (tailoring) => state.tailoring = toRef(tailoring)
     };
 
     const actions = {

@@ -73,17 +73,37 @@ const onError = (title, message) => {
 </script>
 
 <template>
-    <Dialog :visible="active" :wait :header="t('Excel2JSONConverterDialog.title')" :modal="true" @update:visible="onClose">
-        <template #footer>
-            <Button :label="$t('close')" @click="onClose" />
-        </template>
+  <Dialog
+    :visible="active"
+    :wait
+    :header="t('Excel2JSONConverterDialog.title')"
+    :modal="true"
+    @update:visible="onClose"
+  >
+    <template #footer>
+      <Button
+        :label="$t('close')"
+        @click="onClose"
+      />
+    </template>
 
-        <div v-if="active" class="flex flex-col gap-1">
-            <FileUpload mode="advanced" multiple="false" custom-upload="true" :upload-label="t('Excel2JSONConverterDialog.convert')" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" @select="onSelect" @uploader="onUpload">
-                <template #empty>
-                    <span>{{ t('Excel2JSONConverterDialog.files') }}</span>
-                </template>
-            </FileUpload>
-        </div>
-    </Dialog>
+    <div
+      v-if="active"
+      class="flex flex-col gap-1"
+    >
+      <FileUpload
+        mode="advanced"
+        multiple="false"
+        custom-upload="true"
+        :upload-label="t('Excel2JSONConverterDialog.convert')"
+        accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        @select="onSelect"
+        @uploader="onUpload"
+      >
+        <template #empty>
+          <span>{{ t('Excel2JSONConverterDialog.files') }}</span>
+        </template>
+      </FileUpload>
+    </div>
+  </Dialog>
 </template>

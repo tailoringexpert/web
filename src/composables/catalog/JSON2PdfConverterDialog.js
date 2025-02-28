@@ -15,7 +15,7 @@ export function useJSON2PdfConverterDialog() {
 
     const actions = {
         convert: (file) => {
-            var url = toValue(store.state).links.catalogpreview.href;
+            const url = toValue(store.state).links.catalogpreview.href;
             if (url == null) {
                 return Promise.resolve();
             }
@@ -34,7 +34,6 @@ export function useJSON2PdfConverterDialog() {
                             resolve(response.data);
                         })
                         .catch((error) => {
-                            console.log(error);
                             reject(error.data);
                         });
                 });

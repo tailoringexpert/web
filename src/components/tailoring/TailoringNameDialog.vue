@@ -70,17 +70,35 @@ const onSuccess = (title, message) => {
 </script>
 
 <template>
-    <Dialog :visible="active" :header="t('TailoringNameDialog.title')" :modal="true" @update:visible="onClose">
-        <template #footer>
-            <Button :label="t('close')" @click="onClose" />
-            <Button :label="t('save')" @click="onSave" />
-        </template>
+  <Dialog
+    :visible="active"
+    :header="t('TailoringNameDialog.title')"
+    :modal="true"
+    @update:visible="onClose"
+  >
+    <template #footer>
+      <Button
+        :label="t('close')"
+        @click="onClose"
+      />
+      <Button
+        :label="t('save')"
+        @click="onSave"
+      />
+    </template>
 
-        <div class="grid grid-cols-12 gap-2">
-            <label for="name" class="flex items-center col-span-12 mb-2 md:col-span-2 md:mb-0">{{ t('TailoringNameDialog.name') }}</label>
-            <div class="col-span-12 md:col-span-10">
-                <InputText id="name" v-model="name" type="text" />
-            </div>
-        </div>
-    </Dialog>
+    <div class="grid grid-cols-12 gap-2">
+      <label
+        for="name"
+        class="flex items-center col-span-12 mb-2 md:col-span-2 md:mb-0"
+      >{{ t('TailoringNameDialog.name') }}</label>
+      <div class="col-span-12 md:col-span-10">
+        <InputText
+          id="name"
+          v-model="name"
+          type="text"
+        />
+      </div>
+    </div>
+  </Dialog>
 </template>

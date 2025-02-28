@@ -106,25 +106,45 @@ const onAbout = () => {
 </script>
 
 <template>
-    <div class="layout-wrapper" :class="containerClass">
-        <app-topbar @help="onHelp" @open="onOpen"/>
-        <app-sidebar @help="onHelp" @about="onAbout"/>
-        <div class="layout-main-container">
-            <div class="layout-main">
-                <router-view />
-            </div>
-        </div>
-        <app-footer @open="onOpen"></app-footer>
+  <div
+    class="layout-wrapper"
+    :class="containerClass"
+  >
+    <app-topbar
+      @help="onHelp"
+      @open="onOpen"
+    />
+    <app-sidebar
+      @help="onHelp"
+      @about="onAbout"
+    />
+    <div class="layout-main-container">
+      <div class="layout-main">
+        <router-view />
+      </div>
     </div>
+    <app-footer @open="onOpen" />
+  </div>
 
-    <BlockUI :blocked="blocked" full-screen>
-        <ProgressSpinner v-if="blocked" fill="transparent" style="position: fixed; top: 50%; left: 50%; z-index: 10000" />
-    </BlockUI>
+  <BlockUI
+    :blocked="blocked"
+    full-screen
+  >
+    <ProgressSpinner
+      v-if="blocked"
+      fill="transparent"
+      style="position: fixed; top: 50%; left: 50%; z-index: 10000"
+    />
+  </BlockUI>
 
-    <ConfirmDialog />
-    <Toast />
+  <ConfirmDialog />
+  <Toast />
 
-    <Drawer v-model:visible="help.state" position="bottom" style="height: auto">
-        <p v-html="help.text"></p>
-    </Drawer>
+  <Drawer
+    v-model:visible="help.state"
+    position="bottom"
+    style="height: auto"
+  >
+    <p v-html="help.text" />
+  </Drawer>
 </template>

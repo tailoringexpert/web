@@ -108,47 +108,81 @@ const onClose = () => {
 </script>
 
 <template>
-    <Dialog :visible="active" :header="t('AttachmentsDialog.title')" :modal="true" @update:visible="onClose">
-        <template #footer>
-            <Button :label="$t('close')" @click="onClose" />
+  <Dialog
+    :visible="active"
+    :header="t('AttachmentsDialog.title')"
+    :modal="true"
+    @update:visible="onClose"
+  >
+    <template #footer>
+      <Button
+        :label="$t('close')"
+        @click="onClose"
+      />
+    </template>
+
+    <FileUpload
+      mode="advanced"
+      custom-upload="true"
+      multiple="false"
+      @select="onSelect"
+      @uploader="onUpload"
+    >
+      <template #empty>
+        <span>{{ t('AttachmentsDialog.files') }}</span>
+      </template>
+    </FileUpload>
+
+    <DataTable
+      :value="attachments"
+      data-key="hash"
+      striped-rows
+      scrollable
+      scroll-height="400px"
+      table-style="min-width: 50rem"
+      paginator
+      :rows="10"
+      :rows-per-page-options="[10, 15, 20, 25]"
+      paginator-template="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
+      current-page-report-template="{first} to {last} of {totalRecords}"
+    >
+      <template #loading>
+        {{ t('AttachmentsDialog.loading') }}
+      </template>
+
+      <Column :header="t('AttachmentsDialog.file')">
+        <template #body="slotProps">
+          <span @click.self="onDownload(slotProps.data.name)">{{ slotProps.data.name }}</span>
         </template>
-
-        <FileUpload mode="advanced" custom-upload="true" multiple="false" @select="onSelect" @uploader="onUpload">
-            <template #empty>
-                <span>{{ t('AttachmentsDialog.files') }}</span>
-            </template>
-        </FileUpload>
-
-        <DataTable
-            :value="attachments"
-            data-key="hash"
-            striped-rows
-            scrollable
-            scroll-height="400px"
-            table-style="min-width: 50rem"
-            paginator
-            :rows="10"
-            :rows-per-page-options="[10, 15, 20, 25]"
-            paginator-template="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
-            current-page-report-template="{first} to {last} of {totalRecords}"
-        >
-            <template #loading>
-                {{ t('AttachmentsDialog.loading') }}
-            </template>
-
-            <Column :header="t('AttachmentsDialog.file')">
-                <template #body="slotProps">
-                    <span @click.self="onDownload(slotProps.data.name)">{{ slotProps.data.name }}</span>
-                </template>
-            </Column>
-            <Column field="type" :header="t('AttachmentsDialog.type')" />
-            <Column field="hash" :header="t('AttachmentsDialog.checksum')" />
-            <Column :header="t('AttachmentsDialog.action')">
-                <template #body="slotProps">
-                    <Button v-tooltip.bottom="t('AttachmentsDialog.tooltip.download')" variant="text" rounded icon="pi pi-download" severity="secondary" @click="onDownload(slotProps.data)" />
-                    <Button v-tooltip.bottom="t('AttachmentsDialog.tooltip.delete')" variant="text" rounded icon="pi pi-trash" severity="secondary" @click="onDelete(slotProps.data)" />
-                </template>
-            </Column>
-        </DataTable>
-    </Dialog>
+      </Column>
+      <Column
+        field="type"
+        :header="t('AttachmentsDialog.type')"
+      />
+      <Column
+        field="hash"
+        :header="t('AttachmentsDialog.checksum')"
+      />
+      <Column :header="t('AttachmentsDialog.action')">
+        <template #body="slotProps">
+          <Button
+            v-tooltip.bottom="t('AttachmentsDialog.tooltip.download')"
+            variant="text"
+            rounded
+            icon="pi pi-download"
+            severity="secondary"
+            @click="onDownload(slotProps.data)"
+          />
+          <Button
+            v-tooltip.bottom="t('AttachmentsDialog.tooltip.delete')"
+            variant="text"
+            rounded
+            icon="pi pi-trash"
+            severity="secondary"
+            @click="onDelete(slotProps.data)"
+          />
+        </template>
+      </Column>
+    </DataTable>
+  </Dialog>
 </template>

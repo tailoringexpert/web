@@ -11,23 +11,19 @@ export function useSelectionvectorComparison() {
     });
 
     const mutations = {
-        calculatedSelectionvector: (calculatedSelectionvector) => {
-            state.calculatedSelectionvector = toRef(calculatedSelectionvector);
-        },
+        calculatedSelectionvector: (calculatedSelectionvector) => state.calculatedSelectionvector = toRef(calculatedSelectionvector),
         editedSelectionvector: (editedSelectionvector) => {
             if (editedSelectionvector) {
                 state.editedSelectionvector = toRef(editedSelectionvector);
             }
         },
-        comparedSelectionvectors: (comparedSelectionvectors) => {
-            state.comparedSelectionvectors = toRef(comparedSelectionvectors);
-        }
+        comparedSelectionvectors: (comparedSelectionvectors) => state.comparedSelectionvectors = toRef(comparedSelectionvectors)
     };
 
     const actions = {
         initialize: () => {
-            let items = [];
-            for (let name in state.calculatedSelectionvector.levels) {
+            const items = [];
+            for (const name in state.calculatedSelectionvector.levels) {
                 items.push({
                     name: name,
                     label: t('tenant.selectionvector.' + name),

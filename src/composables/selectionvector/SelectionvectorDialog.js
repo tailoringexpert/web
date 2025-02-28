@@ -11,26 +11,23 @@ export function useSelectionvectorDialog() {
     });
 
     const mutations = {
-        tailoring: (tailoring) => {
-            state.tailoring = toRef(tailoring);
-        },
-        levels: (levels) => {
-            state.levels = toRef(levels);
-        }
+        tailoring: (tailoring) => state.tailoring = toRef(tailoring),
+        levels: (levels) => state.levels = toRef(levels)
     };
 
     const actions = {
         initialize: () => {
-            let url = toValue(state.tailoring)._links.selectionvector.href;
+            const url = toValue(state.tailoring)._links.selectionvector.href;
             if (url == null) {
                 return Promise.resolve();
             }
+
             return new Promise((resolve, reject) => {
                 return axios
                     .get(url)
                     .then((response) => {
-                        let items = [];
-                        for (let name in response.data.levels) {
+                        const items = [];
+                        for (const name in response.data.levels) {
                             items.push({
                                 label: t('tenant.selectionvector.' + name),
                                 name: name,
@@ -43,7 +40,6 @@ export function useSelectionvectorDialog() {
                         resolve(items);
                     })
                     .catch((error) => {
-                        console.log(error);
                         reject(error.data);
                     });
             });

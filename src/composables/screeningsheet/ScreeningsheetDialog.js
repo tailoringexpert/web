@@ -13,17 +13,13 @@ export function useScreeningsheetDialog() {
     });
 
     const mutations = {
-        screeningsheet: (screeningsheet) => {
-            state.screeningsheet = toRef(screeningsheet);
-        },
-        selectionvectorParameter: (selectionvectorParameter) => {
-            state.selectionvectorParameter = toRef(selectionvectorParameter);
-        }
+        screeningsheet: (screeningsheet) => state.screeningsheet = toRef(screeningsheet),
+        selectionvectorParameter: (selectionvectorParameter) => state.selectionvectorParameter = toRef(selectionvectorParameter)
     };
 
     const actions = {
         initialize: () => {
-            var url = toValue(state.screeningsheet)._links.screeningsheet.href;
+            const url = toValue(state.screeningsheet)._links.screeningsheet.href;
             if (url == null) {
                 return Promise.resolve();
             }
@@ -33,8 +29,8 @@ export function useScreeningsheetDialog() {
                     .get(url)
                     .then((response) => {
                         mutations.screeningsheet(response.data);
-                        var selectionvectorParameter = [];
-                        for (var name in response.data.selectionVector.levels) {
+                        const selectionvectorParameter = [];
+                        for (const name in response.data.selectionVector.levels) {
                             selectionvectorParameter.push({
                                 label: t('tenant.selectionvector.' + name),
                                 name: name,
@@ -52,7 +48,7 @@ export function useScreeningsheetDialog() {
             });
         },
         download: () => {
-            var url = toValue(state.screeningsheet)._links.datei.href;
+            const url = toValue(state.screeningsheet)._links.datei.href;
             if (url == null) {
                 return Promise.resolve();
             }

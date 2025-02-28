@@ -74,24 +74,40 @@ const onClose = () => {
 </script>
 
 <template>
-    <Dialog :visible="active" :header="t('NotesDialog.title')" :modal="true" @update:visible="onClose">
-        <div class="card">
-            <Card class="mt-4">
-                <template #content>
-                    <Textarea id="note" v-model="noteText" rows="4" />
-                    <Button :label="t('NotesDialog.add')" text @click="onNew" />
-                </template>
-            </Card>
+  <Dialog
+    :visible="active"
+    :header="t('NotesDialog.title')"
+    :modal="true"
+    @update:visible="onClose"
+  >
+    <div class="card">
+      <Card class="mt-4">
+        <template #content>
+          <Textarea
+            id="note"
+            v-model="noteText"
+            rows="4"
+          />
+          <Button
+            :label="t('NotesDialog.add')"
+            text
+            @click="onNew"
+          />
+        </template>
+      </Card>
 
-            <Timeline :value="notes" align="alternate">
-                <template #content="slotProps">
-                    <Card class="mt-4">
-                        <template #content>
-                            <span>{{ slotProps.item.text }}</span>
-                        </template>
-                    </Card>
-                </template>
-            </Timeline>
-        </div>
-    </Dialog>
+      <Timeline
+        :value="notes"
+        align="alternate"
+      >
+        <template #content="slotProps">
+          <Card class="mt-4">
+            <template #content>
+              <span>{{ slotProps.item.text }}</span>
+            </template>
+          </Card>
+        </template>
+      </Timeline>
+    </div>
+  </Dialog>
 </template>

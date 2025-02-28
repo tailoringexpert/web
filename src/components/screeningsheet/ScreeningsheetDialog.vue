@@ -82,46 +82,73 @@ const onError = (title, message) => {
 </script>
 
 <template>
-    <Dialog :visible="active" :header="t('ScreeningsheetDialog.title')" :modal="true" @update:visible="onClose">
-        <template #footer>
-            <Button :label="$t('close')" @click="onClose" />
-        </template>
+  <Dialog
+    :visible="active"
+    :header="t('ScreeningsheetDialog.title')"
+    :modal="true"
+    @update:visible="onClose"
+  >
+    <template #footer>
+      <Button
+        :label="$t('close')"
+        @click="onClose"
+      />
+    </template>
 
-        <Tabs value="1">
-            <TabList>
-                <Tab value="1">
-                    {{ $t('ScreeningsheetDialog.parameter') }}
-                </Tab>
-                <Tab value="2">
-                    {{ $t('ScreeningsheetDialog.calculatedSelectionvector') }}
-                </Tab>
-            </TabList>
+    <Tabs value="1">
+      <TabList>
+        <Tab value="1">
+          {{ $t('ScreeningsheetDialog.parameter') }}
+        </Tab>
+        <Tab value="2">
+          {{ $t('ScreeningsheetDialog.calculatedSelectionvector') }}
+        </Tab>
+      </TabList>
 
-            <TabPanels>
-                <TabPanel value="1">
-                    <DataTable :value="screeningSheet.parameters" data-key="label" striped-rows scrollable scroll-height="400px" table-style="min-width: 50rem">
-                        <template #loading>
-                            {{ t('ScreeningsheetDialog.loading') }}
-                        </template>
+      <TabPanels>
+        <TabPanel value="1">
+          <DataTable
+            :value="screeningSheet.parameters"
+            data-key="label"
+            striped-rows
+            scrollable
+            scroll-height="400px"
+            table-style="min-width: 50rem"
+          >
+            <template #loading>
+              {{ t('ScreeningsheetDialog.loading') }}
+            </template>
 
-                        <Column field="label" :header="t('ScreeningsheetDialog.name')" />
-                        <Column field="value" :header="t('ScreeningsheetDialog.value')" />
-                    </DataTable>
-                </TabPanel>
-                <TabPanel value="2">
-                    <DataTable
-                        :value="selectionVectorParameter"
-                        data-key="label"
-                        striped-rows
-                        scrollable
-                        scroll-height="400px"
-                        table-style="min-width: 50rem"
-                    >
-                        <Column field="label" :header="t('ScreeningsheetDialog.parameter')" />
-                        <Column field="value" :header="t('ScreeningsheetDialog.value')" />
-                    </DataTable>
-                </TabPanel>
-            </TabPanels>
-        </Tabs>
-    </Dialog>
+            <Column
+              field="label"
+              :header="t('ScreeningsheetDialog.name')"
+            />
+            <Column
+              field="value"
+              :header="t('ScreeningsheetDialog.value')"
+            />
+          </DataTable>
+        </TabPanel>
+        <TabPanel value="2">
+          <DataTable
+            :value="selectionVectorParameter"
+            data-key="label"
+            striped-rows
+            scrollable
+            scroll-height="400px"
+            table-style="min-width: 50rem"
+          >
+            <Column
+              field="label"
+              :header="t('ScreeningsheetDialog.parameter')"
+            />
+            <Column
+              field="value"
+              :header="t('ScreeningsheetDialog.value')"
+            />
+          </DataTable>
+        </TabPanel>
+      </TabPanels>
+    </Tabs>
+  </Dialog>
 </template>

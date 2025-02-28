@@ -68,6 +68,7 @@ export function useTailoringCatalog() {
 
     const addChapterMapping = (chapter) => {
         number2Chapter[chapter.key] = chapter.name;
+        // disables because of async requirement loading
         mutations.setChapterRequirements(chapter.key, chapter.data);
 
         chapter.children.forEach((subchapter) => addChapterMapping(subchapter));
@@ -87,17 +88,21 @@ export function useTailoringCatalog() {
     });
 
     const getters = {
-        requirements: () => (toValue(state.chapter) != null ? state.chapter2Requirements[toValue(state.chapter).key] : []),
+        requirements: () => toValue(state.chapter) != null ? state.chapter2Requirements[toValue(state.chapter).key] : [],
         name: (number) => number2Chapter[number]
     };
 
     const mutations = {
-        catalog: (catalog) => (state.catalog = toRef(catalog)),
+        catalog: (catalog) => state.catalog = toRef(catalog),
         chapter: (chapter) => {
             state.chapter = toRef(chapter);
 
+            if (!Object.hasOwn(state.chapter2Requirements, state.chapter.key) || !state.chapter2Requirements[chapter.key]) {
+                loadRequirements();
+            }
+
             state.breadcrumbs = [];
-            [...chapter.key.matchAll(/\./g)].map((match) => {
+            [...state.chapter.key.matchAll(/\./g)].map((match) => {
                 const number = chapter.key.substring(0, match.index);
                 state.breadcrumbs.push({
                     label: number + ' ' + getters.name(number),
@@ -110,9 +115,9 @@ export function useTailoringCatalog() {
                 disabled: true
             });
         },
-        requirement: (requirement) => (state.requirement = toRef(requirement)),
-        setChapterRequirements: (key, requirements) => (state.chapter2Requirements[key] = toRef(requirements)),
-        updateChapterRequirements: (requirements) => (state.chapter2Requirements[state.chapter.key] = requirements)
+        requirement: (requirement) => state.requirement = toRef(requirement),
+        setChapterRequirements: (key, requirements) => state.chapter2Requirements[key] = toRef(requirements),
+        updateChapterRequirements: (requirements) => state.chapter2Requirements[state.chapter.key] = requirements
     };
 
     const actions = {
@@ -131,7 +136,6 @@ export function useTailoringCatalog() {
                         resolve(state.catalog);
                     })
                     .catch((error) => {
-                        console.log(error);
                         reject(error.data);
                     });
             });
@@ -159,7 +163,6 @@ export function useTailoringCatalog() {
                         resolve(state.requirement);
                     })
                     .catch((error) => {
-                        console.log(error);
                         reject(error.data);
                     });
             });

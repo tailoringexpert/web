@@ -54,25 +54,39 @@ const onClose = () => {
 </script>
 
 <template>
-    <Dialog :visible="active" :header="t('SelectionVectorDialog.applied')" :modal="true" @update:visible="onClose">
-        <template #footer>
-            <Button :label="$t('close')" @click="onClose" />
-        </template>
+  <Dialog
+    :visible="active"
+    :header="t('SelectionVectorDialog.applied')"
+    :modal="true"
+    @update:visible="onClose"
+  >
+    <template #footer>
+      <Button
+        :label="$t('close')"
+        @click="onClose"
+      />
+    </template>
 
-        <DataTable
-            :value="items"
-            data-key="label"
-            striped-rows
-            scrollable
-            scroll-height="400px"
-            table-style="min-width: 50rem"
-        >
-            <template #loading>
-                {{ t('SelectionVectorDialog.loading') }}
-            </template>
+    <DataTable
+      :value="items"
+      data-key="label"
+      striped-rows
+      scrollable
+      scroll-height="400px"
+      table-style="min-width: 50rem"
+    >
+      <template #loading>
+        {{ t('SelectionVectorDialog.loading') }}
+      </template>
 
-            <Column field="label" :header="t('SelectionVectorDialog.name')" />
-            <Column field="value" :header="t('SelectionVectorDialog.value')" />
-        </DataTable>
-    </Dialog>
+      <Column
+        field="label"
+        :header="t('SelectionVectorDialog.name')"
+      />
+      <Column
+        field="value"
+        :header="t('SelectionVectorDialog.value')"
+      />
+    </DataTable>
+  </Dialog>
 </template>

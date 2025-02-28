@@ -8,13 +8,13 @@ export function useNotesDialog() {
     });
 
     const mutations = {
-        tailoring: (tailoring) => (state.tailoring = toRef(tailoring)),
-        notes: (notes) => (state.notes = toRef(notes))
+        tailoring: (tailoring) => state.tailoring = toRef(tailoring),
+        notes: (notes) => state.notes = toRef(notes)
     };
 
     const actions = {
         initialize: () => {
-            var url = toValue(state.tailoring)._links.note.href;
+            const url = toValue(state.tailoring)._links.note.href;
             if (url == null) {
                 return Promise.resolve();
             }
@@ -35,7 +35,7 @@ export function useNotesDialog() {
             });
         },
         create: (text) => {
-            var url = toValue(state.tailoring)._links.note.href;
+            const url = toValue(state.tailoring)._links.note.href;
             if (url == null) {
                 return Promise.resolve();
             }
@@ -47,12 +47,10 @@ export function useNotesDialog() {
                     })
 
                     .then(() => {
-                        actions.initialize().then(() => {
-                            resolve(state.notes);
-                        });
+                        actions.initialize()
+                            .then(() => resolve(state.notes));
                     })
                     .catch((error) => {
-                        console.log(error);
                         reject(error.data);
                     });
             });

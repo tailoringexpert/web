@@ -23,7 +23,7 @@ const selectionvector = {
 
 export function useLocales() {
     const get = (files) => {
-        let tenant =  window?.configs?.PAGE_APP_TENANT || APP_TENANT;
+        const tenant =  window?.configs?.PAGE_APP_TENANT || APP_TENANT;
         console.log('loading translations for ' + tenant);
 
         const messages = {};

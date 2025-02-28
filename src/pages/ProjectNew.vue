@@ -121,52 +121,116 @@ onBeforeMount(() => {
 </script>
 
 <template>
-    <div class="card justify-center" fluid>
-        <Stepper :value="step" class="basis-[50rem]">
-            <StepList>
-                <Step :value="1">
-                    {{ t('ProjectNew.catalog') }}
-                </Step>
-                <Step :value="2">
-                    {{ t('ProjectNew.screeningsheet') }}
-                </Step>
-                <Step :value="3">
-                    {{ t('ProjectNew.selectionvector') }}
-                </Step>
-                <Step :value="4">
-                    {{ t('ProjectNew.summary') }}
-                </Step>
-            </StepList>
+  <div
+    class="card justify-center"
+    fluid
+  >
+    <Stepper
+      :value="step"
+      class="basis-[50rem]"
+    >
+      <StepList>
+        <Step :value="1">
+          {{ t('ProjectNew.catalog') }}
+        </Step>
+        <Step :value="2">
+          {{ t('ProjectNew.screeningsheet') }}
+        </Step>
+        <Step :value="3">
+          {{ t('ProjectNew.selectionvector') }}
+        </Step>
+        <Step :value="4">
+          {{ t('ProjectNew.summary') }}
+        </Step>
+      </StepList>
 
-            <StepPanels>
-                <StepPanel v-slot="{ activateCallback }" :value="1">
-                    <CatalogSelection @catalog-select="onCatalogSelect" @catalog-note="onNoteEdited" />
-                    <div class="flex pt-6 justify-end">
-                        <Button :label="t('tailoringnew.next')" icon="pi pi-arrow-right" icon-pos="right" @click="activateCallback(2)" />
-                    </div>
-                </StepPanel>
-                <StepPanel v-slot="{ activateCallback }" :value="2">
-                    <ScreeningsheetUpload @screeningsheet:upload="onScreeningsheetUpload" />
-                    <div class="flex pt-6 justify-between">
-                        <Button :label="t('ProjectNew.previous')" severity="secondary" icon="pi pi-arrow-left" @click="activateCallback(1)" />
-                        <Button :label="t('ProjectNew.next')" icon="pi pi-arrow-right" icon-pos="right" @click="activateCallback(3)" />
-                    </div>
-                </StepPanel>
-                <StepPanel v-slot="{ activateCallback }" :value="3">
-                    <SelectionVectorEdit :selection-vector="screeningsheet.selectionVector" :project @selectionvector-modified="onSelectionVectorModified" />
-                    <div class="flex pt-6 justify-between">
-                        <Button :label="t('ProjectNew.previous')" severity="secondary" icon="pi pi-arrow-left" @click="activateCallback(2)" />
-                        <Button :label="t('ProjectNew.next')" icon="pi pi-arrow-right" icon-pos="right" @click="activateCallback(4)" />
-                    </div>
-                </StepPanel>
-                <StepPanel v-slot="{ activateCallback }" :value="4">
-                    <SelectionVectorComparison :project :selection-vector="screeningsheet.selectionVector" :edited-selection-vector="selectionVector" />
-                    <div class="flex pt-6 justify-between">
-                        <Button :label="t('ProjectNew.previous')" severity="secondary" icon="pi pi-arrow-left" @click="activateCallback(3)" />
-                        <Button :label="t('ProjectNew.next')" icon="pi pi-arrow-right" icon-pos="right" @click="onCreate" />
-                    </div>
-                </StepPanel>
-            </StepPanels>
-        </Stepper>
-    </div>
+      <StepPanels>
+        <StepPanel
+          v-slot="{ activateCallback }"
+          :value="1"
+        >
+          <CatalogSelection
+            @catalog-select="onCatalogSelect"
+            @catalog-note="onNoteEdited"
+          />
+          <div class="flex pt-6 justify-end">
+            <Button
+              :label="t('tailoringnew.next')"
+              icon="pi pi-arrow-right"
+              icon-pos="right"
+              @click="activateCallback(2)"
+            />
+          </div>
+        </StepPanel>
+        <StepPanel
+          v-slot="{ activateCallback }"
+          :value="2"
+        >
+          <ScreeningsheetUpload @screeningsheet:upload="onScreeningsheetUpload" />
+          <div class="flex pt-6 justify-between">
+            <Button
+              :label="t('ProjectNew.previous')"
+              severity="secondary"
+              icon="pi pi-arrow-left"
+              @click="activateCallback(1)"
+            />
+            <Button
+              :label="t('ProjectNew.next')"
+              icon="pi pi-arrow-right"
+              icon-pos="right"
+              @click="activateCallback(3)"
+            />
+          </div>
+        </StepPanel>
+        <StepPanel
+          v-slot="{ activateCallback }"
+          :value="3"
+        >
+          <SelectionVectorEdit
+            :selection-vector="screeningsheet.selectionVector"
+            :project
+            @selectionvector-modified="onSelectionVectorModified"
+          />
+          <div class="flex pt-6 justify-between">
+            <Button
+              :label="t('ProjectNew.previous')"
+              severity="secondary"
+              icon="pi pi-arrow-left"
+              @click="activateCallback(2)"
+            />
+            <Button
+              :label="t('ProjectNew.next')"
+              icon="pi pi-arrow-right"
+              icon-pos="right"
+              @click="activateCallback(4)"
+            />
+          </div>
+        </StepPanel>
+        <StepPanel
+          v-slot="{ activateCallback }"
+          :value="4"
+        >
+          <SelectionVectorComparison
+            :project
+            :selection-vector="screeningsheet.selectionVector"
+            :edited-selection-vector="selectionVector"
+          />
+          <div class="flex pt-6 justify-between">
+            <Button
+              :label="t('ProjectNew.previous')"
+              severity="secondary"
+              icon="pi pi-arrow-left"
+              @click="activateCallback(3)"
+            />
+            <Button
+              :label="t('ProjectNew.next')"
+              icon="pi pi-arrow-right"
+              icon-pos="right"
+              @click="onCreate"
+            />
+          </div>
+        </StepPanel>
+      </StepPanels>
+    </Stepper>
+  </div>
 </template>
