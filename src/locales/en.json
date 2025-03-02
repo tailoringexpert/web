@@ -261,8 +261,8 @@
         "title": "Edit tailoring name",
         "name": "Name",
         "state": {
-            "title": "Tailoring",
-            "success": "Name updated"
+            "success": "Name updated",
+            "error": "Name could not be updated"
         }
     },
     "AttachmentsDialog": {
@@ -273,6 +273,13 @@
         "type": "Type",
         "loading": "Loading attachments list. Please wait.",
         "action": "Actions",
+        "upload": {
+            "title": "Upload attachment",
+            "state": {
+                "success": "Attachment upload successful",
+                "error": "Attachment could be uploaded"
+            }
+        },
         "delete": {
             "title": "Delete attachment",
             "text": "Shall attachment be deleted?",

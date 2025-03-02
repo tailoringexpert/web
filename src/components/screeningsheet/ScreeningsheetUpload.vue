@@ -9,7 +9,7 @@ import { useConfirm } from 'primevue/useconfirm';
 import { useScreeningsheetUpload } from '@/composables/screeningsheet/ScreeningsheetUpload';
 
 // provided interfaces
-const emit = defineEmits(['screeningsheet:upload']);
+const emit = defineEmits(['screeningsheet:upload', 'error']);
 
 // injects
 const logger = inject('logger');
@@ -48,18 +48,7 @@ const onUpload = () => {
 };
 
 const onError = (title, message) => {
-    confirm.require({
-        header: title,
-        message: message,
-        icon: 'pi pi-exclamation-triangle',
-        rejectProps: {
-            style: 'visibility:hidden'
-        },
-        acceptProps: {
-            label: t('ok'),
-            severity: 'secondary'
-        }
-    });
+    emit("error", title, message);
 };
 // hooks
 </script>

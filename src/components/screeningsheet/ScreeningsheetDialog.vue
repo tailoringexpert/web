@@ -6,7 +6,7 @@ import { useConfirm } from 'primevue/useconfirm';
 import { useScreeningsheetDialog } from '@/composables/screeningsheet/ScreeningsheetDialog';
 
 // provided interfaces
-const emit = defineEmits(['close:closed']);
+const emit = defineEmits(['close:closed', 'error']);
 const props = defineProps({
     active: {
         type: Boolean,
@@ -60,24 +60,14 @@ const onDownload = () => {
     });
 };
 
+const onError = (title, message) => {
+    emit("error", title, message);
+};
+
 const onClose = () => {
     emit('close:closed');
 };
 
-const onError = (title, message) => {
-    confirm.require({
-        header: title,
-        message: message,
-        icon: 'pi pi-exclamation-triangle',
-        rejectProps: {
-            style: 'visibility:hidden'
-        },
-        acceptProps: {
-            label: t('ok'),
-            severity: 'secondary'
-        }
-    });
-};
 // hooks
 </script>
 

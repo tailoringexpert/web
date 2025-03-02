@@ -6,7 +6,7 @@ import { useConfirm } from 'primevue/useconfirm';
 import { useExcel2JSONConverterDialog } from '@/composables/catalog/Excel2JSONConverterDialog';
 
 // provided interfaces
-const emit = defineEmits(['close:closed']);
+const emit = defineEmits(['close:closed', 'error']);
 const props = defineProps({
     active: {
         type: Boolean,
@@ -51,24 +51,14 @@ const onUpload = () => {
         });
 };
 
+const onError = (title, message) => {
+    emit("error", title, message);
+};
+
 const onClose = () => {
     emit('close:closed');
 };
 
-const onError = (title, message) => {
-    confirm.require({
-        header: title,
-        message: message,
-        icon: 'pi pi-exclamation-triangle',
-        rejectProps: {
-            style: 'visibility:hidden'
-        },
-        acceptProps: {
-            label: t('ok'),
-            severity: 'secondary'
-        }
-    });
-};
 // hooks
 </script>
 

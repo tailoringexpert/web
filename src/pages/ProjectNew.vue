@@ -18,6 +18,7 @@ import SelectionVectorEdit from '@/components/selectionvector/SelectionVectorEdi
 import SelectionVectorComparison from '@/components/selectionvector/SelectionVectorComparison.vue';
 
 // provided interfaces
+const emit = defineEmits(['success', 'error']);
 
 // injects
 const store = inject('store');
@@ -61,7 +62,10 @@ const selectionVector = computed(() => state.selectionvector);
 const onSelectionVectorModified = (payload) => {
     logger.debug('onSelectionVectorModified');
     mutations.selectionvector(payload.selectionVector);
-    onSuccess(t('ProjectNew.editSelectionvector.title'), t('ProjectNew.editSelectionvector.state.success'));
+    onSuccess(
+        t('ProjectNew.editSelectionvector.title'),
+        t('ProjectNew.editSelectionvector.state.success')
+    );
 };
 
 // step summary
@@ -70,7 +74,10 @@ const onCreate = () => {
     actions
         .create()
         .then(() => {
-            onSuccess(t('ProjectNew.title'), t('ProjectNew.state.success'));
+            onSuccess(
+                t('ProjectNew.title'),
+                t('ProjectNew.state.success')
+            );
             router.push({
                 name: 'project',
                 params: {
@@ -79,32 +86,19 @@ const onCreate = () => {
             });
         })
         .catch((error) => {
-            onError(t('error'), error.data);
+            onError(
+                t('error'),
+                error.data
+            );
         });
 };
 
 const onSuccess = (title, message) => {
-    toast.add({
-        severity: 'success',
-        summary: title,
-        detail: message,
-        life: 3000
-    });
+    emit("success", title, message);
 };
 
 const onError = (title, message) => {
-    confirm.require({
-        header: title,
-        message: message,
-        icon: 'pi pi-exclamation-triangle',
-        rejectProps: {
-            style: 'visibility:hidden'
-        },
-        acceptProps: {
-            label: t('ok'),
-            severity: 'secondary'
-        }
-    });
+    emit("error", title, message);
 };
 
 // hooks
@@ -152,6 +146,8 @@ onBeforeMount(() => {
           <CatalogSelection
             @catalog-select="onCatalogSelect"
             @catalog-note="onNoteEdited"
+            @success="onSuccess"
+            @error="onError"
           />
           <div class="flex pt-6 justify-end">
             <Button
@@ -166,7 +162,11 @@ onBeforeMount(() => {
           v-slot="{ activateCallback }"
           :value="2"
         >
-          <ScreeningsheetUpload @screeningsheet:upload="onScreeningsheetUpload" />
+        <ScreeningsheetUpload
+            @success="onSuccess"
+            @error="onError"
+            @screeningsheet:upload="onScreeningsheetUpload"
+          />
           <div class="flex pt-6 justify-between">
             <Button
               :label="t('ProjectNew.previous')"
@@ -190,6 +190,8 @@ onBeforeMount(() => {
             :selection-vector="screeningsheet.selectionVector"
             :project
             @selectionvector-modified="onSelectionVectorModified"
+            @success="onSuccess"
+            @error="onError"
           />
           <div class="flex pt-6 justify-between">
             <Button
@@ -214,6 +216,8 @@ onBeforeMount(() => {
             :project
             :selection-vector="screeningsheet.selectionVector"
             :edited-selection-vector="selectionVector"
+            @success="onSuccess"
+            @error="onError"
           />
           <div class="flex pt-6 justify-between">
             <Button

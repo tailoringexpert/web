@@ -17,6 +17,7 @@ import router from '@/router';
 import { useProject } from '@/composables/Project';
 
 // provided interfaces
+const emit = defineEmits(['success', 'error']);
 
 // injects
 const store = inject('store');
@@ -78,10 +79,16 @@ const onState = (tailoring) => {
             actions
                 .updateState(tailoring)
                 .then(() => {
-                    onSuccess(t('Project.updateState.state.title'), t('Project.updateState.state.success'));
+                    onSuccess(
+                        t('Project.updateState.state.title'),
+                        t('Project.updateState.state.success')
+                    );
                 })
                 .catch(() => {
-                    onError(t('Project.updateState.title'), t('Project.updateState.error'));
+                    onError(
+                        t('Project.updateState.title'),
+                        t('Project.updateState.error')
+                    );
                 });
         }
     });
@@ -89,9 +96,14 @@ const onState = (tailoring) => {
 
 const onBaseCatalog = (tailoring) => {
     logger.debug('onBaseCatalog');
-    actions.getBaseCatalog(tailoring).catch(() => {
-        onError(t('Project.downloadBasecatalog.title'), new TextDecoder('utf-8').decode(new Uint8Array(error.data)));
-    });
+    actions
+        .getBaseCatalog(tailoring)
+        .catch(() => {
+            onError(
+                t('Project.downloadBasecatalog.title'),
+                new TextDecoder('utf-8').decode(new Uint8Array(error.data))
+            );
+        });
 };
 
 const onEdit = (tailoring) => {
@@ -126,10 +138,16 @@ const onDelete = (tailoring) => {
             actions
                 .delete(tailoring)
                 .then(() => {
-                    onSuccess(t('Project.deleteTailoring.title'), t('Project.deleteTailoring.state.success'));
+                    onSuccess(
+                        t('Project.deleteTailoring.title'),
+                        t('Project.deleteTailoring.state.success')
+                    );
                 })
                 .catch((error) => {
-                    onError(t('Project.deleteTailoring.title'), t('Project.deleteTailoring.state.error'));
+                    onError(
+                        t('Project.deleteTailoring.title'),
+                        t('Project.deleteTailoring.state.error')
+                    );
                 });
         }
     });
@@ -172,28 +190,13 @@ const onDialog = (name, tailoring) => {
     data.value = tailoring;
 };
 
+
 const onSuccess = (title, message) => {
-    toast.add({
-        severity: 'success',
-        summary: title,
-        detail: message,
-        life: 3000
-    });
+    emit("success", title, message);
 };
 
 const onError = (title, message) => {
-    confirm.require({
-        header: title,
-        message: message,
-        icon: 'pi pi-exclamation-triangle',
-        rejectProps: {
-            style: 'visibility:hidden'
-        },
-        acceptProps: {
-            label: t('ok'),
-            severity: 'secondary'
-        }
-    });
+    emit("error", title, message);
 };
 
 // hooks
@@ -226,6 +229,8 @@ const onUpdatedName = (name) => {
   <TailoringNameDialog
     :tailoring="data"
     :active="dialog === 'name'"
+    @success="onSuccess"
+    @error="onError"
     @close:cancel="dialog = 'none'"
     @close:close="initialize"
   />
@@ -233,36 +238,47 @@ const onUpdatedName = (name) => {
   <DownloadDialog
     :tailoring="data"
     :active="dialog === 'download'"
+    @success="onSuccess"
+    @error="onError"
     @close:closed="dialog = 'none'"
   />
 
   <ScreeningsheetDialog
     :screeningsheet="data"
     :active="dialog === 'screeningsheet'"
+    @success="onSuccess"
+    @error="onError"
     @close:closed="dialog = 'none'"
   />
 
   <SelectionVectorDialog
     :tailoring="data"
     :active="dialog === 'selectionvector'"
+    @success="onSuccess"
+    @error="onError"
     @close:closed="dialog = 'none'"
   />
 
   <AttachmentsDialog
     :tailoring="data"
     :active="dialog === 'attachments'"
+    @success="onSuccess"
+    @error="onError"
     @close:closed="dialog = 'none'"
   />
-
   <ImportDialog
     :tailoring="data"
     :active="dialog === 'import'"
+    @success="onSuccess"
+    @error="onError"
     @close:closed="dialog = 'none'"
   />
 
   <NotesDialog
     :tailoring="data"
     :active="dialog === 'notes'"
+    @success="onSuccess"
+    @error="onError"
     @close:closed="dialog = 'none'"
   />
 

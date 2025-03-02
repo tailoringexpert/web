@@ -6,7 +6,7 @@ import { useToast } from 'primevue/usetoast';
 import { useImportDialog } from '@/composables/tailoring/ImportDialog';
 
 // provided interfaces
-const emit = defineEmits(['close:closed']);
+const emit = defineEmits(['close:closed', 'success', 'error']);
 const props = defineProps({
     active: {
         type: Boolean,
@@ -58,16 +58,26 @@ const onUpload = () => {
         .importRequirements(data)
         .then(() => {
             emit('close:closed');
-            toast.add({
-                severity: 'info',
-                summary: t('ImportDialog.title'),
-                detail: 'ImportDialog.state.success',
-                life: 3000
-            });
+            onSuccess(
+                t('ImportDialog.title'),
+                t('ImportDialog.state.success')
+            );
         })
         .catch((error) => {
             console.error(error);
+            onSuccess(
+                t('ImportDialog.title'),
+                t('ImportDialog.state.error')
+            );
         });
+};
+
+const onSuccess = (title, message) => {
+    emit("success", title, message);
+};
+
+const onError = (title, message) => {
+    emit("error", title, message);
 };
 
 const onClose = () => {

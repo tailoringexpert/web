@@ -6,7 +6,7 @@ import { useToast } from 'primevue/usetoast';
 import { useSignatureDialog } from '@/composables/tailoring/SignatureDialog';
 
 // provided interfaces
-const emit = defineEmits(['close:canceled', 'close:closed']);
+const emit = defineEmits(['close:canceled', 'close:closed', 'success']);
 const props = defineProps({
     active: {
         type: Boolean,
@@ -58,8 +58,11 @@ const onSave = () => {
     actions
         .save()
         .then(() => {
+            onSuccess(
+                _signature.faculty,
+                t('SignatureDialog.state.success')
+            );
             emit('close:closed');
-            onSuccess(_signature.faculty, t('SignatureDialog.state.success'));
         })
         .catch((error) => {
             logger.error(error);
@@ -67,12 +70,7 @@ const onSave = () => {
 };
 
 const onSuccess = (title, message) => {
-    toast.add({
-        severity: 'success',
-        summary: title,
-        detail: message,
-        life: 3000
-    });
+    emit("success", title, message);
 };
 
 // hooks

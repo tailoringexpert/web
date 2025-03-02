@@ -7,7 +7,7 @@ import SignatureDialog from '@/components/tailoring/SignatureDialog.vue';
 import { useDownloadDialog } from '@/composables/tailoring/DownloadDialog';
 
 // provided interfaces
-const emit = defineEmits(['close:closed']);
+const emit = defineEmits(['close:closed', 'error']);
 const props = defineProps({
     active: {
         type: Boolean,
@@ -54,10 +54,6 @@ const downloadFile = (link) => {
 };
 
 // event handlers
-const onClose = () => {
-    emit('close:closed');
-};
-
 const onCatalog = () => {
     logger.debug('onCatalog');
     downloadFile(props.tailoring._links.tailoringcatalog.href);
@@ -78,19 +74,16 @@ const onCloseSignature = () => {
     initialize();
 };
 
+const onSuccess = (title, message) => {
+    emit("success", title, message);
+};
+
 const onError = (title, message) => {
-    confirm.require({
-        header: title,
-        message: message,
-        icon: 'pi pi-exclamation-triangle',
-        rejectProps: {
-            style: 'visibility:hidden'
-        },
-        acceptProps: {
-            label: t('ok'),
-            severity: 'secondary'
-        }
-    });
+    emit("error", title, message);
+};
+
+const onClose = () => {
+    emit('close:closed');
 };
 
 // hooks
@@ -100,6 +93,8 @@ const onError = (title, message) => {
   <SignatureDialog
     :active="isSignature"
     :signature
+    @success="onSuccess"
+    @error="onError"
     @close:closed="onCloseSignature()"
     @close:canceled="isSignature = false"
   />

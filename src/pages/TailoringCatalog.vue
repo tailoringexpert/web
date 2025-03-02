@@ -15,6 +15,9 @@ import EditorDialog from '@/components/editor/EditorDialog.vue';
 
 import { useTailoringCatalog } from '@/composables/TailoringCatalog';
 
+// provided interfaces
+const emit = defineEmits(['success', 'error']);
+
 // injects
 const store = inject('store');
 const logger = inject('logger');
@@ -75,7 +78,10 @@ const onStates = (state) => {
         })
         .catch((error) => {
             logger.debug(error);
-            onError(t('TailoringCatalog.setStates.title'), error);
+            onError(
+                t('TailoringCatalog.setStates.title'),
+                error
+            );
         });
 };
 
@@ -86,10 +92,16 @@ const onState = (requirement) => {
         .state()
         .then(() => {
             mutations.requirement(null);
-            onSuccess(t('TailoringCatalog.setState.title'), t('TailoringCatalog.setState.state.success'));
+            onSuccess(
+                t('TailoringCatalog.setState.title'),
+                t('TailoringCatalog.setState.state.success')
+            );
         })
         .catch((error) => {
-            onError(t('TailoringCatalog.setState.title'), error);
+            onError(
+                t('TailoringCatalog.setState.title'),
+                error
+            );
         });
 };
 
@@ -124,36 +136,26 @@ const onSave = (payload) => {
     actions
         .save(payload)
         .then(() => {
-            onSuccess(t('TailoringCatalog.saveText.title'), t('Tailoringcatalog.saveText.state.success'));
+            onSuccess(
+                t('TailoringCatalog.saveText.title'),
+                t('Tailoringcatalog.saveText.state.success')
+            );
         })
         .catch((error) => {
             logger.debug(error);
-            onError(t('TailoringCatalog.saveText.title'), error);
+            onError(
+                t('TailoringCatalog.saveText.title'),
+                error
+            );
         });
 };
 
 const onSuccess = (title, message) => {
-    toast.add({
-        severity: 'success',
-        summary: title,
-        detail: message,
-        life: 3000
-    });
+    emit("success", title, message);
 };
 
 const onError = (title, message) => {
-    confirm.require({
-        header: title,
-        message: message,
-        icon: 'pi pi-exclamation-triangle',
-        rejectProps: {
-            style: 'visibility:hidden'
-        },
-        acceptProps: {
-            label: t('ok'),
-            severity: 'secondary'
-        }
-    });
+    emit("error", title, message);
 };
 
 // hooks
@@ -180,6 +182,8 @@ onBeforeMount(() => {
   <EditorDialog
     :active="edit"
     :model-value="requirementText"
+    @success="onSuccess"
+    @error="onError"
     @close:cancel="onCancel"
     @close:save="onSave"
   />

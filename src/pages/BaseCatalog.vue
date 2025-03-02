@@ -8,6 +8,8 @@ import JSON2PdfConverterDialog from '@/components/catalog/JSON2PdfConverterDialo
 
 import { useBaseCatalog } from '@/composables/BaseCatalog';
 // provided interfaces
+// provided interfaces
+const emit = defineEmits(['error']);
 
 // injects
 const store = inject('store');
@@ -33,7 +35,10 @@ const onPDF = (item) => {
     logger.debug('onPDF');
     actions.pdf(item).catch((error) => {
         logger.error(error);
-        onError(t('BaseCatalog.error.download'), error);
+        onError(
+            t('BaseCatalog.error.download'),
+            error
+        );
     });
 };
 
@@ -41,7 +46,10 @@ const onJSON = (item) => {
     logger.debug('onJSON');
     actions.json(item).catch((error) => {
         logger.error(error);
-        onError(t('BaseCatalog.error.download'), error);
+        onError(
+            t('BaseCatalog.error.download'),
+            error
+        );
     });
 };
 
@@ -49,14 +57,20 @@ const onExcel = (item) => {
     logger.debug('onExcel');
     actions.excel(item).catch((error) => {
         logger.error(error);
-        onError(t('BaseCatalog.error.download'), error);
+        onError(
+            t('BaseCatalog.error.download'),
+            error
+        );
     });
 };
 
 const onZip = (item) => {
     actions.zip(item).catch((error) => {
         logger.error(error);
-        onError(t('BaseCatalog.error.download'), error);
+        onError(
+            t('BaseCatalog.error.download'),
+            error
+        );
     });
 };
 
@@ -71,19 +85,9 @@ const onPreview = () => {
 };
 
 const onError = (title, message) => {
-    confirm.require({
-        header: title,
-        message: message,
-        icon: 'pi pi-exclamation-triangle',
-        rejectProps: {
-            style: 'visibility:hidden'
-        },
-        acceptProps: {
-            label: t('ok'),
-            severity: 'secondary'
-        }
-    });
+    emit("error", title, message);
 };
+
 
 // hooks
 onBeforeMount(() => {
@@ -102,11 +106,15 @@ onBeforeMount(() => {
 <template>
   <Excel2JSONConverterDialog
     :active="dialog === 'excel2Json'"
+    @success="onSuccess"
+    @error="onError"
     @close:closed="dialog = 'none'"
   />
 
   <JSON2PdfConverterDialog
     :active="dialog === 'json2pdf'"
+    @success="onSuccess"
+    @error="onError"
     @close:closed="dialog = 'none'"
   />
 

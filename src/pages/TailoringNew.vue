@@ -17,6 +17,7 @@ import router from '@/router';
 import { useTailoringNew } from '@/composables/TailoringNew';
 
 // provided interfaces
+const emit = defineEmits(['success', 'error']);
 
 // injects
 const store = inject('store');
@@ -61,7 +62,10 @@ const selectionVector = computed(() => state.selectionvector);
 const onSelectionVectorModified = (payload) => {
     logger.debug('onSelectionVectorModified');
     mutations.selectionvector(payload.selectionVector);
-    onSuccess(t('TailoringNew.editSelectionvector.title'), t('TailoringNew.editSelectionvector.state.success'));
+    onSuccess(
+        t('TailoringNew.editSelectionvector.title'),
+        t('TailoringNew.editSelectionvector.state.success')
+    );
 };
 
 // step summary
@@ -70,7 +74,10 @@ const onCreate = () => {
     actions
         .create()
         .then(() => {
-            onSuccess(t('TailoringNew.title'), t('TailoringNew.state.success'));
+            onSuccess(
+                t('TailoringNew.title'),
+                t('TailoringNew.state.success')
+            );
             router.push({
                 name: 'project',
                 params: {
@@ -79,32 +86,19 @@ const onCreate = () => {
             });
         })
         .catch((error) => {
-            onError(t('error'), error.data);
+            onError(
+                t('error'),
+                error.data
+            );
         });
 };
 
 const onSuccess = (title, message) => {
-    toast.add({
-        severity: 'success',
-        summary: title,
-        detail: message,
-        life: 3000
-    });
+    emit("success", title, message);
 };
 
 const onError = (title, message) => {
-    confirm.require({
-        header: title,
-        message: message,
-        icon: 'pi pi-exclamation-triangle',
-        rejectProps: {
-            style: 'visibility:hidden'
-        },
-        acceptProps: {
-            label: t('ok'),
-            severity: 'secondary'
-        }
-    });
+    emit("error", title, message);
 };
 
 // hooks
@@ -146,54 +140,62 @@ onBeforeMount(() => {
           v-slot="{ activateCallback }"
           :value="1"
         >
-          <CatalogSelection
-            @catalog-select="onCatalogSelect"
-            @catalog-note="onNoteEdited"
-          />
-          <div class="flex pt-6 justify-end">
-            <Button
-              :label="t('TailoringNew.next')"
-              icon="pi pi-arrow-right"
-              icon-pos="right"
-              @click="activateCallback(2)"
+            <CatalogSelection
+                @catalog-select="onCatalogSelect"
+                @catalog-note="onNoteEdited"
+                @success="onSuccess"
+                @error="onError"
             />
-          </div>
+            <div class="flex pt-6 justify-end">
+                <Button
+                    :label="t('TailoringNew.next')"
+                    icon="pi pi-arrow-right"
+                    icon-pos="right"
+                    @click="activateCallback(2)"
+                />
+            </div>
         </StepPanel>
         <StepPanel
           v-slot="{ activateCallback }"
           :value="2"
         >
-          <ScreeningsheetUpload @screeningsheet:upload="onScreeningsheetUpload" />
-          <div class="flex pt-6 justify-between">
-            <Button
-              :label="t('TailoringNew.previous')"
-              severity="secondary"
-              icon="pi pi-arrow-left"
-              @click="activateCallback(1)"
+            <ScreeningsheetUpload
+                @screeningsheet:upload="onScreeningsheetUpload"
+                @success="onSuccess"
+                @error="onError"
             />
-            <Button
-              :label="t('TailoringNew.next')"
-              icon="pi pi-arrow-right"
-              icon-pos="right"
-              @click="activateCallback(3)"
-            />
-          </div>
+            <div class="flex pt-6 justify-between">
+                <Button
+                :label="t('TailoringNew.previous')"
+                severity="secondary"
+                icon="pi pi-arrow-left"
+                @click="activateCallback(1)"
+            >
+                <Button
+                  :label="t('TailoringNew.next')"
+                  icon="pi pi-arrow-right"
+                  icon-pos="right"
+                  @click="activateCallback(3)"
+                />
+            </div>
         </StepPanel>
         <StepPanel
           v-slot="{ activateCallback }"
           :value="3"
         >
-          <SelectionVectorEdit
-            :selection-vector="screeningsheet.selectionVector"
-            :project
-            @selectionvector-modified="onSelectionVectorModified"
-          />
-          <div class="flex pt-6 justify-between">
-            <Button
-              :label="t('TailoringNew.previous')"
-              severity="secondary"
-              icon="pi pi-arrow-left"
-              @click="activateCallback(2)"
+            <SelectionVectorEdit
+                :selection-vector="screeningsheet.selectionVector"
+                :project
+                @selectionvector-modified="onSelectionVectorModified"
+                @success="onSuccess"
+                @error="onError"
+            />
+            <div class="flex pt-6 justify-between">
+                <Button
+                :label="t('TailoringNew.previous')"
+                severity="secondary"
+                icon="pi pi-arrow-left"
+                @click="activateCallback(2)"
             />
             <Button
               :label="t('TailoringNew.next')"
@@ -207,25 +209,27 @@ onBeforeMount(() => {
           v-slot="{ activateCallback }"
           :value="4"
         >
-          <SelectionVectorComparison
-            :project
-            :selection-vector="screeningsheet.selectionVector"
-            :edited-selection-vector="selectionVector"
-          />
-          <div class="flex pt-6 justify-between">
-            <Button
-              :label="t('TailoringNew.previous')"
-              severity="secondary"
-              icon="pi pi-arrow-left"
-              @click="activateCallback(3)"
+            <SelectionVectorComparison
+                :project
+                :selection-vector="screeningsheet.selectionVector"
+                :edited-selection-vector="selectionVector"
+                @success="onSuccess"
+                @error="onError"
             />
-            <Button
-              :label="t('TailoringNew.next')"
-              icon="pi pi-arrow-right"
-              icon-pos="right"
-              @click="onCreate"
-            />
-          </div>
+            <div class="flex pt-6 justify-between">
+                <Button
+                    :label="t('TailoringNew.previous')"
+                    severity="secondary"
+                    icon="pi pi-arrow-left"
+                    @click="activateCallback(3)"
+                />
+                <Button
+                    :label="t('TailoringNew.next')"
+                    icon="pi pi-arrow-right"
+                    icon-pos="right"
+                    @click="onCreate"
+                />
+            </div>
         </StepPanel>
       </StepPanels>
     </Stepper>

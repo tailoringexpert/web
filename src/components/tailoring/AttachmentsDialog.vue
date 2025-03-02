@@ -3,10 +3,11 @@ import { ref, watch, computed, toValue, inject } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useConfirm } from 'primevue/useconfirm';
 
+import { useNotifications } from '@/composables/notifications';
 import { useAttachmentsDialog } from '@/composables/tailoring/AttachmentsDialog';
 
 // provided interfaces
-const emit = defineEmits(['close:closed']);
+const emit = defineEmits(['close:closed', 'success', 'error']);
 const props = defineProps({
     active: {
         type: Boolean,
@@ -23,7 +24,7 @@ const logger = inject('logger');
 
 // internal
 const { state, mutations, actions } = useAttachmentsDialog();
-
+// const { success, error } = useNotifications();
 watch(
     [() => props.tailoring, () => props.active],
     () => {
@@ -59,9 +60,20 @@ const onUpload = () => {
     let data = new FormData();
     data.append('datei', toValue(file));
 
-    actions.upload(data).then(() => {
-        file.value = null;
-    });
+    actions.upload(data)
+        .then(() => {
+            file.value = null;
+            onSuccess(
+                t('AttachmentsDialog.upload.title'),
+                t('AttachmentsDialog.upload.state.success')
+            );
+        })
+        .catch(() => {
+            onError(
+                t('AttachmentsDialog.upload.title'),
+                t('AttachmentsDialog.upload.state.error')
+            );
+        });
 };
 
 const onDownload = (item) => {
@@ -90,14 +102,21 @@ const onDelete = (item) => {
                 .delete(item)
                 .then(() => {
                     file.value = null;
-                    onSuccess(t('AttachmentsDialog.title'), t('AttachmentsDialog.delete.state.success'));
+
                 })
                 .catch((error) => {
                     console.log(error);
-                    onError(t('AttachmentsDialog.title'), t('AttachmentsDialog.delete.state.error'));
                 });
         }
     });
+};
+
+const onSuccess = (title, message) => {
+    emit("success", title, message);
+};
+
+const onError = (title, message) => {
+    emit("error", title, message);
 };
 
 const onClose = () => {

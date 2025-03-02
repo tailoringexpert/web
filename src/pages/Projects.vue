@@ -12,6 +12,7 @@ import { useToast } from 'primevue/usetoast';
 import { useProjects } from '@/composables/Projects';
 
 // provided interfaces
+const emit = defineEmits(['close:closed', 'success', 'error']);
 
 // injects
 const store = inject('store');
@@ -60,10 +61,16 @@ const onState = (project) => {
             actions
                 .updateState(project)
                 .then(() => {
-                    onSuccess(t('Projects.updateState.state.title'), t('Projects.updateState.state.success'));
+                    onSuccess(
+                        t('Projects.updateState.state.title'),
+                        t('Projects.updateState.state.success')
+                    );
                 })
                 .catch((error) => {
-                    onError(t('Projects.updateState.state,title'), t('Projects.updateState.state.error'));
+                    onError(
+                        t('Projects.updateState.state,title'),
+                        t('Projects.updateState.state.error')
+                    );
                 });
         }
     });
@@ -99,33 +106,28 @@ const onDelete = (project) => {
             actions
                 .delete(project)
                 .then(() => {
-                    onSuccess(t('Projects.delete.title'), t('Projects.delete.state.success'));
+                    onSuccess(
+                        t('Projects.delete.title'),
+                        t('Projects.delete.state.success')
+                    );
                 })
                 .catch((error) => {
                     console.log(error);
-                    onError(t('Projects.delete.title'), t('Projects.delete.state.success'));
+                    onError(
+                        t('Projects.delete.title'),
+                        t('Projects.delete.state.success')
+                    );
                 });
         }
     });
 };
 
 const onSuccess = (title, message) => {
-    toast.add({ severity: 'success', summary: title, detail: message, life: 3000 });
+    emit("success", title, message);
 };
 
 const onError = (title, message) => {
-    confirm.require({
-        header: title,
-        message: message,
-        icon: 'pi pi-exclamation-triangle',
-        rejectProps: {
-            style: 'visibility:hidden'
-        },
-        acceptProps: {
-            label: t('ok'),
-            severity: 'secondary'
-        }
-    });
+    emit("error", title, message);
 };
 
 // hooks

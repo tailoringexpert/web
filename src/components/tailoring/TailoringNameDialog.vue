@@ -6,7 +6,7 @@ import { useToast } from 'primevue/usetoast';
 import { useNameDialog } from '@/composables/tailoring/TailoringNameDialog';
 
 // provided interfaces
-const emit = defineEmits(['close:cancel', 'close:close']);
+const emit = defineEmits(['close:cancel', 'close:close', 'success', 'error']);
 const props = defineProps({
     active: {
         type: Boolean,
@@ -50,21 +50,28 @@ const onSave = () => {
         .save(toValue(name))
         .then(() => {
             emit('close:close', toValue(name));
-            onSuccess(t('TailoringNameDialog.state.title'), t('TailoringNameDialog.state.success'));
+            onSuccess(
+                t('TailoringNameDialog.title'),
+                t('TailoringNameDialog.state.success')
+            );
         })
         .catch((error) => {
             logger.error(error);
+            onError(
+                t('TailoringNameDialog.title'),
+                t('TailoringNameDialog.state.error')
+            );
         });
 };
 
 const onSuccess = (title, message) => {
-    toast.add({
-        severity: 'success',
-        summary: title,
-        detail: message,
-        life: 3000
-    });
+    emit("success", title, message);
 };
+
+const onError = (title, message) => {
+    emit("error", title, message);
+};
+
 
 // hooks
 </script>
