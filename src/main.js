@@ -1,7 +1,7 @@
 import { createApp } from 'vue';
 import axios from 'axios';
 import { createI18n } from 'vue-i18n';
-import Aura from '@primevue/themes/aura';
+import Aura from '@primeuix/themes/aura';
 import PrimeVue from 'primevue/config';
 import ConfirmationService from 'primevue/confirmationservice';
 import ToastService from 'primevue/toastservice';

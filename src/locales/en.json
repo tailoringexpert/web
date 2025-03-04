@@ -205,7 +205,7 @@
         "empty": "No basecatalogs found",
         "convert": "Convert",
         "preview": "Preview",
-        "catalog": "Catalog",
+        "catalog": "Catalog | Catalogs",
         "validFrom": "Valid from",
         "action": "Actions",
         "error": {
