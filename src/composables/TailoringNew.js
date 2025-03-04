@@ -13,21 +13,11 @@ export function useTailoringNew() {
     });
 
     const mutations = {
-        catalog: (catalog) => {
-            state.catalog = toRef(catalog);
-        },
-        note: (note) => {
-            state.note = toRef(note);
-        },
-        project: (project) => {
-            state.project = toRef(project);
-        },
-        screeningsheet: (screeningsheet) => {
-            state.screeningsheet = toRef(screeningsheet);
-        },
-        selectionvector: (selectionvector) => {
-            state.selectionvector = toRef(selectionvector);
-        }
+        catalog: (catalog) =>  state.catalog = toRef(catalog),
+        note: (note) => state.note = toRef(note),
+        project: (project) => state.project = toRef(project),
+        screeningsheet: (screeningsheet) => state.screeningsheet = toRef(screeningsheet),
+        selectionvector: (selectionvector) => state.selectionvector = toRef(selectionvector)
     };
 
     const actions = {

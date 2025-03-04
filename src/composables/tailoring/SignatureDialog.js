@@ -7,14 +7,12 @@ export function useSignatureDialog() {
     });
 
     const mutations = {
-        signature: (signature) => {
-            state.signature = toRef(signature);
-        }
+        signature: (signature) =>  state.signature = toRef(signature)
     };
 
     const actions = {
         save: () => {
-            let url = toValue(state.signature)._links.self.href;
+            const url = toValue(state.signature)._links.self.href;
             if (url == null) {
                 return Promise.resolve();
             }
@@ -32,7 +30,6 @@ export function useSignatureDialog() {
                         resolve(state.signature);
                     })
                     .catch((error) => {
-                        console.log(error);
                         reject(error.data);
                     });
             });

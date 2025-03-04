@@ -6,7 +6,7 @@ import { useConfirm } from 'primevue/useconfirm';
 import { useExcel2JSONConverterDialog } from '@/composables/catalog/Excel2JSONConverterDialog';
 
 // provided interfaces
-const emit = defineEmits(['close:closed']);
+const emit = defineEmits(['close:closed', 'error']);
 const props = defineProps({
     active: {
         type: Boolean,
@@ -51,39 +51,49 @@ const onUpload = () => {
         });
 };
 
+const onError = (title, message) => {
+    emit("error", title, message);
+};
+
 const onClose = () => {
     emit('close:closed');
 };
 
-const onError = (title, message) => {
-    confirm.require({
-        header: title,
-        message: message,
-        icon: 'pi pi-exclamation-triangle',
-        rejectProps: {
-            style: 'visibility:hidden'
-        },
-        acceptProps: {
-            label: t('ok'),
-            severity: 'secondary'
-        }
-    });
-};
 // hooks
 </script>
 
 <template>
-    <Dialog :visible="active" :wait :header="t('Excel2JSONConverterDialog.title')" :modal="true" @update:visible="onClose">
-        <template #footer>
-            <Button :label="$t('close')" @click="onClose" />
-        </template>
+  <Dialog
+    :visible="active"
+    :wait
+    :header="t('Excel2JSONConverterDialog.title')"
+    :modal="true"
+    @update:visible="onClose"
+  >
+    <template #footer>
+      <Button
+        :label="$t('close')"
+        @click="onClose"
+      />
+    </template>
 
-        <div v-if="active" class="flex flex-col gap-1">
-            <FileUpload mode="advanced" multiple="false" custom-upload="true" :upload-label="t('Excel2JSONConverterDialog.convert')" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" @select="onSelect" @uploader="onUpload">
-                <template #empty>
-                    <span>{{ t('Excel2JSONConverterDialog.files') }}</span>
-                </template>
-            </FileUpload>
-        </div>
-    </Dialog>
+    <div
+      v-if="active"
+      class="flex flex-col gap-1"
+    >
+      <FileUpload
+        mode="advanced"
+        multiple="false"
+        custom-upload="true"
+        :upload-label="t('Excel2JSONConverterDialog.convert')"
+        accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        @select="onSelect"
+        @uploader="onUpload"
+      >
+        <template #empty>
+          <span>{{ t('Excel2JSONConverterDialog.files') }}</span>
+        </template>
+      </FileUpload>
+    </div>
+  </Dialog>
 </template>

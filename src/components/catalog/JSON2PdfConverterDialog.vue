@@ -6,7 +6,7 @@ import { useConfirm } from 'primevue/useconfirm';
 import { useJSON2PdfConverterDialog } from '@/composables/catalog/JSON2PdfConverterDialog';
 
 // provided interfaces
-const emit = defineEmits(['close:closed']);
+const emit = defineEmits(['close:closed', 'error']);
 const props = defineProps({
     active: {
         type: Boolean,
@@ -49,39 +49,49 @@ const onUpload = () => {
         });
 };
 
+const onError = (title, message) => {
+    emit("error", title, message);
+};
+
 const onClose = () => {
     emit('close:closed');
 };
 
-const onError = (title, message) => {
-    confirm.require({
-        header: title,
-        message: message,
-        icon: 'pi pi-exclamation-triangle',
-        rejectProps: {
-            style: 'visibility:hidden'
-        },
-        acceptProps: {
-            label: t('ok'),
-            severity: 'secondary'
-        }
-    });
-};
 // hooks
 </script>
 
 <template>
-    <Dialog :header="t('JSON2PdfconverterDialog.title')" :visible="active" :wait :modal="true" @update:visible="onClose">
-        <template #footer>
-            <Button :label="$t('close')" @click="onClose" />
-        </template>
+  <Dialog
+    :header="t('JSON2PdfconverterDialog.title')"
+    :visible="active"
+    :wait
+    :modal="true"
+    @update:visible="onClose"
+  >
+    <template #footer>
+      <Button
+        :label="$t('close')"
+        @click="onClose"
+      />
+    </template>
 
-        <div v-if="active" class="flex flex-col gap-1">
-            <FileUpload mode="advanced" multiple="false" :upload-label="t('JSON2PdfconverterDialog.convert')" custom-upload="true" accept="application/json" @select="onSelect" @uploader="onUpload">
-                <template #empty>
-                    <span>{{ t('JSON2PdfconverterDialog.files') }}</span>
-                </template>
-            </FileUpload>
-        </div>
-    </Dialog>
+    <div
+      v-if="active"
+      class="flex flex-col gap-1"
+    >
+      <FileUpload
+        mode="advanced"
+        multiple="false"
+        :upload-label="t('JSON2PdfconverterDialog.convert')"
+        custom-upload="true"
+        accept="application/json"
+        @select="onSelect"
+        @uploader="onUpload"
+      >
+        <template #empty>
+          <span>{{ t('JSON2PdfconverterDialog.files') }}</span>
+        </template>
+      </FileUpload>
+    </div>
+  </Dialog>
 </template>

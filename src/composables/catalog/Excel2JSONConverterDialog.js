@@ -13,7 +13,7 @@ export function useExcel2JSONConverterDialog() {
 
     const actions = {
         convert: (data) => {
-            var url = toValue(store.state).links.catalogconversion.href;
+            const url = toValue(store.state).links.catalogconversion.href;
             if (url == null) {
                 return Promise.resolve();
             }

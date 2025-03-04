@@ -18,7 +18,7 @@ export function useAttachmentsDialog() {
 
     const actions = {
         initialize: () => {
-            var url = toValue(state.tailoring)._links.attachment.href;
+            const url = toValue(state.tailoring)._links.attachment.href;
             if (url == null) {
                 return Promise.resolve();
             }
@@ -28,26 +28,15 @@ export function useAttachmentsDialog() {
                     .get(url)
                     .then((response) => {
                         mutations.attachments(response.data.hasOwnProperty('_embedded') ? response.data._embedded.files : []);
-
-                        /*                 if (response.data.hasOwnProperty("_embedded")) {
-                            mutations.attachments(
-                                response.data._embedded.files
-                            );
-
-                        } else {
-
-                        } */
-                        console.log('b');
                         resolve(state.attachments);
                     })
                     .catch((error) => {
-                        console.log(error);
                         reject(error.data);
                     });
             });
         },
         upload: (attachment) => {
-            var url = toValue(state.tailoring)._links.attachment.href;
+            const url = toValue(state.tailoring)._links.attachment.href;
             if (url == null) {
                 return Promise.resolve();
             }
@@ -62,13 +51,12 @@ export function useAttachmentsDialog() {
                         resolve(state.attachments);
                     })
                     .catch((error) => {
-                        console.log(error);
                         reject(error.data);
                     });
             });
         },
         download: (attachment) => {
-            var url = toValue(attachment)._links.self.href;
+            const url = toValue(attachment)._links.self.href;
             if (url == null) {
                 return Promise.resolve();
             }
@@ -76,7 +64,7 @@ export function useAttachmentsDialog() {
             return download(url);
         },
         delete: (attachment) => {
-            var url = toValue(attachment)._links.self.href;
+            const url = toValue(attachment)._links.self.href;
             if (url == null) {
                 return Promise.resolve();
             }

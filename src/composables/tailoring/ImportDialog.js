@@ -12,7 +12,7 @@ export function useImportDialog() {
 
     const actions = {
         importRequirements: (data) => {
-            var url = toValue(state.tailoring)._links.import.href;
+            const url = toValue(state.tailoring)._links.import.href;
             if (url == null) {
                 return Promise.resolve();
             }

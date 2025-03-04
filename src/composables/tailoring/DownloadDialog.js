@@ -12,15 +12,13 @@ export function useDownloadDialog() {
     });
 
     const mutations = {
-        tailoring: (tailoring) => {
-            state.tailoring = toRef(tailoring);
-        },
-        signatures: (signatures) => (state.signatures = toRef(signatures))
+        tailoring: (tailoring) => state.tailoring = toRef(tailoring),
+        signatures: (signatures) => state.signatures = toRef(signatures)
     };
 
     const actions = {
         initialize: () => {
-            var url = toValue(state.tailoring)._links.signature.href;
+            const url = toValue(state.tailoring)._links.signature.href;
             if (url == null) {
                 return Promise.resolve();
             }
@@ -39,7 +37,7 @@ export function useDownloadDialog() {
             });
         },
         download: (_url) => {
-            var url = toValue(_url);
+            const url = toValue(_url);
             if (url == null) {
                 return Promise.resolve();
             }

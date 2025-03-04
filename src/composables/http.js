@@ -36,7 +36,7 @@ export function useHttp() {
     };
 
     const get = (path, file) => {
-        let url =  window.location.origin + path + "/" + store.state.tenant + "/" + file;
+        const url =  window.location.origin + path + "/" + store.state.tenant + "/" + file;
         if (url == null) {
             return Promise.resolve();
         }

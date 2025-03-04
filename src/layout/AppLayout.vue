@@ -6,6 +6,7 @@ import AppFooter from './AppFooter.vue';
 import AppSidebar from './AppSidebar.vue';
 import AppTopbar from './AppTopbar.vue';
 import { useConfirm } from 'primevue/useconfirm';
+import { useToast } from 'primevue/usetoast';
 import { useI18n } from 'vue-i18n';
 
 import { useHttp } from '@/composables/http.js';
@@ -15,6 +16,9 @@ const store = inject('store');
 const blocked = computed(() => store.state.loading);
 const { t } = useI18n();
 const confirm = useConfirm();
+const toast = useToast();
+
+
 
 const { layoutConfig, layoutState, isSidebarActive } = useLayout();
 
@@ -65,6 +69,31 @@ function isOutsideClicked(event) {
     return !(sidebarEl.isSameNode(event.target) || sidebarEl.contains(event.target) || topbarEl.isSameNode(event.target) || topbarEl.contains(event.target));
 }
 
+const onSuccess = (title, message) => {
+    console.log("onSuccess");
+    toast.add({
+        severity: 'success',
+        summary: title,
+        detail: message,
+        life: 3000
+    });
+}
+
+const onError = (title, message) => {
+    console.log("onError");
+    confirm.require({
+        header: title,
+        message: message,
+        icon: 'pi pi-exclamation-triangle',
+        rejectProps: {
+            style: 'visibility:hidden'
+        },
+        acceptProps: {
+            label: t('ok'),
+            severity: 'secondary'
+        }
+    });
+}
 
 const route = useRoute();
 const { get } = useHttp();
@@ -106,25 +135,45 @@ const onAbout = () => {
 </script>
 
 <template>
-    <div class="layout-wrapper" :class="containerClass">
-        <app-topbar @help="onHelp" @open="onOpen"/>
-        <app-sidebar @help="onHelp" @about="onAbout"/>
-        <div class="layout-main-container">
-            <div class="layout-main">
-                <router-view />
-            </div>
-        </div>
-        <app-footer @open="onOpen"></app-footer>
+  <div
+    class="layout-wrapper"
+    :class="containerClass"
+  >
+    <app-topbar
+      @help="onHelp"
+      @open="onOpen"
+    />
+    <app-sidebar
+      @help="onHelp"
+      @about="onAbout"
+    />
+    <div class="layout-main-container">
+      <div class="layout-main">
+        <router-view @success="onSuccess" @error="onError" />
+      </div>
     </div>
+    <app-footer @open="onOpen" />
+  </div>
 
-    <BlockUI :blocked="blocked" full-screen>
-        <ProgressSpinner v-if="blocked" fill="transparent" style="position: fixed; top: 50%; left: 50%; z-index: 10000" />
-    </BlockUI>
+  <BlockUI
+    :blocked="blocked"
+    full-screen
+  >
+    <ProgressSpinner
+      v-if="blocked"
+      fill="transparent"
+      style="position: fixed; top: 50%; left: 50%; z-index: 10000"
+    />
+  </BlockUI>
 
-    <ConfirmDialog />
-    <Toast />
+  <ConfirmDialog />
+  <Toast />
 
-    <Drawer v-model:visible="help.state" position="bottom" style="height: auto">
-        <p v-html="help.text"></p>
-    </Drawer>
+  <Drawer
+    v-model:visible="help.state"
+    position="bottom"
+    style="height: auto"
+  >
+    <p v-html="help.text" />
+  </Drawer>
 </template>

@@ -23,8 +23,8 @@ export function useProject() {
     };
 
     const mutations = {
-        project: (project) => (state.project = toRef(project)),
-        tailoring: (tailoring) => (state.tailoring = toRef(tailoring))
+        project: (project) => state.project = toRef(project),
+        tailoring: (tailoring) => state.tailoring = toRef(tailoring)
     };
 
     const actions = {
@@ -43,12 +43,10 @@ export function useProject() {
         },
         updateState: (tailoring) => {
             return new Promise((resolve, reject) => {
-                console.log('updateState');
-                console.log(tailoring);
                 return axios
                     .put(toValue(tailoring)._links.state.href)
                     .then((response) => {
-                        var index = state.project.tailorings.indexOf(tailoring);
+                        const index = state.project.tailorings.indexOf(tailoring);
                         state.project.tailorings.splice(index, 1, response.data);
                         resolve(response.data);
                     })
@@ -70,14 +68,8 @@ export function useProject() {
                     });
             });
         },
-        getBaseCatalog: (tailoring) => {
-            var url = toValue(tailoring)._links.basecatalog.href;
-            return download(url);
-        },
-        getComparison: (tailoring) => {
-            var url = toValue(tailoring)._links.compare.href;
-            return download(url);
-        }
+        getBaseCatalog: (tailoring) => download(toValue(tailoring)._links.basecatalog.href),
+        getComparison: (tailoring) => download(toValue(tailoring)._links.compare.href)
     };
 
     return {

@@ -45,14 +45,31 @@ const onSave = (payload) => {
 </script>
 
 <template>
-    <Dialog :visible="active" :header="t('EditorDialog.title')" :modal="true" @update:visible="onClose">
-        <template #footer>
-            <Button :label="$t('close')" @click="onClose" />
-            <Button :label="$t('save')" @click="onSave" />
-        </template>
+  <Dialog
+    :visible="active"
+    :header="t('EditorDialog.title')"
+    :modal="true"
+    @update:visible="onClose"
+  >
+    <template #footer>
+      <Button
+        :label="$t('close')"
+        @click="onClose"
+      />
+      <Button
+        :label="$t('save')"
+        @click="onSave"
+      />
+    </template>
 
-        <div v-if="active" class="flex flex-col gap-1">
-            <Editor v-model="text" editor-style="height: 320px" />
-        </div>
-    </Dialog>
+    <div
+      v-if="active"
+      class="flex flex-col gap-1"
+    >
+      <Editor
+        v-model="text"
+        editor-style="height: 320px"
+      />
+    </div>
+  </Dialog>
 </template>

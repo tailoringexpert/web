@@ -9,7 +9,7 @@ import { useConfirm } from 'primevue/useconfirm';
 import { useScreeningsheetUpload } from '@/composables/screeningsheet/ScreeningsheetUpload';
 
 // provided interfaces
-const emit = defineEmits(['screeningsheet:upload']);
+const emit = defineEmits(['screeningsheet:upload', 'error']);
 
 // injects
 const logger = inject('logger');
@@ -48,42 +48,44 @@ const onUpload = () => {
 };
 
 const onError = (title, message) => {
-    confirm.require({
-        header: title,
-        message: message,
-        icon: 'pi pi-exclamation-triangle',
-        rejectProps: {
-            style: 'visibility:hidden'
-        },
-        acceptProps: {
-            label: t('ok'),
-            severity: 'secondary'
-        }
-    });
+    emit("error", title, message);
 };
 // hooks
 </script>
 
 <template>
-    <FileUpload mode="advanced" custom-upload="true" multiple="false" accept="application/pdf" @select="onSelect" @uploader="onUpload">
-        <template #empty>
-            <span>{{ t('ScreeningsheetUpload.files') }}</span>
-        </template>
-    </FileUpload>
+  <FileUpload
+    mode="advanced"
+    custom-upload="true"
+    multiple="false"
+    accept="application/pdf"
+    @select="onSelect"
+    @uploader="onUpload"
+  >
+    <template #empty>
+      <span>{{ t('ScreeningsheetUpload.files') }}</span>
+    </template>
+  </FileUpload>
 
-    <DataTable
-        :value="screeningsheet.parameters"
-        data-key="label"
-        striped-rows
-        scrollable
-        scroll-height="400px"
-        table-style="min-width: 50rem"
-     >
-        <template #loading>
-            {{ t('ScreeningsheetUpload.loading') }}
-        </template>
+  <DataTable
+    :value="screeningsheet.parameters"
+    data-key="label"
+    striped-rows
+    scrollable
+    scroll-height="400px"
+    table-style="min-width: 50rem"
+  >
+    <template #loading>
+      {{ t('ScreeningsheetUpload.loading') }}
+    </template>
 
-        <Column field="label" :header="t('ScreeningsheetUpload.name')" />
-        <Column field="value" :header="t('ScreeningsheetUpload.value')" />
-    </DataTable>
+    <Column
+      field="label"
+      :header="t('ScreeningsheetUpload.name')"
+    />
+    <Column
+      field="value"
+      :header="t('ScreeningsheetUpload.value')"
+    />
+  </DataTable>
 </template>
