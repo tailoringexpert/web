@@ -115,7 +115,10 @@ onBeforeMount(() => {
 </script>
 
 <template>
-  <div class="card flex justify-center">
+  <div
+    class="card justify-center"
+    fluid
+  >
     <Stepper
       :value="step"
       class="basis-[50rem]"
@@ -192,18 +195,18 @@ onBeforeMount(() => {
             />
             <div class="flex pt-6 justify-between">
                 <Button
-                :label="t('TailoringNew.previous')"
-                severity="secondary"
-                icon="pi pi-arrow-left"
-                @click="activateCallback(2)"
-            />
-            <Button
-              :label="t('TailoringNew.next')"
-              icon="pi pi-arrow-right"
-              icon-pos="right"
-              @click="activateCallback(4)"
-            />
-          </div>
+                    :label="t('TailoringNew.previous')"
+                    severity="secondary"
+                    icon="pi pi-arrow-left"
+                    @click="activateCallback(2)"
+                />
+                <Button
+                    :label="t('TailoringNew.next')"
+                    icon="pi pi-arrow-right"
+                    icon-pos="right"
+                    @click="activateCallback(4)"
+                />
+            </div>
         </StepPanel>
         <StepPanel
           v-slot="{ activateCallback }"

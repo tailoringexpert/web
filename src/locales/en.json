@@ -48,7 +48,7 @@
         "action": "Actions",
         "updateState": {
             "title": "Next tailoring state",
-            "text": "Do you really want to set next state of tailoring?<br/>After setting to next state neither requirements can be changed nor tailoring be deleted!<br/><br/>In case you need to downstate call your administrator",
+            "text": "Do you really want to set next state of tailoring?After setting to next state neither requirements can be changed nor tailoring be deleted! In case you need to downstate call your administrator",
             "state": {
                 "success": "State changed",
                 "error": "State could not be changed"
@@ -87,7 +87,10 @@
         "name": "Name",
         "value": "Value",
         "parameter": "Screeningsheet parameters",
-        "calculatedSelectionvector": "Calculated selectionvector"
+        "calculatedSelectionvector": "Calculated selectionvector",
+        "tooltip": {
+            "download": "Download screeningsheet"
+        }
     },
     "SelectionVectorDialog": {
         "loading": "Loading selectionvector data. Please wait.",
@@ -296,7 +299,7 @@
     "ImportDialog": {
         "title": "Import tailored requirements",
         "files": "Drag and drop Excel file to here to update requirements.",
-        "upload": "Convert",
+        "upload": "Import",
         "state": {
             "success": "Requirements changed",
             "error": "Requirements could not be imported"

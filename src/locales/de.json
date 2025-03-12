@@ -1,0 +1,312 @@
+{
+    "yes": "Ja",
+    "no": "Nein",
+    "error": "Fehler",
+    "cancel": "Abbbrechen",
+    "close": "Schliessen",
+    "save": "Speichern",
+
+    "Projects": {
+        "project": "Projekt | Projekte",
+        "loading": "Lad Projekt. Bitte warten.",
+        "name": "Name",
+        "createdAt": "Erstellt am",
+        "state": "Status",
+        "action": "Aktionen",
+        "updateState": {
+            "title": "Nächster Projekt Status",
+            "text": "Wollen Sie wirklich auf den nächsten Projekt Status ändern?",
+            "state": {
+                "title": "Projekt Status ändern",
+                "success": "Status erfolgreich geändert",
+                "error": "Status konnte nicht geändert werden"
+            }
+        },
+        "delete": {
+            "title": "Projekt löschen",
+            "text": "Soll das Projekt wirklich gelöscht werden?",
+            "state": {
+                "success": "Projekt gelöscht",
+                "error": "Projekt konnte nicht gelöscht werden"
+            }
+        },
+        "tooltip": {
+            "new": "Neues Projekt erstellen",
+            "state": "Projekt Status ändern",
+            "edit": "Projekt bearbeiten",
+            "delete": "Projekt löschen"
+        }
+    },
+    "Project": {
+        "loading": "Lade Tailorings. Bitte warten.",
+        "project": "Projekt | Projekte",
+        "tailoring": "Tailoring",
+        "name": "Name",
+        "phases": "Phasen",
+        "state": "Status",
+        "catalog": "Katalog",
+        "action": "Actions",
+        "updateState": {
+            "title": "Nächster Tailoring Status",
+            "text": "Wollen Sie wirklich das Tailoring in den nächsten Status setzen? Nach Änderung des Status können weder Anforderungen geändert noch das Tailoring gelöscht werden! Ein setzen eines vorherigen Status kann nur durch einen Administator durchgeführt werden.",
+            "state": {
+                "success": "Tailoring Status geändert",
+                "error": "Tailoring Status konnte nicht geändert werden"
+            }
+        },
+        "downloadBasecatalog": {
+            "title": "Download Gesamtkatalog"
+        },
+        "deleteTailoring": {
+            "title": "Tailoring löschen",
+            "text": "Soll das Tailoring wirklich gelöscht werden?",
+            "state": {
+                "success": "Tailoring gelöscht",
+                "error": "Tailoring konnte nicht gelöscht werden"
+            }
+        },
+        "tooltip": {
+            "openScreeningsheet": "Screeningsheet anzeigen",
+            "newTailoring": "Neues Tailoring",
+            "changeName": "Tailoring Name ändern",
+            "updateState": "Tailoring Status ändern",
+            "downloadBasecatalog": "Download Gesamtkatalog",
+            "editRequirements": "Anforderungskatalog bearbeiten",
+            "downloadDocuments": "Download Dokumente",
+            "compareTailoring": "Tailoring Unterschiede anzeigen",
+            "openSelectionvector": "Selectionvektor anzeigen",
+            "openAttachments": "Anhänge bearbeiten",
+            "importRequirements": "Anforderungen importieren",
+            "openNotes": "Tailoring Notizen",
+            "deleteTailoring": "Tailoring löschen"
+        }
+    },
+    "ScreeningsheetDialog": {
+        "title": "Screeningsheet",
+        "loading": "Lade Screeningsheet Daten.",
+        "name": "Name",
+        "value": "Wert",
+        "parameter": "Screeningsheet Parameters",
+        "calculatedSelectionvector": "Berechnetere Selektionsvektor",
+        "tooltip": {
+            "download": "Download Screeningsheet"
+        }
+    },
+    "SelectionVectorDialog": {
+        "loading": "Lade Selektionsvektor Daten. Bitte warten.",
+        "name": "Name",
+        "value": "Wert",
+        "applied": "Angwendeter Selektionsvektor"
+    },
+    "ProjectNew": {
+        "title": "Projekt erstellen",
+        "catalog": "Katalog",
+        "screeningsheet": "Screeningsheet",
+        "selectionvector": "Selektionsvektor",
+        "next": "Weiter",
+        "previous": "Zurück",
+        "summary": "Zusammenfassung",
+        "state": {
+            "success": "Projekt erstellt",
+            "error": "Projekt konnte nicht erstellt werden"
+        },
+        "editSelectionvector": {
+            "title": "Parameter",
+            "state": {
+                "success": "Level aktualisiert"
+            }
+        }
+    },
+    "CatalogSelection": {
+        "note": "Notiz",
+        "placeholder": "Katalog auswählen"
+    },
+    "ScreeningsheetUpload": {
+        "title": "Upload Screeningsheet",
+        "loading": "Lade Screeningsheeet Parameter",
+        "files": "PDF Screeningsheet zum Hochladen hier ablegen.",
+        "name": "Name",
+        "value": "Wert"
+    },
+    "SelectionVectorEdit": {
+        "loading": "Lade Parameter. Bitte warten.",
+        "empty": "Keine Parameter vorhanden",
+        "project": "Projekt",
+        "profilePlaceholder": "Profil auswählen",
+        "name": "Name",
+        "value": "Wert",
+        "parameterdialog": {
+            "title": "Parameter bearbeiten",
+            "required": {
+                "value": "Wert ist erforderlich"
+            },
+            "state": {
+                "success": "Wert aktualisiert",
+                "cancel": "Wert nicht aktualisiert"
+            }
+        }
+    },
+    "SelectionVectorComparison": {
+        "project": "Projekt",
+        "name": "Name",
+        "calculatedSelectionvector": "Berechneter Selektionsvektor",
+        "appliedSelectionvector": "Angewendeter Selektionsvektor"
+    },
+    "TailoringCatalog": {
+        "project": "Projekt | Projekte",
+        "search": "Suche",
+        "changed": "geändert",
+        "setState": {
+            "title": "Anforderungsselektion",
+            "state": {
+                "success": "Anforderungsselektion erfolgreich geändert"
+            }
+        },
+        "setStates": {
+            "title": "Anforderungselektion",
+            "state": {
+                "success": "Selektion der Anforderung von {chapter} erfolgreiche geändert zu {state}"
+            }
+        },
+        "saveText": {
+            "title": "Anforderungstext",
+            "state": {
+                "success": "Text erfolgreich gespeichert"
+            }
+        },
+        "tooltip": {
+            "setRequirementsApplicable": "Alle Anforderungen des Kapitels anwendbar setzen",
+            "unsetRequirementsApplicable": "Alle Anforderungen des Kapitels nicht anwendbar setzen",
+            "editRequirement": "Anforderung bearbeiten",
+            "createRequirement": "Neue nachfolgende Anforderung erstellen"
+        }
+    },
+    "EditorDialog": {
+        "title": "Anforderung bearbeiten"
+    },
+    "TailoringNew": {
+        "title": "Tailoring erstellen",
+        "catalog": "Katalog",
+        "screeningsheet": "Screeningsheet",
+        "selectionvector": "Selektionsvektor",
+        "next": "Weiter",
+        "previous": "Zurück",
+        "summary": "Zusammenfassung",
+        "state": {
+            "success": "Tailoring erstellt",
+            "error": "Tailoring konnte nicht erstellt werden"
+        },
+        "editSelectionvector": {
+            "title": "Parameter",
+            "state": {
+                "success": "Level aktualisiert"
+            }
+        }
+    },
+    "BaseCatalog": {
+        "loading": "Lade Gesamtkataloge. Bitte warten.",
+        "empty": "Keine Gesamtkataloge vorhanden",
+        "convert": "Umwandeln",
+        "preview": "Vorschau",
+        "catalog": "Katalog | Kataloge",
+        "validFrom": "Gültig ab",
+        "action": "Aktionen",
+        "error": {
+            "download": "Downloadfehler"
+        },
+        "tooltip": {
+            "downloadJSON": "Download JSON",
+            "downloadPDF": "Download PDF",
+            "downloadExcel": "Download Excel",
+            "downloadZip": "Download Dokumente"
+        }
+    },
+    "Excel2JSONConverterDialog": {
+        "title": "Excel zu JSON Katalog Konverter",
+        "convert": "Umwandeln",
+        "files": "Drag and drop an Excel catalog file here to be converted into JSON."
+    },
+
+    "JSON2PdfconverterDialog": {
+        "title": "Vorschau PDF Katalog",
+        "convert": "Vorschau",
+        "files": "Drag and drop a JSON catalog file here to be converted into PDF."
+    },
+    "DownloadDialog": {
+        "title": "Download Dokumente",
+        "loading": "Lade Zeichnerdaten. Bitte warten.",
+        "signatures": "Dokumentsignaturen",
+        "faculty": "Bereich",
+        "signatureState": "Status",
+        "signee": "Unterzeichner",
+        "download": "Download",
+        "catalog": "Katalog",
+        "json": "JSON",
+        "applicable": "Anwendbar",
+        "action": "Aktionen",
+        "state": {
+            "success": "",
+            "error": ""
+        },
+        "tooltip": {
+            "editSignature": "Unterzeichner bearbeiten"
+        }
+    },
+    "SignatureDialog": {
+        "name": "Name",
+        "applicable": "Anwendbar",
+        "signaturestate": "Status",
+        "state": {
+            "success": "Unterzeichner aktualisiert"
+        }
+    },
+    "TailoringNameDialog": {
+        "title": "Tailoring Name bearbeiten",
+        "name": "Name",
+        "state": {
+            "success": "Name aktualisiert",
+            "error": "Name konnte nicht aktualisiert werden"
+        }
+    },
+    "AttachmentsDialog": {
+        "title": "Anhänge",
+        "file": "Date",
+        "files": "Drag and drop files to here to upload",
+        "checksum": "Prüfsumme",
+        "type": "Typ",
+        "loading": "Lade Anhangsliste. Bitte warten.",
+        "action": "Aktionen",
+        "upload": {
+            "title": "Anhang hochladen",
+            "state": {
+                "success": "Anhang erfolgreich hochgeladen",
+                "error": "Anhang konnte nicht hochgeladen werden"
+            }
+        },
+        "delete": {
+            "title": "Anhang löschen",
+            "text": "Soll der Anhang wirklich gelöscht werden?",
+            "state": {
+                "success": "Anhang gelöscht",
+                "error": "Anhang konnte nicht gelöscht werden"
+            }
+        },
+        "tooltip": {
+            "download": "Anhang lade",
+            "delete": "Anhang löschen"
+        }
+    },
+    "ImportDialog": {
+        "title": "Importier getailorte Anforderungen",
+        "files": "Drag and drop Excel file to here to update requirements.",
+        "upload": "Import",
+        "state": {
+            "success": "Anforderungen aktualisiert",
+            "error": "Anforderungen konnten nicht aktualisiert werden"
+        }
+    },
+    "NotesDialog": {
+        "title": "Nozizen",
+        "add": "Neu"
+    }
+}

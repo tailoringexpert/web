@@ -78,6 +78,22 @@ const onClose = () => {
     :modal="true"
     @update:visible="onClose"
   >
+
+    <template #header>
+        <div class="flex items-center justify-left mb-0">
+            <span class="p-dialog-title">{{ t('ScreeningsheetDialog.title') }}: &nbsp;</span>
+            <Button
+                v-tooltip.bottom="t('ScreeningsheetDialog.tooltip.download')"
+                variant="text"
+                icon="pi pi-download"
+                severity="secondary"
+                rounded
+                @click="onDownload"
+            />
+        </div>
+    </template>
+
+
     <template #footer>
       <Button
         :label="$t('close')"

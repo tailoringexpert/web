@@ -393,7 +393,6 @@ const onUpdatedName = (name) => {
             />
             <Button
               v-tooltip.bottom="t('Project.tooltip.downloadDocuments')"
-              :disabled="!isTailoringEditable(slotProps.data)"
               variant="text"
               icon="pi pi-download"
               severity="secondary"

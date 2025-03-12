@@ -68,7 +68,6 @@ export function useTailoringCatalog() {
 
     const addChapterMapping = (chapter) => {
         number2Chapter[chapter.key] = chapter.name;
-        // disables because of async requirement loading
         mutations.setChapterRequirements(chapter.key, chapter.data);
 
         chapter.children.forEach((subchapter) => addChapterMapping(subchapter));
@@ -177,11 +176,10 @@ export function useTailoringCatalog() {
                 return axios
                     .put(url.replace('{selected}', toValue(selected)))
                     .then((response) => {
-                        mutations.setChapterRequirements(toValue(state.chapter).key, response.data.data);
+                        addChapterMapping(response.data);
                         resolve(getters.requirements);
                     })
                     .catch((error) => {
-                        console.log(error);
                         reject(error.data);
                     });
             });

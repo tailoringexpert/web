@@ -138,7 +138,7 @@ const onSave = (payload) => {
         .then(() => {
             onSuccess(
                 t('TailoringCatalog.saveText.title'),
-                t('Tailoringcatalog.saveText.state.success')
+                t('TailoringCatalog.saveText.state.success')
             );
         })
         .catch((error) => {
@@ -176,6 +176,8 @@ onBeforeMount(() => {
     ]);
     initialize();
 });
+
+const dummy = ref("<html>The PPIP should include, but not be limited to, the following information: <ul> <li>in detail, the processes, procedures, analyses, and facilities how the project will incorporate for the required planetary protection,</li></ul></html>")
 </script>
 
 <template>
@@ -266,7 +268,7 @@ onBeforeMount(() => {
                 </template>
                 <template #content>
                   <p
-                    class="m-0 text-xl font-semibold"
+                    class="m-0 text-xl font-semibold requirement-card"
                     v-html="sanitizeHtml(item.text)"
                   />
                 </template>
@@ -279,7 +281,7 @@ onBeforeMount(() => {
                       @click="onEdit(item)"
                     />
                     <Button
-                      v-tooltip.bottom="t('§tooltip.createRequirement')"
+                      v-tooltip.bottom="t('TailoringCatalog.tooltip.createRequirement')"
                       variant="text"
                       icon="pi pi-plus"
                       @click="onNew(item)"
@@ -299,3 +301,15 @@ onBeforeMount(() => {
     />
   </div>
 </template>
+
+<style scoped>
+    .requirement-card :deep(ul) {
+        display: block;
+        list-style-type: disc;
+        margin-top: 1em;
+        margin-bottom: 1 em;
+        margin-left: 0;
+        margin-right: 0;
+        padding-left: 40px;
+}
+</style>

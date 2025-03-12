@@ -1,5 +1,5 @@
 <script setup>
-import { inject, ref } from 'vue';
+import { inject, ref, computed } from 'vue';
 import { useLayout } from '@/layout/composables/layout';
 import AppConfigurator from './AppConfigurator.vue';
 
@@ -102,16 +102,21 @@ const home = ref({
 
       <div class="layout-topbar-menu hidden lg:block">
         <div class="layout-topbar-menu-content">
-          <button
-            type="button"
-            class="layout-topbar-action"
-            @click="emit('help')"
-          >
-            <i class="pi pi-question" />
-            <span>Calendar</span>
-          </button>
+            <Select
+                v-model="$i18n.locale"
+                :options="$i18n.availableLocales"
+            >
+            </Select>
+            <button
+                type="button"
+                class="layout-topbar-action"
+                @click="emit('help')"
+            >
+                <i class="pi pi-question" />
+            </button>
         </div>
       </div>
+
     </div>
   </div>
 </template>
