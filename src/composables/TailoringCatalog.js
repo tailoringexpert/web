@@ -36,8 +36,8 @@ export function useTailoringCatalog() {
 
         return new Promise((resolve, reject) => {
             axios
-                .put(url, text, {
-                    headers: { 'Content-Type': 'text/plain' }
+                .put(url, { "text": text }, {
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
                 })
                 .then((response) => {
                     const _requirement = getters.requirements().find((requirement) => requirement.position === toValue(state.requirement).position);

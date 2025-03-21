@@ -42,8 +42,10 @@ export function useNotesDialog() {
 
             return new Promise((resolve, reject) => {
                 return axios
-                    .post(url, toValue(text), {
-                        headers: { 'Content-Type': 'text/plain' }
+                   .post(url, { "note" : toValue(text) }, {
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        }
                     })
 
                     .then(() => {

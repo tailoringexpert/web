@@ -19,8 +19,10 @@ export function useNameDialog() {
 
             return new Promise((resolve, reject) => {
                 return axios
-                    .put(url, name, {
-                        headers: { 'Content-Type': 'text/plain' }
+                    .put(url, { "name" : name }, {
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        }
                     })
                     .then((response) => {
                         mutations.tailoring(response.data);
