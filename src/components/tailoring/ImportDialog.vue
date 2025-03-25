@@ -51,11 +51,8 @@ const onUpload = () => {
         return;
     }
 
-    let data = new FormData();
-    data.append('datei', toValue(file.value));
-
     actions
-        .importRequirements(data)
+        .importRequirements(toValue(file))
         .then(() => {
             emit('close:closed');
             onSuccess(

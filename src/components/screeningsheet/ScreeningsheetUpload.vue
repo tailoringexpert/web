@@ -32,11 +32,8 @@ const onUpload = () => {
         return;
     }
 
-    let data = new FormData();
-    data.append('datei', toValue(file));
-
     actions
-        .upload(data)
+        .upload(toValue(file))
         .then((response) => {
             emit('screeningsheet:upload', {
                 screeningsheet: response

@@ -35,15 +35,18 @@ export function useAttachmentsDialog() {
                     });
             });
         },
-        upload: (attachment) => {
+        upload: (file) => {
             const url = toValue(state.tailoring)._links.attachment.href;
             if (url == null) {
                 return Promise.resolve();
             }
 
+            let data = new FormData();
+            data.append('file', toValue(file));
+
             return new Promise((resolve, reject) => {
                 return axios
-                    .post(url, attachment, {
+                    .post(url, data, {
                         headers: { 'Content-Type': 'multipart/form-data' }
                     })
                     .then(() => {

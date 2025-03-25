@@ -14,11 +14,14 @@ export function useScreeningsheetUpload() {
     };
 
     const actions = {
-        upload: (data) => {
+        upload: (file) => {
             const url = toValue(store).state.links.screeningsheet.href;
             if (url == null) {
                 return Promise.resolve();
             }
+
+            let data = new FormData();
+            data.append('file', toValue(file));
 
             return new Promise((resolve, reject) => {
                 axios

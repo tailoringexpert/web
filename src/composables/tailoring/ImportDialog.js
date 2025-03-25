@@ -11,15 +11,18 @@ export function useImportDialog() {
     };
 
     const actions = {
-        importRequirements: (data) => {
+        importRequirements: (file) => {
             const url = toValue(state.tailoring)._links.import.href;
             if (url == null) {
                 return Promise.resolve();
             }
 
+            let data = new FormData();
+            data.append('file', toValue(file));
+
             return new Promise((resolve, reject) => {
                 return axios
-                    .post(url, toValue(data), {
+                    .post(url, data, {
                         headers: { 'Content-Type': 'multipart/form-data' }
                     })
 

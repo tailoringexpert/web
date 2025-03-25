@@ -56,10 +56,7 @@ const onUpload = () => {
         return;
     }
 
-    let data = new FormData();
-    data.append('datei', toValue(file));
-
-    actions.upload(data)
+    actions.upload(toValue(file))
         .then(() => {
             file.value = null;
             onSuccess(

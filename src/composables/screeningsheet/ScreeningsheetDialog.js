@@ -48,7 +48,7 @@ export function useScreeningsheetDialog() {
             });
         },
         download: () => {
-            const url = toValue(state.screeningsheet)._links.datei.href;
+            const url = toValue(state.screeningsheet)._links.file.href;
             if (url == null) {
                 return Promise.resolve();
             }

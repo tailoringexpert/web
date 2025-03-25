@@ -14,8 +14,10 @@ export function useTailoringCatalog() {
 
         return new Promise((resolve, reject) => {
             return axios
-                .post(url, text, {
-                    emulateJSON: true
+                .post(url, { "text" : toValue(text) }, {
+                    headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                    }
                 })
                 .then((response) => {
                     mutations.requirement(response.data);
