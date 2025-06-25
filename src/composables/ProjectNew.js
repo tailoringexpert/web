@@ -1,7 +1,7 @@
 import { reactive, readonly, toRef, toValue } from 'vue';
-import axios from 'axios';
+import api from '@/plugins/api';
 
-import store from '@/store';
+import store from '@/plugins/store';
 
 export function useProjectNew() {
     const state = reactive({
@@ -30,7 +30,7 @@ export function useProjectNew() {
             };
 
             return new Promise((resolve, reject) => {
-                return axios
+                return api
                     .post(toValue(state.catalog).project, data, {
                         headers: {
                             'Content-Type': 'application/json;charset=utf-8'

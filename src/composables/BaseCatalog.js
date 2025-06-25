@@ -1,7 +1,7 @@
 import { reactive, readonly, toRef, toValue } from 'vue';
-import axios from 'axios';
+import api from '@/plugins/api';
 
-import store from '@/store';
+import store from '@/plugins/store';
 import { useHttp } from '@/composables/http';
 
 export function useBaseCatalog() {
@@ -25,7 +25,7 @@ export function useBaseCatalog() {
             }
 
             return new Promise((resolve, reject) => {
-                return axios
+                return api
                     .get(url)
                     .then((response) => {
                         mutations.catalogs(response.data._embedded.baseCatalogVersions);

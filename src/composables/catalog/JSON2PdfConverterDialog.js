@@ -1,7 +1,7 @@
 import { reactive, readonly, toValue } from 'vue';
-import axios from 'axios';
+import api from '@/plugins/api';
 
-import store from '@/store';
+import store from '@/plugins/store';
 import { useHttp } from '@/composables/http';
 import { useFile } from '@/composables/file';
 
@@ -22,7 +22,7 @@ export function useJSON2PdfConverterDialog() {
 
             return new Promise((resolve, reject) => {
                 readAsString(toValue(file)).then((response) => {
-                    return axios
+                    return api
                         .post(url, response, {
                             headers: {
                                 'Content-Type': 'application/json;charset=utf-8'

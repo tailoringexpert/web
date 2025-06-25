@@ -1,5 +1,5 @@
 import { reactive, toValue, readonly, toRef } from 'vue';
-import axios from 'axios';
+import api from '@/plugins/api';
 import { useI18n } from 'vue-i18n';
 
 export function useSelectionvectorDialog() {
@@ -23,7 +23,7 @@ export function useSelectionvectorDialog() {
             }
 
             return new Promise((resolve, reject) => {
-                return axios
+                return api
                     .get(url)
                     .then((response) => {
                         const items = [];

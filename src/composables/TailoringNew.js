@@ -1,7 +1,7 @@
 import { reactive, readonly, toRef, toValue } from 'vue';
-import axios from 'axios';
+import api from '@/plugins/api';
 
-import store from '@/store';
+import store from '@/plugins/store';
 
 export function useTailoringNew() {
     const state = reactive({
@@ -30,7 +30,7 @@ export function useTailoringNew() {
             };
 
             return new Promise((resolve, reject) => {
-                return axios
+                return api
                     .post(toValue(store.state.project)._links.tailoring.href, data, {
                         headers: {
                             'Content-Type': 'application/json;charset=utf-8'

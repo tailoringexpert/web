@@ -1,7 +1,7 @@
 import { reactive, readonly, toRef, toValue } from 'vue';
-import axios from 'axios';
+import api from '@/plugins/api';
 
-import store from '@/store';
+import store from '@/plugins/store';
 
 export function useTailoringCatalog() {
     let number2Chapter = {};
@@ -13,7 +13,7 @@ export function useTailoringCatalog() {
         }
 
         return new Promise((resolve, reject) => {
-            return axios
+            return api
                 .post(url, { "text" : toValue(text) }, {
                     headers: {
                             'Content-Type': 'application/x-www-form-urlencoded'
@@ -129,7 +129,7 @@ export function useTailoringCatalog() {
             }
 
             return new Promise((resolve, reject) => {
-                return axios
+                return api
                     .get(url)
                     .then((response) => {
                         mutations.catalog({ toc: response.data.toc });
@@ -154,7 +154,7 @@ export function useTailoringCatalog() {
                 return Promise.resolve();
             }
             return new Promise((resolve, reject) => {
-                return axios
+                return api
                     .put(url)
                     .then((response) => {
                         const _requirement = getters.requirements().find((requirement) => requirement.position === toValue(state.requirement).position);
@@ -175,7 +175,7 @@ export function useTailoringCatalog() {
             }
 
             return new Promise((resolve, reject) => {
-                return axios
+                return api
                     .put(url.replace('{selected}', toValue(selected)))
                     .then((response) => {
                         addChapterMapping(response.data);

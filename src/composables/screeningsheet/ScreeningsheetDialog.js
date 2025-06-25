@@ -1,5 +1,5 @@
 import { reactive, readonly, toValue, toRef } from 'vue';
-import axios from 'axios';
+import api from '@/plugins/api';
 import { useI18n } from 'vue-i18n';
 import { useHttp } from '@/composables/http';
 
@@ -25,7 +25,7 @@ export function useScreeningsheetDialog() {
             }
 
             return new Promise((resolve, reject) => {
-                return axios
+                return api
                     .get(url)
                     .then((response) => {
                         mutations.screeningsheet(response.data);

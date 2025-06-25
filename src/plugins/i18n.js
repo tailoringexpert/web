@@ -1,7 +1,7 @@
 import { createI18n } from 'vue-i18n';
-import axios from 'axios';
 
-import store from '@/store';
+import api from '@/plugins/api';
+import store from '@/plugins/store';
 
 // fallback
 const selectionvector = {
@@ -25,22 +25,10 @@ const selectionvector = {
     }
 };
 
-const i18n = createI18n({
-    locale: 'en',
-    legacy: false,
-    allowComposition: true,
-    fallbackLocale: 'en',
-    globalInjection: true,
-    messages: loadLocaleMessages()
-});
-
-function loadLocaleMessages() {
+const get = (locales) => {
     var tenant =  window?.configs?.PAGE_APP_TENANT || APP_TENANT;
     console.log('loading translations for ' + tenant);
 
-
-
-    const locales = import.meta.glob('/public/locales/*.json');
     const messages = {};
     for (const locale in locales) {
         locales[locale]().then((current) => {
@@ -50,8 +38,7 @@ function loadLocaleMessages() {
             if (matched && matched.length > 1) {
                 const key = file.split('.')[0];
                 let bundle = {};
-
-                axios
+                api
                     .get(window.location.origin + '/i18n/' + tenant + '/' + file)
                     .then((response) => {
                         Object.assign(bundle, current, response.data);
@@ -67,4 +54,15 @@ function loadLocaleMessages() {
     return messages;
 }
 
-export default i18n;
+const systemLocales = import.meta.glob('@/locales/*.json');
+const instance = createI18n({
+    locale: 'en',
+    legacy: false,
+    allowComposition: true,
+    fallbackLocale: 'en',
+    globalInjection: true,
+    messages: get(systemLocales)
+
+});
+
+export default instance;

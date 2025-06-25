@@ -13,7 +13,7 @@ import AttachmentsDialog from '@/components/tailoring/AttachmentsDialog.vue';
 import ImportDialog from '@/components/tailoring/ImportDialog.vue';
 import NotesDialog from '@/components/tailoring/NotesDialog.vue';
 
-import router from '@/router';
+import router from '@/plugins/router';
 import { useProject } from '@/composables/Project';
 
 // provided interfaces

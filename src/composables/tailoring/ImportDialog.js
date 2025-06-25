@@ -1,5 +1,5 @@
 import { reactive, toValue, readonly, toRef } from 'vue';
-import axios from 'axios';
+import api from '@/plugins/api';
 
 export function useImportDialog() {
     const state = reactive({
@@ -21,7 +21,7 @@ export function useImportDialog() {
             data.append('file', toValue(file));
 
             return new Promise((resolve, reject) => {
-                return axios
+                return api
                     .post(url, data, {
                         headers: { 'Content-Type': 'multipart/form-data' }
                     })

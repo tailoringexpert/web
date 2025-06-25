@@ -1,7 +1,7 @@
 import { reactive, readonly, toRef, toValue } from 'vue';
-import axios from 'axios';
+import api from '@/plugins/api';
 
-import store from '@/store';
+import store from '@/plugins/store';
 import { useHttp } from '@/composables/http';
 
 export function useProject() {
@@ -30,7 +30,7 @@ export function useProject() {
     const actions = {
         initialize: () => {
             return new Promise((resolve, reject) => {
-                return axios
+                return api
                     .get(toValue(store.state).project._links.self.href)
                     .then((response) => {
                         mutations.project(response.data);
@@ -43,7 +43,7 @@ export function useProject() {
         },
         updateState: (tailoring) => {
             return new Promise((resolve, reject) => {
-                return axios
+                return api
                     .put(toValue(tailoring)._links.state.href)
                     .then((response) => {
                         const index = state.project.tailorings.indexOf(tailoring);
@@ -57,7 +57,7 @@ export function useProject() {
         },
         delete: (tailoring) => {
             return new Promise((resolve, reject) => {
-                return axios
+                return api
                     .delete(toValue(tailoring)._links.self.href)
                     .then((response) => {
                         state.project.tailorings.splice(state.project.tailorings.indexOf(tailoring), 1);

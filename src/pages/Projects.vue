@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed, inject, onBeforeMount } from 'vue';
 import { useI18n } from 'vue-i18n';
-import router from '@/router';
+import router from '@/plugins/router';
 
 import { FilterMatchMode } from '@primevue/core/api';
 import DataTable from 'primevue/datatable';

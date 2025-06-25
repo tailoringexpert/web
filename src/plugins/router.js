@@ -1,12 +1,11 @@
-import AppLayout from '@/layout/AppLayout.vue';
 import { createRouter, createWebHistory } from 'vue-router';
 
-const router = createRouter({
+const instance = createRouter({
     history: createWebHistory(),
     routes: [
         {
             path: '/',
-            component: AppLayout,
+            component: () => import('@/layout/AppLayout.vue'),
             children: [
                 {
                     path: '/project',
@@ -52,4 +51,4 @@ const router = createRouter({
     ]
 });
 
-export default router;
+export default instance;

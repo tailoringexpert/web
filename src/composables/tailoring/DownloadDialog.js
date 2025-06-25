@@ -1,5 +1,5 @@
 import { reactive, readonly, toValue, toRef } from 'vue';
-import axios from 'axios';
+import api from '@/plugins/api';
 
 import { useHttp } from '@/composables/http';
 
@@ -24,7 +24,7 @@ export function useDownloadDialog() {
             }
 
             return new Promise((resolve, reject) => {
-                return axios
+                return api
                     .get(url)
                     .then((response) => {
                         mutations.signatures(response.data._embedded.signatures);

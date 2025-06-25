@@ -1,5 +1,5 @@
 import { reactive, toRef, toValue, readonly } from 'vue';
-import axios from 'axios';
+import api from '@/plugins/api';
 
 export function useNotesDialog() {
     const state = reactive({
@@ -20,7 +20,7 @@ export function useNotesDialog() {
             }
 
             return new Promise((resolve, reject) => {
-                return axios
+                return api
                     .get(url)
                     .then((response) => {
                         if (response.data.hasOwnProperty('_embedded')) {
@@ -41,7 +41,7 @@ export function useNotesDialog() {
             }
 
             return new Promise((resolve, reject) => {
-                return axios
+                return api
                    .post(url, { "note" : toValue(text) }, {
                         headers: {
                             'Content-Type': 'application/x-www-form-urlencoded'

@@ -1,5 +1,5 @@
 import { reactive, readonly, toValue, toRef } from 'vue';
-import axios from 'axios';
+import api from '@/plugins/api';
 
 export function useSignatureDialog() {
     const state = reactive({
@@ -18,7 +18,7 @@ export function useSignatureDialog() {
             }
 
             return new Promise((resolve, reject) => {
-                return axios
+                return api
                     .put(url, toValue(state.signature), {
                         emulateJSON: true,
                         headers: {

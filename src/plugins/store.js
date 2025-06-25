@@ -19,14 +19,12 @@ const mutations = {
     },
     loading: (loading) => state.loading = loading,
     help: (help) => state.help = help,
-    links: (links) => {
-        state.links = links;
-    },
-    catalogs: (catalogs) => (state.catalogs = catalogs),
-    breadcrumbs: (breadcrumbs) => (state.breadcrumbs = breadcrumbs),
-    selectionvectors: (selectionvectors) => (state.selectionvectors = selectionvectors),
-    project: (project) => (state.project = project),
-    tailoring: (tailoring) => (state.tailoring = tailoring)
+    links: (links) => state.links = links,
+    catalogs: (catalogs) => state.catalogs = catalogs,
+    breadcrumbs: (breadcrumbs) => state.breadcrumbs = breadcrumbs,
+    selectionvectors: (selectionvectors) => state.selectionvectors = selectionvectors,
+    project: (project) => state.project = project,
+    tailoring: (tailoring) => state.tailoring = tailoring
 };
 
 const actions = {};

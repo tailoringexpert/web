@@ -1,6 +1,6 @@
 import { reactive, toValue, readonly, toRef } from 'vue';
 import { useI18n } from 'vue-i18n';
-import store from '@/store';
+import store from '@/plugins/store';
 
 export function useSelectionvectorEdit() {
     const { t } = useI18n();

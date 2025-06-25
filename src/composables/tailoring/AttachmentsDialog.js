@@ -1,5 +1,5 @@
 import { reactive, toValue, readonly, toRef } from 'vue';
-import axios from 'axios';
+import api from '@/plugins/api';
 
 import { useHttp } from '@/composables/http';
 
@@ -24,7 +24,7 @@ export function useAttachmentsDialog() {
             }
 
             return new Promise((resolve, reject) => {
-                return axios
+                return api
                     .get(url)
                     .then((response) => {
                         mutations.attachments(response.data.hasOwnProperty('_embedded') ? response.data._embedded.files : []);
@@ -45,7 +45,7 @@ export function useAttachmentsDialog() {
             data.append('file', toValue(file));
 
             return new Promise((resolve, reject) => {
-                return axios
+                return api
                     .post(url, data, {
                         headers: { 'Content-Type': 'multipart/form-data' }
                     })
@@ -73,7 +73,7 @@ export function useAttachmentsDialog() {
             }
 
             return new Promise((resolve, reject) => {
-                return axios
+                return api
                     .delete(url)
                     .then(() => {
                         state.attachments.splice(state.attachments.indexOf(attachment), 1);

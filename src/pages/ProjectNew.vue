@@ -14,7 +14,7 @@ import ScreeningsheetUpload from '@/components/screeningsheet/ScreeningsheetUplo
 import SelectionVectorEdit from '@/components/selectionvector/SelectionVectorEdit.vue';
 import SelectionVectorComparison from '@/components/selectionvector/SelectionVectorComparison.vue';
 
-import router from '@/router';
+import router from '@/plugins/router';
 import { useProjectNew } from '@/composables/ProjectNew';
 
 

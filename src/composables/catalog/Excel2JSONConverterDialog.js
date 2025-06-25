@@ -1,7 +1,7 @@
 import { reactive, readonly, toValue } from 'vue';
-import axios from 'axios';
+import api from '@/plugins/api';
 
-import store from '@/store';
+import store from '@/plugins/store';
 import { useHttp } from '@/composables/http';
 
 export function useExcel2JSONConverterDialog() {
@@ -19,7 +19,7 @@ export function useExcel2JSONConverterDialog() {
             }
 
             return new Promise((resolve, reject) => {
-                return axios
+                return api
                     .post(url, data, {
                         responseType: 'arraybuffer',
                         headers: { 'Content-Type': 'multipart/form-data' }

@@ -1,7 +1,7 @@
 import { reactive, ref, toRef, toValue, readonly } from 'vue';
-import axios from 'axios';
+import api from '@/plugins/api';
 
-import store from '@/store';
+import store from '@/plugins/store';
 
 export function useProjects() {
     const state = reactive({
@@ -19,7 +19,7 @@ export function useProjects() {
         initialize: () => {
             return new Promise((resolve, reject) => {
                 const _projects = [];
-                return axios
+                return api
                     .get(toValue(store.state).links.project.href)
                     .then((response) => {
                         if (response.data._embedded != undefined) {
@@ -47,7 +47,7 @@ export function useProjects() {
 
         updateState: (project) => {
             return new Promise((resolve, reject) => {
-                return axios
+                return api
                     .put(project._links.state.href)
                     .then((response) => {
                         let index = state.projects.indexOf(project);
@@ -62,7 +62,7 @@ export function useProjects() {
 
         delete: (project) => {
             return new Promise((resolve, reject) => {
-                return axios
+                return api
                     .delete(toValue(project)._links.self.href)
                     .then(() => {
                         actions.initialize();

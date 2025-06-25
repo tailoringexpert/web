@@ -1,5 +1,5 @@
 import { reactive, toValue, readonly, toRef } from 'vue';
-import axios from 'axios';
+import api from '@/plugins/api';
 
 export function useNameDialog() {
     const state = reactive({
@@ -18,7 +18,7 @@ export function useNameDialog() {
             }
 
             return new Promise((resolve, reject) => {
-                return axios
+                return api
                     .put(url, { "name" : name }, {
                         headers: {
                             'Content-Type': 'application/x-www-form-urlencoded'

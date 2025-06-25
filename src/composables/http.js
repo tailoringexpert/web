@@ -1,6 +1,6 @@
 import { toValue } from 'vue';
-import axios from 'axios';
-import store from '@/store';
+import api from '@/plugins/api';
+import store from '@/plugins/store';
 
 export function useHttp() {
     const download = (url) => {
@@ -11,7 +11,7 @@ export function useHttp() {
         }
 
         return new Promise((resolve, reject) => {
-            return axios
+            return api
                 .get(_url, { responseType: 'arraybuffer' })
                 .then((response) => {
                     provide(response);
@@ -42,7 +42,7 @@ export function useHttp() {
         }
 
         return new Promise((resolve, reject) => {
-            return axios
+            return api
                 .get(url)
                 .then((response) => {
                     resolve(response.data);
