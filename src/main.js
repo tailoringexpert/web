@@ -5,8 +5,8 @@ import Aura from '@primeuix/themes/aura';
 import PrimeVue from 'primevue/config';
 import ConfirmationService from 'primevue/confirmationservice';
 import ToastService from 'primevue/toastservice';
-import '@/assets/styles.scss';
-import '@/assets/tailwind.css';
+import '@/assets/styles/main.scss';
+import "@/assets/styles/main.css";
 import VueLogger from 'vuejs3-logger';
 
 import App from '@/App.vue';

@@ -4,6 +4,7 @@ import Components from 'unplugin-vue-components/vite';
 import { PrimeVueResolver } from '@primevue/auto-import-resolver';
 import { fileURLToPath, URL } from 'node:url';
 import packageJson from './package.json';
+import tailwindcss from "@tailwindcss/vite";
 
 import vueDevTools from 'vite-plugin-vue-devtools';
 
@@ -43,6 +44,7 @@ export default ({ mode }) => {
 
         plugins: [
             vue(),
+            tailwindcss(),
             vueDevTools(),
             Components({
                 resolvers: [PrimeVueResolver()]
