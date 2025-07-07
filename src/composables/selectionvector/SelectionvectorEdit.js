@@ -12,8 +12,8 @@ export function useSelectionvectorEdit() {
     });
 
     const mutations = {
-        selectionvector: (selectionvector) => state.selectionvector = toRef(selectionvector),
-        levels: (levels) => state.levels = toRef(levels)
+        selectionvector: (selectionvector) => (state.selectionvector = toRef(selectionvector)),
+        levels: (levels) => (state.levels = toRef(levels))
     };
 
     const actions = {

@@ -8,7 +8,7 @@
 
     "Projects": {
         "project": "Projekt | Projekte",
-        "loading": "Lad Projekt. Bitte warten.",
+        "loading": "Lade Projekt. Bitte warten.",
         "name": "Name",
         "createdAt": "Erstellt am",
         "state": "Status",

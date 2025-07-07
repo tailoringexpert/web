@@ -89,100 +89,53 @@ const onCancel = () => {
 </script>
 
 <template>
-  <Dialog
-    v-model:visible="active"
-    :style="{ width: '450px' }"
-    :header="t('SelectionVectorEdit.parameterdialog.title')"
-    :modal="true"
-  >
-    <div class="flex flex-col gap-6">
-      <div>
-        <label
-          for="value"
-          class="block font-bold mb-3"
-        >{{ editItem.label }}</label>
-        <InputText
-          id="value"
-          v-model.trim="editItem.value"
-          required="true"
-          autofocus
-          :invalid="submitted && !editItem.value"
-          fluid
-        />
-        <small
-          v-if="submitted && !editItem.value"
-          class="text-red-500"
-        >{{ t('SelectionVectorEdit.parameterdialog.required.value') }}</small>
-      </div>
-    </div>
+    <Dialog v-model:visible="active" :style="{ width: '450px' }" :header="t('SelectionVectorEdit.parameterdialog.title')" :modal="true">
+        <div class="flex flex-col gap-6">
+            <div>
+                <label for="value" class="block font-bold mb-3">{{ editItem.label }}</label>
+                <InputText id="value" v-model.trim="editItem.value" required="true" autofocus :invalid="submitted && !editItem.value" fluid />
+                <small v-if="submitted && !editItem.value" class="text-red-500">{{ t('SelectionVectorEdit.parameterdialog.required.value') }}</small>
+            </div>
+        </div>
 
-    <template #footer>
-      <Button
-        :label="t('cancel')"
-        icon="pi pi-times"
-        text
-        @click="OnCancel"
-      />
-      <Button
-        :label="t('save')"
-        icon="pi pi-check"
-        @click="onSave"
-      />
-    </template>
-  </Dialog>
-
-  <Card>
-    <template #title>
-      <div class="flex items-center justify-left mb-0">
-        <span>{{ t('SelectionVectorEdit.project') }}: &nbsp;</span><span>{{ project }}</span>
-      </div>
-    </template>
-
-    <template #content>
-      <DataTable
-        :value="items"
-        data-key="label"
-        striped-rows
-        scrollable
-        scroll-height="400px"
-        table-style="min-width: 50rem"
-        class="col-span-full"
-      >
-        <template #empty>
-          {{ t('SelectionVectorEdit.empty') }}
+        <template #footer>
+            <Button :label="t('cancel')" icon="pi pi-times" text @click="OnCancel" />
+            <Button :label="t('save')" icon="pi pi-check" @click="onSave" />
         </template>
-        <template #loading>
-          {{ t('SelectionVectorEdit.loading') }}
+    </Dialog>
+
+    <Card>
+        <template #title>
+            <div class="flex items-center justify-left mb-0">
+                <span>{{ t('SelectionVectorEdit.project') }}: &nbsp;</span><span>{{ project }}</span>
+            </div>
         </template>
 
-        <template #header>
-          <div class="flex flex-wrap items-end justify-end gap-2">
-            <Select
-              v-model="profile"
-              :options="profiles"
-              option-label="name"
-              :placeholder="t('SelectionVectorEdit.profilePlaceholder')"
-            />
-          </div>
-        </template>
+        <template #content>
+            <DataTable :value="items" data-key="label" striped-rows scrollable scroll-height="400px" table-style="min-width: 50rem" class="col-span-full">
+                <template #empty>
+                    {{ t('SelectionVectorEdit.empty') }}
+                </template>
+                <template #loading>
+                    {{ t('SelectionVectorEdit.loading') }}
+                </template>
 
-        <Column
-          field="label"
-          :header="t('SelectionVectorEdit.name')"
-        />
-        <Column :header="t('SelectionVectorEdit.value')">
-          <template #body="slotProps">
-            <span @click="onEdit(slotProps.data)">{{ slotProps.data.value }}
-              <Button
-                icon="pi pi-pencil"
-                variant="text"
-                rounded
-                @click="onEdit(slotProps.data)"
-              />
-            </span>
-          </template>
-        </Column>
-      </DataTable>
-    </template>
-  </Card>
+                <template #header>
+                    <div class="flex flex-wrap items-end justify-end gap-2">
+                        <Select v-model="profile" :options="profiles" option-label="name" :placeholder="t('SelectionVectorEdit.profilePlaceholder')" />
+                    </div>
+                </template>
+
+                <Column field="label" :header="t('SelectionVectorEdit.name')" />
+                <Column :header="t('SelectionVectorEdit.value')">
+                    <template #body="slotProps">
+                        <span @click="onEdit(slotProps.data)"
+                            >{{ slotProps.data.value }}
+                            <Button icon="pi pi-pencil" variant="text" rounded @click="onEdit(slotProps.data)" />
+                        </span>
+                    </template>
+                </Column>
+            </DataTable>
+        </template>
+    </Card>
 </template>

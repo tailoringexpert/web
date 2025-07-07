@@ -11,8 +11,8 @@ export function useSelectionvectorDialog() {
     });
 
     const mutations = {
-        tailoring: (tailoring) => state.tailoring = toRef(tailoring),
-        levels: (levels) => state.levels = toRef(levels)
+        tailoring: (tailoring) => (state.tailoring = toRef(tailoring)),
+        levels: (levels) => (state.levels = toRef(levels))
     };
 
     const actions = {

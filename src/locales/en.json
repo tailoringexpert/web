@@ -6,6 +6,22 @@
     "close": "Close",
     "save": "Save",
 
+    "AppTopbar": {
+        "tooltip": {
+            "login": "login to use TailoringeXpert",
+            "logout": "Logout"
+        }
+    },
+
+    "Login": {
+        "login": {
+            "title": "Login",
+            "error": "Could not login"
+        },
+        "tooltip": {
+            "login": "Login"
+        }
+    },
     "Projects": {
         "project": "Project | Projects",
         "loading": "Loading projects. Please wait.",

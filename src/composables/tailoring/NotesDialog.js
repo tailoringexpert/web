@@ -8,8 +8,8 @@ export function useNotesDialog() {
     });
 
     const mutations = {
-        tailoring: (tailoring) => state.tailoring = toRef(tailoring),
-        notes: (notes) => state.notes = toRef(notes)
+        tailoring: (tailoring) => (state.tailoring = toRef(tailoring)),
+        notes: (notes) => (state.notes = toRef(notes))
     };
 
     const actions = {
@@ -42,15 +42,18 @@ export function useNotesDialog() {
 
             return new Promise((resolve, reject) => {
                 return api
-                   .post(url, { "note" : toValue(text) }, {
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded'
+                    .post(
+                        url,
+                        { note: toValue(text) },
+                        {
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded'
+                            }
                         }
-                    })
+                    )
 
                     .then(() => {
-                        actions.initialize()
-                            .then(() => resolve(state.notes));
+                        actions.initialize().then(() => resolve(state.notes));
                     })
                     .catch((error) => {
                         reject(error.data);

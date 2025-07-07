@@ -62,10 +62,7 @@ const selectionVector = computed(() => state.selectionvector);
 const onSelectionVectorModified = (payload) => {
     logger.debug('onSelectionVectorModified');
     mutations.selectionvector(payload.selectionVector);
-    onSuccess(
-        t('TailoringNew.editSelectionvector.title'),
-        t('TailoringNew.editSelectionvector.state.success')
-    );
+    onSuccess(t('TailoringNew.editSelectionvector.title'), t('TailoringNew.editSelectionvector.state.success'));
 };
 
 // step summary
@@ -74,10 +71,7 @@ const onCreate = () => {
     actions
         .create()
         .then(() => {
-            onSuccess(
-                t('TailoringNew.title'),
-                t('TailoringNew.state.success')
-            );
+            onSuccess(t('TailoringNew.title'), t('TailoringNew.state.success'));
             router.push({
                 name: 'project',
                 params: {
@@ -86,19 +80,16 @@ const onCreate = () => {
             });
         })
         .catch((error) => {
-            onError(
-                t('error'),
-                error.data
-            );
+            onError(t('error'), error.data);
         });
 };
 
 const onSuccess = (title, message) => {
-    emit("success", title, message);
+    emit('success', title, message);
 };
 
 const onError = (title, message) => {
-    emit("error", title, message);
+    emit('error', title, message);
 };
 
 // hooks
@@ -115,126 +106,52 @@ onBeforeMount(() => {
 </script>
 
 <template>
-  <div
-    class="card justify-center"
-    fluid
-  >
-    <Stepper
-      :value="step"
-      class="basis-[50rem]"
-    >
-      <StepList>
-        <Step :value="1">
-          {{ t('TailoringNew.catalog') }}
-        </Step>
-        <Step :value="2">
-          {{ t('TailoringNew.screeningsheet') }}
-        </Step>
-        <Step :value="3">
-          {{ t('TailoringNew.selectionvector') }}
-        </Step>
-        <Step :value="4">
-          {{ t('TailoringNew.summary') }}
-        </Step>
-      </StepList>
+    <div class="card justify-center" fluid>
+        <Stepper :value="step" class="basis-[50rem]">
+            <StepList>
+                <Step :value="1">
+                    {{ t('TailoringNew.catalog') }}
+                </Step>
+                <Step :value="2">
+                    {{ t('TailoringNew.screeningsheet') }}
+                </Step>
+                <Step :value="3">
+                    {{ t('TailoringNew.selectionvector') }}
+                </Step>
+                <Step :value="4">
+                    {{ t('TailoringNew.summary') }}
+                </Step>
+            </StepList>
 
-      <StepPanels>
-        <StepPanel
-          v-slot="{ activateCallback }"
-          :value="1"
-        >
-            <CatalogSelection
-                @catalog-select="onCatalogSelect"
-                @catalog-note="onNoteEdited"
-                @success="onSuccess"
-                @error="onError"
-            />
-            <div class="flex pt-6 justify-end">
-                <Button
-                    :label="t('TailoringNew.next')"
-                    icon="pi pi-arrow-right"
-                    icon-pos="right"
-                    @click="activateCallback(2)"
-                />
-            </div>
-        </StepPanel>
-        <StepPanel
-          v-slot="{ activateCallback }"
-          :value="2"
-        >
-            <ScreeningsheetUpload
-                @screeningsheet:upload="onScreeningsheetUpload"
-                @success="onSuccess"
-                @error="onError"
-            />
-            <div class="flex pt-6 justify-between">
-                <Button
-                    :label="t('TailoringNew.previous')"
-                    severity="secondary"
-                    icon="pi pi-arrow-left"
-                    @click="activateCallback(1)"
-                />
-                <Button
-                    :label="t('TailoringNew.next')"
-                    icon="pi pi-arrow-right"
-                    icon-pos="right"
-                    @click="activateCallback(3)"
-                />
-            </div>
-        </StepPanel>
-        <StepPanel
-          v-slot="{ activateCallback }"
-          :value="3"
-        >
-            <SelectionVectorEdit
-                :selection-vector="screeningsheet.selectionVector"
-                :project
-                @selectionvector-modified="onSelectionVectorModified"
-                @success="onSuccess"
-                @error="onError"
-            />
-            <div class="flex pt-6 justify-between">
-                <Button
-                    :label="t('TailoringNew.previous')"
-                    severity="secondary"
-                    icon="pi pi-arrow-left"
-                    @click="activateCallback(2)"
-                />
-                <Button
-                    :label="t('TailoringNew.next')"
-                    icon="pi pi-arrow-right"
-                    icon-pos="right"
-                    @click="activateCallback(4)"
-                />
-            </div>
-        </StepPanel>
-        <StepPanel
-          v-slot="{ activateCallback }"
-          :value="4"
-        >
-            <SelectionVectorComparison
-                :project
-                :selection-vector="screeningsheet.selectionVector"
-                :edited-selection-vector="selectionVector"
-                @success="onSuccess"
-                @error="onError"
-            />
-            <div class="flex pt-6 justify-between">
-                <Button
-                    :label="t('TailoringNew.previous')"
-                    severity="secondary"
-                    icon="pi pi-arrow-left"
-                    @click="activateCallback(3)"
-                />
-                <Button
-                    :label="t('TailoringNew.next')"
-                    icon="pi pi-arrow-right"
-                    icon-pos="right"
-                    @click="onCreate"
-                />
-            </div>
-        </StepPanel>
-      </StepPanels>
-    </Stepper>
-  </div>
+            <StepPanels>
+                <StepPanel v-slot="{ activateCallback }" :value="1">
+                    <CatalogSelection @catalog-select="onCatalogSelect" @catalog-note="onNoteEdited" @success="onSuccess" @error="onError" />
+                    <div class="flex pt-6 justify-end">
+                        <Button :label="t('TailoringNew.next')" icon="pi pi-arrow-right" icon-pos="right" @click="activateCallback(2)" />
+                    </div>
+                </StepPanel>
+                <StepPanel v-slot="{ activateCallback }" :value="2">
+                    <ScreeningsheetUpload @screeningsheet:upload="onScreeningsheetUpload" @success="onSuccess" @error="onError" />
+                    <div class="flex pt-6 justify-between">
+                        <Button :label="t('TailoringNew.previous')" severity="secondary" icon="pi pi-arrow-left" @click="activateCallback(1)" />
+                        <Button :label="t('TailoringNew.next')" icon="pi pi-arrow-right" icon-pos="right" @click="activateCallback(3)" />
+                    </div>
+                </StepPanel>
+                <StepPanel v-slot="{ activateCallback }" :value="3">
+                    <SelectionVectorEdit :selection-vector="screeningsheet.selectionVector" :project @selectionvector-modified="onSelectionVectorModified" @success="onSuccess" @error="onError" />
+                    <div class="flex pt-6 justify-between">
+                        <Button :label="t('TailoringNew.previous')" severity="secondary" icon="pi pi-arrow-left" @click="activateCallback(2)" />
+                        <Button :label="t('TailoringNew.next')" icon="pi pi-arrow-right" icon-pos="right" @click="activateCallback(4)" />
+                    </div>
+                </StepPanel>
+                <StepPanel v-slot="{ activateCallback }" :value="4">
+                    <SelectionVectorComparison :project :selection-vector="screeningsheet.selectionVector" :edited-selection-vector="selectionVector" @success="onSuccess" @error="onError" />
+                    <div class="flex pt-6 justify-between">
+                        <Button :label="t('TailoringNew.previous')" severity="secondary" icon="pi pi-arrow-left" @click="activateCallback(3)" />
+                        <Button :label="t('TailoringNew.next')" icon="pi pi-arrow-right" icon-pos="right" @click="onCreate" />
+                    </div>
+                </StepPanel>
+            </StepPanels>
+        </Stepper>
+    </div>
 </template>

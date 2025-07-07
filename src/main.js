@@ -5,14 +5,16 @@ import ConfirmationService from 'primevue/confirmationservice';
 import ToastService from 'primevue/toastservice';
 import VueLogger from 'vuejs3-logger';
 
+import { useMasterdata } from '@/composables/masterdata';
+
 import App from '@/App.vue';
 import router from '@/plugins/router';
 import store from '@/plugins/store';
 import api from '@/plugins/api';
-import i18n from '@/plugins/i18n'
+import i18n from '@/plugins/i18n';
 
 import '@/assets/styles/main.scss';
-import "@/assets/styles/main.css";
+import '@/assets/styles/main.css';
 
 const app = createApp(App);
 
@@ -30,16 +32,14 @@ app.provide('logger', app.config.globalProperties.$log);
 
 // store
 app.provide('store', store);
-store.mutations.tenant(window?.configs?.PAGE_APP_TENANT || APP_TENANT);
+store.mutations.tenant(window?.configs?.APP_TENANT || APP_TENANT);
+store.mutations.authRequired(window?.configs?.AUTH_REQUIRED || AUTH_REQUIRED);
 
 // i18n
 app.use(i18n);
 
 // router
 app.use(router);
-
-// axios
-app.config.globalProperties.$axios = api;
 
 // primevue
 app.use(PrimeVue, {
@@ -57,10 +57,6 @@ app.use(ConfirmationService);
 const origin = window.location.origin + '/api';
 api.get(origin).then((response) => {
     store.mutations.links(response.data._links);
-    api.get(response.data._links['selectionvector'].href).then((response) => {
-        store.mutations.selectionvectors(response.data._embedded.selectionVectorProfiles);
-        app.mount('#app');
-    });
+    useMasterdata().loadMasterdata();
+    app.mount('#app');
 });
-
-

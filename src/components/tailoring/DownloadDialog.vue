@@ -75,11 +75,11 @@ const onCloseSignature = () => {
 };
 
 const onSuccess = (title, message) => {
-    emit("success", title, message);
+    emit('success', title, message);
 };
 
 const onError = (title, message) => {
-    emit("error", title, message);
+    emit('error', title, message);
 };
 
 const onClose = () => {
@@ -90,80 +90,33 @@ const onClose = () => {
 </script>
 
 <template>
-  <SignatureDialog
-    :active="isSignature"
-    :signature
-    @success="onSuccess"
-    @error="onError"
-    @close:closed="onCloseSignature()"
-    @close:canceled="isSignature = false"
-  />
+    <SignatureDialog :active="isSignature" :signature @success="onSuccess" @error="onError" @close:closed="onCloseSignature()" @close:canceled="isSignature = false" />
 
-  <Dialog
-    :visible="active"
-    :header="t('DownloadDialog.title')"
-    :modal="true"
-    @update:visible="onClose"
-  >
-    <template #footer>
-      <Button
-        :label="$t('close')"
-        @click="onClose"
-      />
-      <Button
-        :label="$t('DownloadDialog.catalog')"
-        @click="onCatalog"
-      />
-      <Button
-        :label="$t('DownloadDialog.download')"
-        @click="onZip"
-      />
-    </template>
-
-    <DataTable
-      :value="signatures"
-      data-key="faculty"
-      striped-rows
-      scrollable
-      scroll-height="400px"
-      table-style="min-width: 50rem"
-    >
-      <template #loading>
-        {{ downloaddialog.loading }}
-      </template>
-
-      <Column
-        field="faculty"
-        :header="t('DownloadDialog.faculty')"
-      />
-      <Column
-        field="signee"
-        :header="t('DownloadDialog.signee')"
-      />
-      <Column
-        field="state"
-        :header="t('DownloadDialog.signatureState')"
-      />
-      <Column :header="t('DownloadDialog.applicable')">
-        <template #body="{ data }">
-          <i
-            class="pi"
-            :class="{ 'pi-check-circle text-green-500 ': data.applicable, 'pi-times-circle text-red-500': !data.applicable }"
-          />
+    <Dialog :visible="active" :header="t('DownloadDialog.title')" :modal="true" @update:visible="onClose">
+        <template #footer>
+            <Button :label="$t('close')" @click="onClose" />
+            <Button :label="$t('DownloadDialog.catalog')" @click="onCatalog" />
+            <Button :label="$t('DownloadDialog.download')" @click="onZip" />
         </template>
-      </Column>
-      <Column :header="t('DownloadDialog.action')">
-        <template #body="slotProps">
-          <Button
-            v-tooltip.bottom="t('DownloadDialog.tooltip.editSignature')"
-            variant="text"
-            icon="pi pi-pen-to-square"
-            severity="secondary"
-            rounded
-            @click="onEditSignature(slotProps.data)"
-          />
-        </template>
-      </Column>
-    </DataTable>
-  </Dialog>
+
+        <DataTable :value="signatures" data-key="faculty" striped-rows scrollable scroll-height="400px" table-style="min-width: 50rem">
+            <template #loading>
+                {{ downloaddialog.loading }}
+            </template>
+
+            <Column field="faculty" :header="t('DownloadDialog.faculty')" />
+            <Column field="signee" :header="t('DownloadDialog.signee')" />
+            <Column field="state" :header="t('DownloadDialog.signatureState')" />
+            <Column :header="t('DownloadDialog.applicable')">
+                <template #body="{ data }">
+                    <i class="pi" :class="{ 'pi-check-circle text-green-500 ': data.applicable, 'pi-times-circle text-red-500': !data.applicable }" />
+                </template>
+            </Column>
+            <Column :header="t('DownloadDialog.action')">
+                <template #body="slotProps">
+                    <Button v-tooltip.bottom="t('DownloadDialog.tooltip.editSignature')" variant="text" icon="pi pi-pen-to-square" severity="secondary" rounded @click="onEditSignature(slotProps.data)" />
+                </template>
+            </Column>
+        </DataTable>
+    </Dialog>
 </template>

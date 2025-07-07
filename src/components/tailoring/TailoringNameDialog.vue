@@ -50,62 +50,37 @@ const onSave = () => {
         .save(toValue(name))
         .then(() => {
             emit('close:close', toValue(name));
-            onSuccess(
-                t('TailoringNameDialog.title'),
-                t('TailoringNameDialog.state.success')
-            );
+            onSuccess(t('TailoringNameDialog.title'), t('TailoringNameDialog.state.success'));
         })
         .catch((error) => {
             logger.error(error);
-            onError(
-                t('TailoringNameDialog.title'),
-                t('TailoringNameDialog.state.error')
-            );
+            onError(t('TailoringNameDialog.title'), t('TailoringNameDialog.state.error'));
         });
 };
 
 const onSuccess = (title, message) => {
-    emit("success", title, message);
+    emit('success', title, message);
 };
 
 const onError = (title, message) => {
-    emit("error", title, message);
+    emit('error', title, message);
 };
-
 
 // hooks
 </script>
 
 <template>
-  <Dialog
-    :visible="active"
-    :header="t('TailoringNameDialog.title')"
-    :modal="true"
-    @update:visible="onClose"
-  >
-    <template #footer>
-      <Button
-        :label="t('close')"
-        @click="onClose"
-      />
-      <Button
-        :label="t('save')"
-        @click="onSave"
-      />
-    </template>
+    <Dialog :visible="active" :header="t('TailoringNameDialog.title')" :modal="true" @update:visible="onClose">
+        <template #footer>
+            <Button :label="t('close')" @click="onClose" />
+            <Button :label="t('save')" @click="onSave" />
+        </template>
 
-    <div class="grid grid-cols-12 gap-2">
-      <label
-        for="name"
-        class="flex items-center col-span-12 mb-2 md:col-span-2 md:mb-0"
-      >{{ t('TailoringNameDialog.name') }}</label>
-      <div class="col-span-12 md:col-span-10">
-        <InputText
-          id="name"
-          v-model="name"
-          type="text"
-        />
-      </div>
-    </div>
-  </Dialog>
+        <div class="grid grid-cols-12 gap-2">
+            <label for="name" class="flex items-center col-span-12 mb-2 md:col-span-2 md:mb-0">{{ t('TailoringNameDialog.name') }}</label>
+            <div class="col-span-12 md:col-span-10">
+                <InputText id="name" v-model="name" type="text" />
+            </div>
+        </div>
+    </Dialog>
 </template>

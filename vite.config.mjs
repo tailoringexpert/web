@@ -4,7 +4,7 @@ import Components from 'unplugin-vue-components/vite';
 import { PrimeVueResolver } from '@primevue/auto-import-resolver';
 import { fileURLToPath, URL } from 'node:url';
 import packageJson from './package.json';
-import tailwindcss from "@tailwindcss/vite";
+import tailwindcss from '@tailwindcss/vite';
 
 import vueDevTools from 'vite-plugin-vue-devtools';
 
@@ -13,9 +13,10 @@ export default ({ mode }) => {
 
     return defineConfig({
         define: {
+            AUTH_REQUIRED: JSON.parse(`"${process.env.VITE_AUTH_REQUIRED}"`.toLowerCase()),
             APP_TENANT: `"${process.env.VITE_APP_TENANT}"`,
             WEB_NAME: JSON.stringify(packageJson.name),
-            WEB_VERSION: JSON.stringify(packageJson.version),
+            WEB_VERSION: JSON.stringify(packageJson.version)
         },
         server: {
             port: 3000,

@@ -1,10 +1,12 @@
 <script setup>
-import { useRoute } from "vue-router";
-import { useLayout } from '@/layout/composables/layout';
+import { useRoute, useRouter } from 'vue-router';
 import { inject, computed, ref, reactive, watch } from 'vue';
-import AppFooter from './AppFooter.vue';
-import AppSidebar from './AppSidebar.vue';
-import AppTopbar from './AppTopbar.vue';
+
+import AppFooter from '@/layout/AppFooter.vue';
+import AppSidebar from '@/layout/AppSidebar.vue';
+import AppTopbar from '@/layout/AppTopbar.vue';
+import { useLayout } from '@/layout/composables/layout';
+
 import { useConfirm } from 'primevue/useconfirm';
 import { useToast } from 'primevue/usetoast';
 import { useI18n } from 'vue-i18n';
@@ -17,8 +19,6 @@ const blocked = computed(() => store.state.loading);
 const { t } = useI18n();
 const confirm = useConfirm();
 const toast = useToast();
-
-
 
 const { layoutConfig, layoutState, isSidebarActive } = useLayout();
 
@@ -69,18 +69,14 @@ function isOutsideClicked(event) {
     return !(sidebarEl.isSameNode(event.target) || sidebarEl.contains(event.target) || topbarEl.isSameNode(event.target) || topbarEl.contains(event.target));
 }
 
-const onSuccess = (title, message) => {
-    console.log("onSuccess");
-    toast.add({
-        severity: 'success',
-        summary: title,
-        detail: message,
-        life: 3000
-    });
-}
+watch(
+    () => store.state.toast,
+    (newValue, oldValue) => onWarn('title', newValue.summary),
+    { deep: true }
+);
 
 const onError = (title, message) => {
-    console.log("onError");
+    console.log('onError');
     confirm.require({
         header: title,
         message: message,
@@ -93,9 +89,30 @@ const onError = (title, message) => {
             severity: 'secondary'
         }
     });
-}
+};
+
+const onWarn = (title, message) => {
+    console.log('onWarn');
+    toast.add({
+        severity: 'warn',
+        summary: title,
+        detail: message,
+        life: 3000
+    });
+};
+
+const onSuccess = (title, message) => {
+    console.log('onSuccess');
+    toast.add({
+        severity: 'success',
+        summary: title,
+        detail: message,
+        life: 3000
+    });
+};
 
 const route = useRoute();
+const router = useRouter();
 const { get } = useHttp();
 const help = reactive({
     state: false,
@@ -103,11 +120,11 @@ const help = reactive({
 });
 
 const onHelp = (event) => {
-    onOpen("help/" + route.name + ".html");
-}
+    onOpen('help/' + route.name + '.html');
+};
 
 const onOpen = (payload) => {
-    get("/static", payload)
+    get('/static', payload)
         .then((response) => {
             help.title = route.name;
             help.text = response;
@@ -116,12 +133,26 @@ const onOpen = (payload) => {
         .catch((error) => {
             store.mutations.loading(false);
         });
-}
+};
+
+const onLogin = () => {
+    console.log('onLogin');
+    route.push({
+        name: 'login'
+    });
+};
+
+const onLogout = () => {
+    console.log('onLogout');
+    store.mutations.logout();
+    onSuccess('Logout', 'Successfully logged out');
+    router.push({ name: 'projects' });
+};
 
 const webVersion = computed(() => WEB_VERSION);
 const onAbout = () => {
     confirm.require({
-        header: "About",
+        header: 'About',
         message: webVersion,
         rejectProps: {
             style: 'visibility:hidden'
@@ -131,49 +162,29 @@ const onAbout = () => {
             severity: 'secondary'
         }
     });
-}
+};
 </script>
 
 <template>
-  <div
-    class="layout-wrapper"
-    :class="containerClass"
-  >
-    <app-topbar
-      @help="onHelp"
-      @open="onOpen"
-    />
-    <app-sidebar
-      @help="onHelp"
-      @about="onAbout"
-    />
-    <div class="layout-main-container">
-      <div class="layout-main">
-        <router-view @success="onSuccess" @error="onError" />
-      </div>
+    <div class="layout-wrapper" :class="containerClass">
+        <app-topbar @help="onHelp" @open="onOpen" @logout="onLogout" @login="onLogin" />
+        <app-sidebar @help="onHelp" @about="onAbout" />
+        <div class="layout-main-container">
+            <div class="layout-main">
+                <router-view @success="onSuccess" @error="onError" />
+            </div>
+        </div>
+        <app-footer @open="onOpen" />
     </div>
-    <app-footer @open="onOpen" />
-  </div>
 
-  <BlockUI
-    :blocked="blocked"
-    full-screen
-  >
-    <ProgressSpinner
-      v-if="blocked"
-      fill="transparent"
-      style="position: fixed; top: 50%; left: 50%; z-index: 10000"
-    />
-  </BlockUI>
+    <BlockUI :blocked="blocked" full-screen>
+        <ProgressSpinner v-if="blocked" fill="transparent" style="position: fixed; top: 50%; left: 50%; z-index: 10000" />
+    </BlockUI>
 
-  <ConfirmDialog />
-  <Toast />
+    <ConfirmDialog />
+    <Toast />
 
-  <Drawer
-    v-model:visible="help.state"
-    position="bottom"
-    style="height: auto"
-  >
-    <p v-html="help.text" />
-  </Drawer>
+    <Drawer v-model:visible="help.state" position="bottom" style="height: auto">
+        <p v-html="help.text" />
+    </Drawer>
 </template>

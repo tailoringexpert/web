@@ -7,7 +7,7 @@ export function useNameDialog() {
     });
 
     const mutations = {
-        tailoring: (tailoring) => state.tailoring = toRef(tailoring)
+        tailoring: (tailoring) => (state.tailoring = toRef(tailoring))
     };
 
     const actions = {
@@ -19,11 +19,15 @@ export function useNameDialog() {
 
             return new Promise((resolve, reject) => {
                 return api
-                    .put(url, { "name" : name }, {
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded'
+                    .put(
+                        url,
+                        { name: name },
+                        {
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded'
+                            }
                         }
-                    })
+                    )
                     .then((response) => {
                         mutations.tailoring(response.data);
                         resolve(response.data);

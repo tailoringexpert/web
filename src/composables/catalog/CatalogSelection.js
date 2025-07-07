@@ -14,9 +14,9 @@ export function useCatalogSelection() {
     });
 
     const mutations = {
-        catalogs: (catalogs) => state.catalogs = toRef(catalogs),
-        catalog: (catalog) => state.catalog = toRef(catalog),
-        note: (note) =>  state.note = toRef(note)
+        catalogs: (catalogs) => (state.catalogs = toRef(catalogs)),
+        catalog: (catalog) => (state.catalog = toRef(catalog)),
+        note: (note) => (state.note = toRef(note))
     };
 
     const actions = {

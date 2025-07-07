@@ -57,36 +57,19 @@ const items = computed(() => state.comparedSelectionvectors);
 </script>
 
 <template>
-  <Card>
-    <template #title>
-      <div class="flex items-center justify-left mb-0">
-        <span>{{ t('SelectionVectorComparison.project') }}: &nbsp;</span><span>{{ project }}</span>
-      </div>
-    </template>
+    <Card>
+        <template #title>
+            <div class="flex items-center justify-left mb-0">
+                <span>{{ t('SelectionVectorComparison.project') }}: &nbsp;</span><span>{{ project }}</span>
+            </div>
+        </template>
 
-    <template #content>
-      <DataTable
-        :value="items"
-        data-key="label"
-        striped-rows
-        scrollable
-        scroll-height="400px"
-        table-style="min-width: 50rem"
-        class="col-span-full"
-      >
-        <Column
-          field="label"
-          :header="t('SelectionVectorComparison.name')"
-        />
-        <Column
-          field="calculated"
-          :header="t('SelectionVectorComparison.calculatedSelectionvector')"
-        />
-        <Column
-          field="modified"
-          :header="t('SelectionVectorComparison.appliedSelectionvector')"
-        />
-      </DataTable>
-    </template>
-  </Card>
+        <template #content>
+            <DataTable :value="items" data-key="label" striped-rows scrollable scroll-height="400px" table-style="min-width: 50rem" class="col-span-full">
+                <Column field="label" :header="t('SelectionVectorComparison.name')" />
+                <Column field="calculated" :header="t('SelectionVectorComparison.calculatedSelectionvector')" />
+                <Column field="modified" :header="t('SelectionVectorComparison.appliedSelectionvector')" />
+            </DataTable>
+        </template>
+    </Card>
 </template>

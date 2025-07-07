@@ -79,16 +79,10 @@ const onState = (tailoring) => {
             actions
                 .updateState(tailoring)
                 .then(() => {
-                    onSuccess(
-                        t('Project.updateState.state.title'),
-                        t('Project.updateState.state.success')
-                    );
+                    onSuccess(t('Project.updateState.state.title'), t('Project.updateState.state.success'));
                 })
                 .catch(() => {
-                    onError(
-                        t('Project.updateState.title'),
-                        t('Project.updateState.error')
-                    );
+                    onError(t('Project.updateState.title'), t('Project.updateState.error'));
                 });
         }
     });
@@ -96,14 +90,9 @@ const onState = (tailoring) => {
 
 const onBaseCatalog = (tailoring) => {
     logger.debug('onBaseCatalog');
-    actions
-        .getBaseCatalog(tailoring)
-        .catch(() => {
-            onError(
-                t('Project.downloadBasecatalog.title'),
-                new TextDecoder('utf-8').decode(new Uint8Array(error.data))
-            );
-        });
+    actions.getBaseCatalog(tailoring).catch(() => {
+        onError(t('Project.downloadBasecatalog.title'), new TextDecoder('utf-8').decode(new Uint8Array(error.data)));
+    });
 };
 
 const onEdit = (tailoring) => {
@@ -138,16 +127,10 @@ const onDelete = (tailoring) => {
             actions
                 .delete(tailoring)
                 .then(() => {
-                    onSuccess(
-                        t('Project.deleteTailoring.title'),
-                        t('Project.deleteTailoring.state.success')
-                    );
+                    onSuccess(t('Project.deleteTailoring.title'), t('Project.deleteTailoring.state.success'));
                 })
                 .catch((error) => {
-                    onError(
-                        t('Project.deleteTailoring.title'),
-                        t('Project.deleteTailoring.state.error')
-                    );
+                    onError(t('Project.deleteTailoring.title'), t('Project.deleteTailoring.state.error'));
                 });
         }
     });
@@ -190,13 +173,12 @@ const onDialog = (name, tailoring) => {
     data.value = tailoring;
 };
 
-
 const onSuccess = (title, message) => {
-    emit("success", title, message);
+    emit('success', title, message);
 };
 
 const onError = (title, message) => {
-    emit("error", title, message);
+    emit('error', title, message);
 };
 
 // hooks
@@ -226,241 +208,95 @@ const onUpdatedName = (name) => {
 </script>
 
 <template>
-  <TailoringNameDialog
-    :tailoring="data"
-    :active="dialog === 'name'"
-    @success="onSuccess"
-    @error="onError"
-    @close:cancel="dialog = 'none'"
-    @close:close="initialize"
-  />
+    <TailoringNameDialog :tailoring="data" :active="dialog === 'name'" @success="onSuccess" @error="onError" @close:cancel="dialog = 'none'" @close:close="initialize" />
 
-  <DownloadDialog
-    :tailoring="data"
-    :active="dialog === 'download'"
-    @success="onSuccess"
-    @error="onError"
-    @close:closed="dialog = 'none'"
-  />
+    <DownloadDialog :tailoring="data" :active="dialog === 'download'" @success="onSuccess" @error="onError" @close:closed="dialog = 'none'" />
 
-  <ScreeningsheetDialog
-    :screeningsheet="data"
-    :active="dialog === 'screeningsheet'"
-    @success="onSuccess"
-    @error="onError"
-    @close:closed="dialog = 'none'"
-  />
+    <ScreeningsheetDialog :screeningsheet="data" :active="dialog === 'screeningsheet'" @success="onSuccess" @error="onError" @close:closed="dialog = 'none'" />
 
-  <SelectionVectorDialog
-    :tailoring="data"
-    :active="dialog === 'selectionvector'"
-    @success="onSuccess"
-    @error="onError"
-    @close:closed="dialog = 'none'"
-  />
+    <SelectionVectorDialog :tailoring="data" :active="dialog === 'selectionvector'" @success="onSuccess" @error="onError" @close:closed="dialog = 'none'" />
 
-  <AttachmentsDialog
-    :tailoring="data"
-    :active="dialog === 'attachments'"
-    @success="onSuccess"
-    @error="onError"
-    @close:closed="dialog = 'none'"
-  />
-  <ImportDialog
-    :tailoring="data"
-    :active="dialog === 'import'"
-    @success="onSuccess"
-    @error="onError"
-    @close:closed="dialog = 'none'"
-  />
+    <AttachmentsDialog :tailoring="data" :active="dialog === 'attachments'" @success="onSuccess" @error="onError" @close:closed="dialog = 'none'" />
+    <ImportDialog :tailoring="data" :active="dialog === 'import'" @success="onSuccess" @error="onError" @close:closed="dialog = 'none'" />
 
-  <NotesDialog
-    :tailoring="data"
-    :active="dialog === 'notes'"
-    @success="onSuccess"
-    @error="onError"
-    @close:closed="dialog = 'none'"
-  />
+    <NotesDialog :tailoring="data" :active="dialog === 'notes'" @success="onSuccess" @error="onError" @close:closed="dialog = 'none'" />
 
-  <Card>
-    <template #title>
-      <div class="flex items-center justify-left mb-0">
-        <span>{{ t('Project.project', 1) }}: &nbsp;</span><span>{{ project.name }}</span>
-        <Button
-          v-tooltip.bottom="t('Project.tooltip.openScreeningsheet')"
-          variant="text"
-          icon="pi pi-id-card"
-          severity="secondary"
-          rounded
-          @click="onScreeningsheet(project)"
-        />
-      </div>
-    </template>
-
-    <template #content>
-      <DataTable
-        :value="project.tailorings"
-        data-key="name"
-        striped-rows
-        table-style="min-width: 50rem"
-        class="col-span-full"
-        paginator
-        :rows="10"
-        :rows-per-page-options="[10, 15, 20, 25]"
-        paginator-template="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
-        current-page-report-template="{first} to {last} of {totalRecords}"
-      >
-        <template #empty>
-          No tailoring found.
-        </template>
-        <template #loading>
-          {{ $t('Project.loading') }}
+    <Card>
+        <template #title>
+            <div class="flex items-center justify-left mb-0">
+                <span>{{ t('Project.project', 1) }}: &nbsp;</span><span>{{ project.name }}</span>
+                <Button v-tooltip.bottom="t('Project.tooltip.openScreeningsheet')" variant="text" icon="pi pi-id-card" severity="secondary" rounded @click="onScreeningsheet(project)" />
+            </div>
         </template>
 
-        <template #header>
-          <div class="flex flex-wrap items-center justify-between gap-2">
-            <span class="text-xl font-bold">{{ $t('Project.tailoring') }}</span>
-            <Button
-              v-tooltip.bottom="t('Project.tooltip.newTailoring')"
-              icon="pi pi-plus"
-              rounded
-              raised
-              @click="onNew()"
-            />
-          </div>
-        </template>
+        <template #content>
+            <DataTable
+                :value="project.tailorings"
+                data-key="name"
+                striped-rows
+                table-style="min-width: 50rem"
+                class="col-span-full"
+                paginator
+                :rows="10"
+                :rows-per-page-options="[10, 15, 20, 25]"
+                paginator-template="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
+                current-page-report-template="{first} to {last} of {totalRecords}"
+            >
+                <template #empty> No tailoring found. </template>
+                <template #loading>
+                    {{ $t('Project.loading') }}
+                </template>
 
-        <Column :header="t('Project.name')">
-          <template #body="slotProps">
-            <span @click="onName(slotProps.data)">{{ slotProps.data.name }}
-              <Button
-                v-tooltip.bottom="t('Project.tooltip.changeName')"
-                icon="pi pi-pencil"
-                variant="text"
-                rounded
-                @click="onName(slotProps.data)"
-              />
-            </span>
-          </template>
-        </Column>
-        <Column
-          field="phases"
-          :header="t('Project.phases')"
-        >
-          <template #body="slotProps">
-            <span>{{ slotProps.data.phases.join(', ') }}</span>
-          </template>
-        </Column>
-        <Column :header="t('Project.state')">
-          <template #body="slotProps">
-            <span @click="onState(slotProps.data)">{{ slotProps.data.state }}
-              <Button
-                v-tooltip.bottom="t('Project.tooltip.updateState')"
-                icon="pi pi-pencil"
-                variant="text"
-                rounded
-                @click="onState(slotProps.data)"
-              />
-            </span>
-          </template>
-        </Column>
-        <Column
-          field="catalogVersion"
-          :header="t('Project.catalog')"
-        >
-          <template #body="slotProps">
-            <span @click="onBaseCatalog(slotProps.data)">{{ slotProps.data.catalogVersion }}
-              <Button
-                v-tooltip.bottom="t('Project.tooltip.downloadBasecatalog')"
-                icon="pi pi-pencil"
-                variant="text"
-                rounded
-                @click="onBaseCatalog(slotProps.data)"
-              />
-            </span>
-          </template>
-        </Column>
-        <Column :header="t('Project.action')">
-          <template #body="slotProps">
-            <Button
-              v-tooltip.bottom="t('Project.tooltip.editRequirements')"
-              :disabled="!isTailoringEditable(slotProps.data)"
-              variant="text"
-              icon="pi pi-pen-to-square"
-              severity="secondary"
-              rounded
-              @click="onEdit(slotProps.data)"
-            />
-            <Button
-              v-tooltip.bottom="t('Project.tooltip.downloadDocuments')"
-              variant="text"
-              icon="pi pi-download"
-              severity="secondary"
-              rounded
-              @click="onDownload(slotProps.data)"
-            />
-            <Button
-              v-tooltip.bottom="t('Project.tooltip.compareTailoring')"
-              :disabled="!isTailoringEditable(slotProps.data)"
-              variant="text"
-              icon="pi pi-verified"
-              severity="secondary"
-              rounded
-              @click="onCompare(slotProps.data)"
-            />
-            <Button
-              v-tooltip.bottom="t('Project.tooltip.openScreeningsheet')"
-              variant="text"
-              icon="pi pi-id-card"
-              severity="secondary"
-              rounded
-              @click="onScreeningsheet(slotProps.data)"
-            />
-            <Button
-              v-tooltip.bottom="t('Project.tooltip.openSelectionvector')"
-              variant="text"
-              icon="pi pi-lightbulb"
-              severity="secondary"
-              rounded
-              @click="onSelectionvector(slotProps.data)"
-            />
-            <Button
-              v-tooltip.bottom="t('Project.tooltip.openAttachments')"
-              variant="text"
-              icon="pi pi-paperclip"
-              severity="secondary"
-              rounded
-              @click="onAttachments(slotProps.data)"
-            />
-            <Button
-              v-tooltip.bottom="t('Project.tooltip.importRequirements')"
-              variant="text"
-              :disabled="!isTailoringEditable(slotProps.data)"
-              icon="pi pi-file-excel"
-              severity="secondary"
-              rounded
-              @click="onImport(slotProps.data)"
-            />
-            <Button
-              v-tooltip.bottom="t('Project.tooltip.openNotes')"
-              variant="text"
-              icon="pi pi-comments"
-              severity="secondary"
-              rounded
-              @click="onNotes(slotProps.data)"
-            />
-            <Button
-              v-tooltip.bottom="t('Project.tooltip.deleteTailoring')"
-              :disabled="!isTailoringDeletable(slotProps.data)"
-              variant="text"
-              icon="pi pi-trash"
-              severity="secondary"
-              rounded
-              @click="onDelete(slotProps.data)"
-            />
-          </template>
-        </Column>
-      </DataTable>
-    </template>
-  </Card>
+                <template #header>
+                    <div class="flex flex-wrap items-center justify-between gap-2">
+                        <span class="text-xl font-bold">{{ $t('Project.tailoring') }}</span>
+                        <Button v-tooltip.bottom="t('Project.tooltip.newTailoring')" icon="pi pi-plus" rounded raised @click="onNew()" />
+                    </div>
+                </template>
+
+                <Column :header="t('Project.name')">
+                    <template #body="slotProps">
+                        <span @click="onName(slotProps.data)"
+                            >{{ slotProps.data.name }}
+                            <Button v-tooltip.bottom="t('Project.tooltip.changeName')" icon="pi pi-pencil" variant="text" rounded @click="onName(slotProps.data)" />
+                        </span>
+                    </template>
+                </Column>
+                <Column field="phases" :header="t('Project.phases')">
+                    <template #body="slotProps">
+                        <span>{{ slotProps.data.phases.join(', ') }}</span>
+                    </template>
+                </Column>
+                <Column :header="t('Project.state')">
+                    <template #body="slotProps">
+                        <span @click="onState(slotProps.data)"
+                            >{{ slotProps.data.state }}
+                            <Button v-tooltip.bottom="t('Project.tooltip.updateState')" icon="pi pi-pencil" variant="text" rounded @click="onState(slotProps.data)" />
+                        </span>
+                    </template>
+                </Column>
+                <Column field="catalogVersion" :header="t('Project.catalog')">
+                    <template #body="slotProps">
+                        <span @click="onBaseCatalog(slotProps.data)"
+                            >{{ slotProps.data.catalogVersion }}
+                            <Button v-tooltip.bottom="t('Project.tooltip.downloadBasecatalog')" icon="pi pi-pencil" variant="text" rounded @click="onBaseCatalog(slotProps.data)" />
+                        </span>
+                    </template>
+                </Column>
+                <Column :header="t('Project.action')">
+                    <template #body="slotProps">
+                        <Button v-tooltip.bottom="t('Project.tooltip.editRequirements')" :disabled="!isTailoringEditable(slotProps.data)" variant="text" icon="pi pi-pen-to-square" severity="secondary" rounded @click="onEdit(slotProps.data)" />
+                        <Button v-tooltip.bottom="t('Project.tooltip.downloadDocuments')" variant="text" icon="pi pi-download" severity="secondary" rounded @click="onDownload(slotProps.data)" />
+                        <Button v-tooltip.bottom="t('Project.tooltip.compareTailoring')" :disabled="!isTailoringEditable(slotProps.data)" variant="text" icon="pi pi-verified" severity="secondary" rounded @click="onCompare(slotProps.data)" />
+                        <Button v-tooltip.bottom="t('Project.tooltip.openScreeningsheet')" variant="text" icon="pi pi-id-card" severity="secondary" rounded @click="onScreeningsheet(slotProps.data)" />
+                        <Button v-tooltip.bottom="t('Project.tooltip.openSelectionvector')" variant="text" icon="pi pi-lightbulb" severity="secondary" rounded @click="onSelectionvector(slotProps.data)" />
+                        <Button v-tooltip.bottom="t('Project.tooltip.openAttachments')" variant="text" icon="pi pi-paperclip" severity="secondary" rounded @click="onAttachments(slotProps.data)" />
+                        <Button v-tooltip.bottom="t('Project.tooltip.importRequirements')" variant="text" :disabled="!isTailoringEditable(slotProps.data)" icon="pi pi-file-excel" severity="secondary" rounded @click="onImport(slotProps.data)" />
+                        <Button v-tooltip.bottom="t('Project.tooltip.openNotes')" variant="text" icon="pi pi-comments" severity="secondary" rounded @click="onNotes(slotProps.data)" />
+                        <Button v-tooltip.bottom="t('Project.tooltip.deleteTailoring')" :disabled="!isTailoringDeletable(slotProps.data)" variant="text" icon="pi pi-trash" severity="secondary" rounded @click="onDelete(slotProps.data)" />
+                    </template>
+                </Column>
+            </DataTable>
+        </template>
+    </Card>
 </template>

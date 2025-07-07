@@ -39,24 +39,12 @@ onBeforeMount(() => initialize());
 </script>
 
 <template>
-  <div class="card flex flex-col gap-4">
-    <Select
-      v-model="catalog.project"
-      :options="catalogs"
-      option-label="version"
-      option-value="project"
-      :placeholder="t('CatalogSelection.placeholder')"
-      class="w-full md:w-56"
-    />
+    <div class="card flex flex-col gap-4">
+        <Select v-model="catalog.project" :options="catalogs" option-label="version" option-value="project" :placeholder="t('CatalogSelection.placeholder')" class="w-full md:w-56" />
 
-    <div class="flex flex-wrap">
-      <label for="note">{{ t('CatalogSelection.note') }}</label>
-      <Textarea
-        id="note"
-        rows="4"
-        fluid
-        @blur="onNoteUpdate"
-      />
+        <div class="flex flex-wrap">
+            <label for="note">{{ t('CatalogSelection.note') }}</label>
+            <Textarea id="note" rows="4" fluid @blur="onNoteUpdate" />
+        </div>
     </div>
-  </div>
 </template>

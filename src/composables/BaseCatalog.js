@@ -13,8 +13,8 @@ export function useBaseCatalog() {
     });
 
     const mutations = {
-        catalogs: (catalogs) => state.catalogs = toRef(catalogs),
-        conversionLink: (conversionLink) => state.conversionLink = toRef(conversionLink)
+        catalogs: (catalogs) => (state.catalogs = toRef(catalogs)),
+        conversionLink: (conversionLink) => (state.conversionLink = toRef(conversionLink))
     };
 
     const actions = {

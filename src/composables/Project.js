@@ -23,8 +23,8 @@ export function useProject() {
     };
 
     const mutations = {
-        project: (project) => state.project = toRef(project),
-        tailoring: (tailoring) => state.tailoring = toRef(tailoring)
+        project: (project) => (state.project = toRef(project)),
+        tailoring: (tailoring) => (state.tailoring = toRef(tailoring))
     };
 
     const actions = {

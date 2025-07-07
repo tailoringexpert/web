@@ -4,8 +4,15 @@ import api from '@/plugins/api';
 import store from '@/plugins/store';
 
 // fallback
-const selectionvector = {
+const tenantDefaults = {
     tenant: {
+        Login: {
+            title: 'Welcome to TailoringeXpert',
+            subTitle: 'Sign in to continue',
+            username: 'Username',
+            password: 'Password',
+            login: 'Sign In'
+        },
         selectionvector: {
             A: 'Product assurance',
             Q: 'Quality assurance',
@@ -26,7 +33,7 @@ const selectionvector = {
 };
 
 const get = (locales) => {
-    var tenant =  window?.configs?.PAGE_APP_TENANT || APP_TENANT;
+    var tenant = window?.configs?.PAGE_APP_TENANT || APP_TENANT;
     console.log('loading translations for ' + tenant);
 
     const messages = {};
@@ -38,21 +45,20 @@ const get = (locales) => {
             if (matched && matched.length > 1) {
                 const key = file.split('.')[0];
                 let bundle = {};
-                api
-                    .get(window.location.origin + '/i18n/' + tenant + '/' + file)
+                api.get(window.location.origin + '/static/' + tenant + '/i18n/' + file)
                     .then((response) => {
                         Object.assign(bundle, current, response.data);
                         messages[key] = bundle;
                     })
                     .catch((error) => {
-                        Object.assign(bundle, selectionvector);
+                        Object.assign(bundle, current, tenantDefaults);
                         messages[key] = bundle;
                     });
             }
         });
     }
     return messages;
-}
+};
 
 const systemLocales = import.meta.glob('@/locales/*.json');
 const instance = createI18n({
@@ -62,7 +68,6 @@ const instance = createI18n({
     fallbackLocale: 'en',
     globalInjection: true,
     messages: get(systemLocales)
-
 });
 
 export default instance;

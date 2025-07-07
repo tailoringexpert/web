@@ -61,7 +61,7 @@ const onDownload = () => {
 };
 
 const onError = (title, message) => {
-    emit("error", title, message);
+    emit('error', title, message);
 };
 
 const onClose = () => {
@@ -72,89 +72,46 @@ const onClose = () => {
 </script>
 
 <template>
-  <Dialog
-    :visible="active"
-    :header="t('ScreeningsheetDialog.title')"
-    :modal="true"
-    @update:visible="onClose"
-  >
+    <Dialog :visible="active" :header="t('ScreeningsheetDialog.title')" :modal="true" @update:visible="onClose">
+        <template #header>
+            <div class="flex items-center justify-left mb-0">
+                <span class="p-dialog-title">{{ t('ScreeningsheetDialog.title') }}: &nbsp;</span>
+                <Button v-tooltip.bottom="t('ScreeningsheetDialog.tooltip.download')" variant="text" icon="pi pi-download" severity="secondary" rounded @click="onDownload" />
+            </div>
+        </template>
 
-    <template #header>
-        <div class="flex items-center justify-left mb-0">
-            <span class="p-dialog-title">{{ t('ScreeningsheetDialog.title') }}: &nbsp;</span>
-            <Button
-                v-tooltip.bottom="t('ScreeningsheetDialog.tooltip.download')"
-                variant="text"
-                icon="pi pi-download"
-                severity="secondary"
-                rounded
-                @click="onDownload"
-            />
-        </div>
-    </template>
+        <template #footer>
+            <Button :label="$t('close')" @click="onClose" />
+        </template>
 
+        <Tabs value="1">
+            <TabList>
+                <Tab value="1">
+                    {{ $t('ScreeningsheetDialog.parameter') }}
+                </Tab>
+                <Tab value="2">
+                    {{ $t('ScreeningsheetDialog.calculatedSelectionvector') }}
+                </Tab>
+            </TabList>
 
-    <template #footer>
-      <Button
-        :label="$t('close')"
-        @click="onClose"
-      />
-    </template>
+            <TabPanels>
+                <TabPanel value="1">
+                    <DataTable :value="screeningSheet.parameters" data-key="label" striped-rows scrollable scroll-height="400px" table-style="min-width: 50rem">
+                        <template #loading>
+                            {{ t('ScreeningsheetDialog.loading') }}
+                        </template>
 
-    <Tabs value="1">
-      <TabList>
-        <Tab value="1">
-          {{ $t('ScreeningsheetDialog.parameter') }}
-        </Tab>
-        <Tab value="2">
-          {{ $t('ScreeningsheetDialog.calculatedSelectionvector') }}
-        </Tab>
-      </TabList>
-
-      <TabPanels>
-        <TabPanel value="1">
-          <DataTable
-            :value="screeningSheet.parameters"
-            data-key="label"
-            striped-rows
-            scrollable
-            scroll-height="400px"
-            table-style="min-width: 50rem"
-          >
-            <template #loading>
-              {{ t('ScreeningsheetDialog.loading') }}
-            </template>
-
-            <Column
-              field="label"
-              :header="t('ScreeningsheetDialog.name')"
-            />
-            <Column
-              field="value"
-              :header="t('ScreeningsheetDialog.value')"
-            />
-          </DataTable>
-        </TabPanel>
-        <TabPanel value="2">
-          <DataTable
-            :value="selectionVectorParameter"
-            data-key="label"
-            striped-rows
-            scrollable
-            scroll-height="400px"
-            table-style="min-width: 50rem"
-          >
-            <Column
-              field="label"
-              :header="t('ScreeningsheetDialog.parameter')"
-            />
-            <Column
-              field="value"
-              :header="t('ScreeningsheetDialog.value')"
-            />
-          </DataTable>
-        </TabPanel>
-      </TabPanels>
-    </Tabs>
-  </Dialog>
+                        <Column field="label" :header="t('ScreeningsheetDialog.name')" />
+                        <Column field="value" :header="t('ScreeningsheetDialog.value')" />
+                    </DataTable>
+                </TabPanel>
+                <TabPanel value="2">
+                    <DataTable :value="selectionVectorParameter" data-key="label" striped-rows scrollable scroll-height="400px" table-style="min-width: 50rem">
+                        <Column field="label" :header="t('ScreeningsheetDialog.parameter')" />
+                        <Column field="value" :header="t('ScreeningsheetDialog.value')" />
+                    </DataTable>
+                </TabPanel>
+            </TabPanels>
+        </Tabs>
+    </Dialog>
 </template>

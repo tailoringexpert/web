@@ -36,7 +36,7 @@ export function useHttp() {
     };
 
     const get = (path, file) => {
-        const url =  window.location.origin + path + "/" + store.state.tenant + "/" + file;
+        const url = window.location.origin + path + '/' + store.state.tenant + '/' + file;
         if (url == null) {
             return Promise.resolve();
         }
@@ -51,8 +51,7 @@ export function useHttp() {
                     reject(error.data);
                 });
         });
-    }
-
+    };
 
     return {
         download,

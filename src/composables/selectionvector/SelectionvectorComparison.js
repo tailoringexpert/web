@@ -11,13 +11,13 @@ export function useSelectionvectorComparison() {
     });
 
     const mutations = {
-        calculatedSelectionvector: (calculatedSelectionvector) => state.calculatedSelectionvector = toRef(calculatedSelectionvector),
+        calculatedSelectionvector: (calculatedSelectionvector) => (state.calculatedSelectionvector = toRef(calculatedSelectionvector)),
         editedSelectionvector: (editedSelectionvector) => {
             if (editedSelectionvector) {
                 state.editedSelectionvector = toRef(editedSelectionvector);
             }
         },
-        comparedSelectionvectors: (comparedSelectionvectors) => state.comparedSelectionvectors = toRef(comparedSelectionvectors)
+        comparedSelectionvectors: (comparedSelectionvectors) => (state.comparedSelectionvectors = toRef(comparedSelectionvectors))
     };
 
     const actions = {

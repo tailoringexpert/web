@@ -55,26 +55,20 @@ const onUpload = () => {
         .importRequirements(toValue(file))
         .then(() => {
             emit('close:closed');
-            onSuccess(
-                t('ImportDialog.title'),
-                t('ImportDialog.state.success')
-            );
+            onSuccess(t('ImportDialog.title'), t('ImportDialog.state.success'));
         })
         .catch((error) => {
             console.error(error);
-            onSuccess(
-                t('ImportDialog.title'),
-                t('ImportDialog.state.error')
-            );
+            onSuccess(t('ImportDialog.title'), t('ImportDialog.state.error'));
         });
 };
 
 const onSuccess = (title, message) => {
-    emit("success", title, message);
+    emit('success', title, message);
 };
 
 const onError = (title, message) => {
-    emit("error", title, message);
+    emit('error', title, message);
 };
 
 const onClose = () => {
@@ -85,36 +79,17 @@ const onClose = () => {
 </script>
 
 <template>
-  <Dialog
-    :visible="active"
-    :header="t('ImportDialog.title')"
-    :modal="true"
-    @update:visible="onClose"
-  >
-    <template #footer>
-      <Button
-        :label="$t('close')"
-        @click="onClose"
-      />
-    </template>
-
-    <div
-      v-if="active"
-      class="flex flex-col gap-1"
-    >
-      <FileUpload
-        mode="advanced"
-        custom-upload="true"
-        :upload-label="t('ImportDialog.upload')"
-        multiple="false"
-        accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-        @select="onSelect"
-        @uploader="onUpload"
-      >
-        <template #empty>
-          <span>{{ t('ImportDialog.files') }}</span>
+    <Dialog :visible="active" :header="t('ImportDialog.title')" :modal="true" @update:visible="onClose">
+        <template #footer>
+            <Button :label="$t('close')" @click="onClose" />
         </template>
-      </FileUpload>
-    </div>
-  </Dialog>
+
+        <div v-if="active" class="flex flex-col gap-1">
+            <FileUpload mode="advanced" custom-upload="true" :upload-label="t('ImportDialog.upload')" multiple="false" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" @select="onSelect" @uploader="onUpload">
+                <template #empty>
+                    <span>{{ t('ImportDialog.files') }}</span>
+                </template>
+            </FileUpload>
+        </div>
+    </Dialog>
 </template>

@@ -12,8 +12,8 @@ export function useDownloadDialog() {
     });
 
     const mutations = {
-        tailoring: (tailoring) => state.tailoring = toRef(tailoring),
-        signatures: (signatures) => state.signatures = toRef(signatures)
+        tailoring: (tailoring) => (state.tailoring = toRef(tailoring)),
+        signatures: (signatures) => (state.signatures = toRef(signatures))
     };
 
     const actions = {

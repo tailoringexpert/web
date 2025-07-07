@@ -5,7 +5,7 @@ import { useHttp } from '@/composables/http';
 
 export function useScreeningsheetDialog() {
     const { download } = useHttp();
-        const { t } = useI18n();
+    const { t } = useI18n();
 
     const state = reactive({
         screeningsheet: null,
@@ -13,8 +13,8 @@ export function useScreeningsheetDialog() {
     });
 
     const mutations = {
-        screeningsheet: (screeningsheet) => state.screeningsheet = toRef(screeningsheet),
-        selectionvectorParameter: (selectionvectorParameter) => state.selectionvectorParameter = toRef(selectionvectorParameter)
+        screeningsheet: (screeningsheet) => (state.screeningsheet = toRef(screeningsheet)),
+        selectionvectorParameter: (selectionvectorParameter) => (state.selectionvectorParameter = toRef(selectionvectorParameter))
     };
 
     const actions = {

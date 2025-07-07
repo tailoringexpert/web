@@ -14,11 +14,15 @@ export function useTailoringCatalog() {
 
         return new Promise((resolve, reject) => {
             return api
-                .post(url, { "text" : toValue(text) }, {
-                    headers: {
+                .post(
+                    url,
+                    { text: toValue(text) },
+                    {
+                        headers: {
                             'Content-Type': 'application/x-www-form-urlencoded'
+                        }
                     }
-                })
+                )
                 .then((response) => {
                     mutations.requirement(response.data);
                     loadRequirements();
@@ -38,9 +42,13 @@ export function useTailoringCatalog() {
 
         return new Promise((resolve, reject) => {
             axios
-                .put(url, { "text": text }, {
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-                })
+                .put(
+                    url,
+                    { text: text },
+                    {
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+                    }
+                )
                 .then((response) => {
                     const _requirement = getters.requirements().find((requirement) => requirement.position === toValue(state.requirement).position);
                     _requirement.text = response.data.text;
@@ -89,12 +97,12 @@ export function useTailoringCatalog() {
     });
 
     const getters = {
-        requirements: () => toValue(state.chapter) != null ? state.chapter2Requirements[toValue(state.chapter).key] : [],
+        requirements: () => (toValue(state.chapter) != null ? state.chapter2Requirements[toValue(state.chapter).key] : []),
         name: (number) => number2Chapter[number]
     };
 
     const mutations = {
-        catalog: (catalog) => state.catalog = toRef(catalog),
+        catalog: (catalog) => (state.catalog = toRef(catalog)),
         chapter: (chapter) => {
             state.chapter = toRef(chapter);
 
@@ -116,9 +124,9 @@ export function useTailoringCatalog() {
                 disabled: true
             });
         },
-        requirement: (requirement) => state.requirement = toRef(requirement),
-        setChapterRequirements: (key, requirements) => state.chapter2Requirements[key] = toRef(requirements),
-        updateChapterRequirements: (requirements) => state.chapter2Requirements[state.chapter.key] = requirements
+        requirement: (requirement) => (state.requirement = toRef(requirement)),
+        setChapterRequirements: (key, requirements) => (state.chapter2Requirements[key] = toRef(requirements)),
+        updateChapterRequirements: (requirements) => (state.chapter2Requirements[state.chapter.key] = requirements)
     };
 
     const actions = {

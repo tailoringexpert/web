@@ -9,8 +9,8 @@ export function useScreeningsheetUpload() {
     });
 
     const mutations = {
-        screeningsheet: (screeningsheet) => state.screeningsheet = toRef(screeningsheet),
-        selectionvectorParameter: (selectionvectorParameter) => state.selectionvectorParameter = toRef(selectionvectorParameter)
+        screeningsheet: (screeningsheet) => (state.screeningsheet = toRef(screeningsheet)),
+        selectionvectorParameter: (selectionvectorParameter) => (state.selectionvectorParameter = toRef(selectionvectorParameter))
     };
 
     const actions = {

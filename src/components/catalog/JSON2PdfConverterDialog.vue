@@ -50,7 +50,7 @@ const onUpload = () => {
 };
 
 const onError = (title, message) => {
-    emit("error", title, message);
+    emit('error', title, message);
 };
 
 const onClose = () => {
@@ -61,37 +61,17 @@ const onClose = () => {
 </script>
 
 <template>
-  <Dialog
-    :header="t('JSON2PdfconverterDialog.title')"
-    :visible="active"
-    :wait
-    :modal="true"
-    @update:visible="onClose"
-  >
-    <template #footer>
-      <Button
-        :label="$t('close')"
-        @click="onClose"
-      />
-    </template>
-
-    <div
-      v-if="active"
-      class="flex flex-col gap-1"
-    >
-      <FileUpload
-        mode="advanced"
-        multiple="false"
-        :upload-label="t('JSON2PdfconverterDialog.convert')"
-        custom-upload="true"
-        accept="application/json"
-        @select="onSelect"
-        @uploader="onUpload"
-      >
-        <template #empty>
-          <span>{{ t('JSON2PdfconverterDialog.files') }}</span>
+    <Dialog :header="t('JSON2PdfconverterDialog.title')" :visible="active" :wait :modal="true" @update:visible="onClose">
+        <template #footer>
+            <Button :label="$t('close')" @click="onClose" />
         </template>
-      </FileUpload>
-    </div>
-  </Dialog>
+
+        <div v-if="active" class="flex flex-col gap-1">
+            <FileUpload mode="advanced" multiple="false" :upload-label="t('JSON2PdfconverterDialog.convert')" custom-upload="true" accept="application/json" @select="onSelect" @uploader="onUpload">
+                <template #empty>
+                    <span>{{ t('JSON2PdfconverterDialog.files') }}</span>
+                </template>
+            </FileUpload>
+        </div>
+    </Dialog>
 </template>

@@ -7,7 +7,7 @@ export function useSignatureDialog() {
     });
 
     const mutations = {
-        signature: (signature) =>  state.signature = toRef(signature)
+        signature: (signature) => (state.signature = toRef(signature))
     };
 
     const actions = {

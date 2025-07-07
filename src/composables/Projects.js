@@ -11,8 +11,8 @@ export function useProjects() {
     });
 
     const mutations = {
-        projects: (projects) => state.projects = toRef(projects),
-        state: (state) => state.state = toRef(state)
+        projects: (projects) => (state.projects = toRef(projects)),
+        state: (state) => (state.state = toRef(state))
     };
 
     const actions = {
