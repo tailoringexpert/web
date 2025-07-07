@@ -33,7 +33,7 @@ const tenantDefaults = {
 };
 
 const get = (locales) => {
-    var tenant = window?.configs?.PAGE_APP_TENANT || APP_TENANT;
+    var tenant = window?.configs?.APP_TENANT || APP_TENANT;
     console.log('loading translations for ' + tenant);
 
     const messages = {};
