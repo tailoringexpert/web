@@ -45,7 +45,7 @@ const get = (locales) => {
             if (matched && matched.length > 1) {
                 const key = file.split('.')[0];
                 let bundle = {};
-                api.get(window.location.origin + '/static/' + tenant + '/i18n/' + file)
+                api.get(window.location.origin + '/static/i18n/' + tenant + '/' + file)
                     .then((response) => {
                         Object.assign(bundle, current, response.data);
                         messages[key] = bundle;

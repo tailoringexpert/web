@@ -54,7 +54,7 @@ app.use(ToastService);
 app.use(ConfirmationService);
 
 // initialize
-const origin = window.location.origin + '/api';
+const origin = window.location.origin + '/api/';
 api.get(origin).then((response) => {
     store.mutations.links(response.data._links);
     useMasterdata().loadMasterdata();
