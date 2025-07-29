@@ -1,5 +1,5 @@
 <script setup>
-import { ref, inject } from 'vue';
+import { ref, inject, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
 
@@ -12,6 +12,7 @@ const store = inject('store');
 const { actions } = useLogin();
 const { t } = useI18n();
 const toast = useToast();
+const blocked = computed(() => store.state.loading);
 
 const userId = ref(null);
 const password = ref(null);
@@ -20,11 +21,13 @@ const onLogin = () => {
     actions
         .login(userId, password)
         .then((response) => {
+            store.mutations.loading(false);
             router.push({
                 name: store.state.returnUrl
             });
         })
         .catch((response) => {
+            store.mutations.loading(false);
             toast.add({
                 severity: 'error',
                 summary: t('Login.login.title'),
@@ -37,6 +40,10 @@ const onLogin = () => {
 
 <template>
     <Toast />
+
+    <BlockUI :blocked="blocked" full-screen>
+        <ProgressSpinner v-if="blocked" fill="transparent" style="position: fixed; top: 50%; left: 50%; z-index: 10000" />
+    </BlockUI>
 
     <div class="fixed flex gap-4 top-8 right-8"></div>
 
