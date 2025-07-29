@@ -1,63 +1,46 @@
 <script setup>
-import { ref, reactive, computed, inject, toValue } from "vue";
-import { useI18n } from "vue-i18n";
-import router from "@/router";
+import { ref, computed, inject, toValue, onBeforeMount } from 'vue';
+import { useI18n } from 'vue-i18n';
 
-import { useProjectNew } from "@/composables/ProjectNew";
+import Stepper from 'primevue/stepper';
+import StepList from 'primevue/steplist';
+import StepPanels from 'primevue/steppanels';
+import StepPanel from 'primevue/steppanel';
+import Step from 'primevue/step';
+import { useToast } from 'primevue/usetoast';
 
-import { mdiFolderZip } from "@mdi/js";
+import CatalogSelection from '@/components/catalog/CatalogSelection.vue';
+import ScreeningsheetUpload from '@/components/screeningsheet/ScreeningsheetUpload.vue';
+import SelectionVectorEdit from '@/components/selectionvector/SelectionVectorEdit.vue';
+import SelectionVectorComparison from '@/components/selectionvector/SelectionVectorComparison.vue';
 
-import { warnDialog } from "vuetify3-dialog";
-
-import Wait from "@/components/wait/Wait";
-import CatalogSelection from "@/components/catalog/CatalogSelection";
-import ScreeningsheetUpload from "@/components/screeningsheet/ScreeningsheetUpload";
-import SelectionVectorEdit from "@/components/selectionvector/SelectionVectorEdit";
-import SelectionVectorComparison from "@/components/selectionvector/SelectionVectorComparison";
+import router from '@/plugins/router';
+import { useProjectNew } from '@/composables/ProjectNew';
 
 // provided interfaces
+const emit = defineEmits(['success', 'error']);
 
 // injects
-const logger = inject("logger");
+const store = inject('store');
+const logger = inject('logger');
 
 // internal
 const { state, mutations, actions } = useProjectNew();
-
 const { t } = useI18n();
-const wait = reactive({
-    active: false,
-    config: {
-        title: "Create Project...",
-        icon: mdiFolderZip,
-    },
-});
+const toast = useToast();
 
 const step = ref(1);
-const steps = reactive([
-    t("catalog"),
-    t("screeningsheet"),
-    t("selectionvector"),
-    t("summary"),
-]);
 
 const project = computed(() => state.project);
 
-function prev() {
-    step.value = step.value - 1;
-}
-const next = () => {
-    if (toValue(step) == 4) {
-        onCreate();
-    } else {
-        step.value = step.value + 1;
-    }
-};
-
 // step catalog selection
 const onCatalogSelect = (payload) => {
+    logger.debug('onCatalogSelect');
     mutations.catalog(payload);
 };
+
 const onNoteEdited = (payload) => {
+    logger.debug('onNoteEdited');
     mutations.note(payload);
 };
 
@@ -65,110 +48,111 @@ const onNoteEdited = (payload) => {
 const screeningsheet = computed(() => state.screeningsheet);
 
 const onScreeningsheetUpload = (payload) => {
-    logger.debug("onScreeningsheetUpload");
+    logger.debug('onScreeningsheetUpload');
     mutations.screeningsheet(payload.screeningsheet);
     mutations.project(payload.screeningsheet.project);
 
     mutations.selectionvector({
-        levels: payload.screeningsheet.selectionVector.levels,
+        levels: payload.screeningsheet.selectionVector.levels
     });
 };
 
 // step selectionvector edit
 const selectionVector = computed(() => state.selectionvector);
+
 const onSelectionVectorModified = (payload) => {
-    logger.debug("onSelectionVectorModified");
+    logger.debug('onSelectionVectorModified');
     mutations.selectionvector(payload.selectionVector);
+    onSuccess(t('ProjectNew.editSelectionvector.title'), t('ProjectNew.editSelectionvector.state.success'));
 };
 
 // step summary
 const onCreate = () => {
-    logger.debug("onCreate");
-    wait.active = true;
-
+    logger.debug('onCreate');
     actions
         .create()
         .then(() => {
-            console.log("then");
+            onSuccess(t('ProjectNew.title'), t('ProjectNew.state.success'));
             router.push({
-                name: "project",
+                name: 'project',
                 params: {
-                    id: toValue(project),
-                },
+                    id: toValue(project)
+                }
             });
-            wait.active = false;
         })
         .catch((error) => {
-            warnDialog({
-                title: t("error"),
-                text: error.data,
-                confirmationText: t("ok"),
-            }).then(() => {
-                wait.active = false;
-            });
+            onError(t('error'), error.data);
         });
 };
+
+const onSuccess = (title, message) => {
+    emit('success', title, message);
+};
+
+const onError = (title, message) => {
+    emit('error', title, message);
+};
+
+// hooks
+onBeforeMount(() => {
+    store.mutations.breadcrumbs([
+        {
+            label: t('project', 2),
+            disabled: false,
+            exact: true,
+            route: { name: 'projects' }
+        }
+    ]);
+});
 </script>
 
 <template>
-  <Wait :wait />
+    <div class="card justify-center" fluid>
+        <Stepper :value="step" class="basis-[50rem]">
+            <StepList>
+                <Step :value="1">
+                    {{ t('ProjectNew.catalog') }}
+                </Step>
+                <Step :value="2">
+                    {{ t('ProjectNew.screeningsheet') }}
+                </Step>
+                <Step :value="3">
+                    {{ t('ProjectNew.selectionvector') }}
+                </Step>
+                <Step :value="4">
+                    {{ t('ProjectNew.summary') }}
+                </Step>
+            </StepList>
 
-  <v-stepper
-    v-model="step"
-    :items="steps"
-    position="sticky"
-    class="elevation-10"
-    hide-actions
-  >
-    <v-stepper-window
-      id="vsw"
-      class="fill-height"
-    >
-      <v-stepper-window-item :value="1">
-        <CatalogSelection
-          @catalog-select="onCatalogSelect"
-          @catalog-note="onNoteEdited"
-        />
-      </v-stepper-window-item>
-      <v-stepper-window-item :value="2">
-        <ScreeningsheetUpload
-          @screeningsheet:upload="onScreeningsheetUpload"
-        />
-      </v-stepper-window-item>
-      <v-stepper-window-item :value="3">
-        <SelectionVectorEdit
-          :selection-vector="screeningsheet.selectionVector"
-          :project
-          @selectionvector-modified="onSelectionVectorModified"
-        />
-      </v-stepper-window-item>
-      <v-stepper-window-item :value="4">
-        <SelectionVectorComparison
-          :project
-          :selection-vector="screeningsheet.selectionVector"
-          :edited-selection-vector="selectionVector"
-        />
-      </v-stepper-window-item>
-    </v-stepper-window>
-
-    <v-stepper-actions>
-      <template #prev>
-        <v-btn
-          :disabled="step === 1"
-          @click="prev()"
-        >
-          {{ $t("back") }}
-        </v-btn>
-      </template>
-      <template #next>
-        <v-btn
-          color="primary"
-          :disabled="false"
-          @click="next()"
-        >
-          {{ $t("next") }}
-        </v-btn>
-      </template>
-    </v-stepper-actions>
-  </v-stepper>
+            <StepPanels>
+                <StepPanel v-slot="{ activateCallback }" :value="1">
+                    <CatalogSelection @catalog-select="onCatalogSelect" @catalog-note="onNoteEdited" @success="onSuccess" @error="onError" />
+                    <div class="flex pt-6 justify-end">
+                        <Button :label="t('ProjectNew.next')" icon="pi pi-arrow-right" icon-pos="right" @click="activateCallback(2)" />
+                    </div>
+                </StepPanel>
+                <StepPanel v-slot="{ activateCallback }" :value="2">
+                    <ScreeningsheetUpload @screeningsheet:upload="onScreeningsheetUpload" @success="onSuccess" @error="onError" />
+                    <div class="flex pt-6 justify-between">
+                        <Button :label="t('ProjectNew.previous')" severity="secondary" icon="pi pi-arrow-left" @click="activateCallback(1)" />
+                        <Button :label="t('ProjectNew.next')" icon="pi pi-arrow-right" icon-pos="right" @click="activateCallback(3)" />
+                    </div>
+                </StepPanel>
+                <StepPanel v-slot="{ activateCallback }" :value="3">
+                    <SelectionVectorEdit :selection-vector="screeningsheet.selectionVector" :project @selectionvector-modified="onSelectionVectorModified" @success="onSuccess" @error="onError" />
+                    <div class="flex pt-6 justify-between">
+                        <Button :label="t('ProjectNew.previous')" severity="secondary" icon="pi pi-arrow-left" @click="activateCallback(2)" />
+                        <Button :label="t('ProjectNew.next')" icon="pi pi-arrow-right" icon-pos="right" @click="activateCallback(4)" />
+                    </div>
+                </StepPanel>
+                <StepPanel v-slot="{ activateCallback }" :value="4">
+                    <SelectionVectorComparison :project :selection-vector="screeningsheet.selectionVector" :edited-selection-vector="selectionVector" @success="onSuccess" @error="onError" />
+                    <div class="flex pt-6 justify-between">
+                        <Button :label="t('ProjectNew.previous')" severity="secondary" icon="pi pi-arrow-left" @click="activateCallback(3)" />
+                        <Button :label="t('ProjectNew.next')" icon="pi pi-arrow-right" icon-pos="right" @click="onCreate" />
+                    </div>
+                </StepPanel>
+            </StepPanels>
+        </Stepper>
+    </div>
 </template>

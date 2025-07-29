@@ -8,6 +8,6 @@ export function useFile() {
         });
 
     return {
-        readAsString,
+        readAsString
     };
 }

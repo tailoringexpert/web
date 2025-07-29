@@ -1,0 +1,47 @@
+import { reactive, toValue, readonly, toRef } from 'vue';
+import api from '@/plugins/api';
+
+export function useNameDialog() {
+    const state = reactive({
+        tailoring: null
+    });
+
+    const mutations = {
+        tailoring: (tailoring) => (state.tailoring = toRef(tailoring))
+    };
+
+    const actions = {
+        save: (name) => {
+            const url = toValue(state.tailoring)._links.name.href;
+            if (url == null) {
+                return Promise.resolve();
+            }
+
+            return new Promise((resolve, reject) => {
+                return api
+                    .put(
+                        url,
+                        { name: name },
+                        {
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded'
+                            }
+                        }
+                    )
+                    .then((response) => {
+                        mutations.tailoring(response.data);
+                        resolve(response.data);
+                    })
+                    .catch((error) => {
+                        reject(error.data);
+                    });
+            });
+        }
+    };
+
+    return {
+        state: readonly(state),
+        mutations,
+        actions
+    };
+}

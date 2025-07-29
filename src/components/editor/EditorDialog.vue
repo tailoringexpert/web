@@ -1,54 +1,58 @@
 <script setup>
-import { computed } from "vue";
+import { computed, ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 
-import Editor from "@/components/editor/Editor";
+import Editor from 'primevue/editor';
 
 // provided interfaces
 const props = defineProps({
     active: {
         type: Boolean,
-        default: false,
+        default: false
     },
     modelValue: {
         type: String,
-        default: "",
-    },
+        default: ''
+    }
 });
-const emit = defineEmits(["close:cancel", "close:save"]);
+const emit = defineEmits(['close:cancel', 'close:save']);
+
+watch(
+    () => props.modelValue,
+    (value) => {
+        text.value = value;
+    }
+);
+
+const text = ref('');
 
 // injects
 
 // internal
-const isActive = computed(() =>  props.active);
+const isActive = computed(() => props.active);
+const { t } = useI18n();
 
 // event handlers
-const onCancel = (payload) => {
-    emit("close:cancel", payload);
+const onClose = (payload) => {
+    emit('close:cancel', payload);
 };
 
 const onSave = (payload) => {
-    emit("close:save", payload);
+    emit('close:save', text.value);
 };
 
 // hooks
 </script>
 
 <template>
-  <v-dialog
-    v-model="isActive"
-    persistent
-    transition="dialog-bottom-transition"
-    justify="center"
-  >
-    <v-card elevation="2">
-      <v-card-title>{{ $t("requirement_edit.title") }}</v-card-title>
-      <v-card-text justify="center">
-        <Editor
-          :model-value="modelValue"
-          @close:cancel="onCancel"
-          @close:save="onSave"
-        />
-      </v-card-text>
-    </v-card>
-  </v-dialog>
+    <Dialog :visible="active" :header="t('EditorDialog.title')" :modal="true" @update:visible="onClose">
+        <template #footer>
+            <Button :label="$t('close')" @click="onClose" />
+            <Button :label="$t('save')" @click="onSave" />
+        </template>
+
+        <div v-if="active" class="flex flex-col gap-1">
+            <Editor v-model="text" editor-style="height: 320px" />
+        </div>
+    </Dialog>
 </template>

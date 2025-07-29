@@ -1,31 +1,27 @@
-import { reactive, readonly, toRef, toValue } from "vue";
-import axios from "axios";
+import { reactive, readonly, toRef, toValue } from 'vue';
+import api from '@/plugins/api';
 
-import store from "@/store";
+import store from '@/plugins/store';
 
 export function useCatalogSelection() {
     const state = reactive({
         catalogs: [],
-        catalog: null,
-        note: null,
+        catalog: {
+            version: null,
+            project: null
+        },
+        note: null
     });
 
     const mutations = {
-        catalogs: (catalogs) => {
-            state.catalogs = toRef(catalogs);
-        },
-        catalog: (catalog) => {
-            state.catalog = toRef(catalog);
-        },
-        note: (note) => {
-            state.note = toRef(note);
-        },
+        catalogs: (catalogs) => (state.catalogs = toRef(catalogs)),
+        catalog: (catalog) => (state.catalog = toRef(catalog)),
+        note: (note) => (state.note = toRef(note))
     };
 
     const actions = {
         initialize: () => {
-            console.log(store.state);
-            var url = toValue(store.state).links.catalog.href;
+            const url = toValue(store.state).links.catalog.href;
             if (url == null) {
                 return Promise.resolve();
             }
@@ -34,26 +30,19 @@ export function useCatalogSelection() {
                 axios
                     .get(url)
                     .then((response) => {
-                        var _catalogs = [];
-                        for (
-                            let i = 0;
-                            i <
-                            response.data._embedded.baseCatalogVersions.length;
-                            i++
-                        ) {
-                            var item =
-                                response.data._embedded.baseCatalogVersions[i];
-                            var links = item._links;
+                        const _catalogs = [];
+                        for (const item of response.data._embedded.baseCatalogVersions) {
+                            const links = item._links;
 
                             if (item.valid) {
                                 mutations.catalog({
                                     version: item.version,
-                                    project: links.project.href,
+                                    project: links.project.href
                                 });
 
                                 _catalogs.push({
                                     version: item.version,
-                                    project: links.project.href,
+                                    project: links.project.href
                                 });
                             }
                         }
@@ -61,16 +50,15 @@ export function useCatalogSelection() {
                         resolve(_catalogs);
                     })
                     .catch((error) => {
-                        logger.error(error);
                         reject(error);
                     });
             });
-        },
+        }
     };
 
     return {
         state: readonly(state),
         mutations,
-        actions,
+        actions
     };
 }

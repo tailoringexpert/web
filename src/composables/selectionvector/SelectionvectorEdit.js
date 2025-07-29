@@ -1,35 +1,31 @@
-import { reactive, toValue, readonly, toRef } from "vue";
-
-import i18n from "@/plugins/i18n";
-
-import store from "@/store";
+import { reactive, toValue, readonly, toRef } from 'vue';
+import { useI18n } from 'vue-i18n';
+import store from '@/plugins/store';
 
 export function useSelectionvectorEdit() {
+    const { t } = useI18n();
+
     const state = reactive({
         profiles: store.state.selectionvectors,
         selectionvector: null,
-        levels: [],
+        levels: []
     });
 
     const mutations = {
-        selectionvector: (selectionvector) => {
-            state.selectionvector = toRef(selectionvector);
-        },
-        levels: (levels) => {
-            state.levels = toRef(levels);
-        },
+        selectionvector: (selectionvector) => (state.selectionvector = toRef(selectionvector)),
+        levels: (levels) => (state.levels = toRef(levels))
     };
 
     const actions = {
         initialize: () => {
             return new Promise((resolve, reject) => {
-                var data = { levels: {} };
-                var items = [];
-                for (var name in toValue(state.selectionvector).levels) {
-                    var item = {
-                        label: i18n.global.t("tenant.selectionvector." + name),
+                const data = { levels: {} };
+                const items = [];
+                for (const name in toValue(state.selectionvector).levels) {
+                    const item = {
+                        label: t('tenant.selectionvector.' + name),
                         name: name,
-                        value: toValue(state.selectionvector).levels[name],
+                        value: toValue(state.selectionvector).levels[name]
                     };
                     items.push(item);
                     data.levels[item.name] = item.value;
@@ -42,7 +38,7 @@ export function useSelectionvectorEdit() {
         },
         update: (level) => {
             return new Promise((resolve, reject) => {
-                var data = { levels: {} };
+                const data = { levels: {} };
                 state.levels.forEach((item, index) => {
                     if (item.name == level.name) {
                         item.value = Number(level.value);
@@ -51,12 +47,12 @@ export function useSelectionvectorEdit() {
                 });
                 resolve(data);
             });
-        },
+        }
     };
 
     return {
         state: readonly(state),
         mutations,
-        actions,
+        actions
     };
 }

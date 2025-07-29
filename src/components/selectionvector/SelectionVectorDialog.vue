@@ -1,28 +1,24 @@
 <script setup>
-import { reactive, inject, computed, watch } from "vue";
-import { useI18n } from "vue-i18n";
+import { inject, computed, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 
-import { useSelectionvectorDialog } from "@/composables/selectionvector/SelectionvectorDialog";
-import Dialog from "@/layouts/WaitingDialog.vue";
-
-import { mdiUpdate } from "@mdi/js";
+import { useSelectionvectorDialog } from '@/composables/selectionvector/SelectionvectorDialog';
 
 // provided interfaces
-const emit = defineEmits(["close:closed"]);
+const emit = defineEmits(['close:closed']);
 const props = defineProps({
     active: {
         type: Boolean,
-        default: false,
+        default: false
     },
     tailoring: {
         type: Object,
-        default: null,
-    },
+        default: null
+    }
 });
 
 // injects
-const store = inject("store");
-const logger = inject("logger");
+const logger = inject('logger');
 
 // internal
 const { state, mutations, actions } = useSelectionvectorDialog();
@@ -40,104 +36,36 @@ watch(
 
 const { t } = useI18n();
 
-const wait = reactive({
-    active: false,
-    config: {
-        title: "Loading applied selectionvector...",
-        icon: mdiUpdate,
-    },
-});
-
-const isActive = computed(() => props.active && !wait.active);
-
-const headers = reactive([
-    {
-        title: t("name"),
-        sortable: true,
-        value: "label",
-    },
-    {
-        title: t("value"),
-        sortable: true,
-        value: "value",
-    },
-]);
+const isActive = computed(() => props.active);
 const items = computed(() => state.levels);
 
 const initialize = () => {
-    wait.active = true;
-
-    actions
-        .initialize()
-        .then(() => {
-            wait.active = false;
-        })
-        .catch((error) => {
-            logger.error(error);
-            wait.active = false;
-        });
+    actions.initialize().catch((error) => {
+        logger.error(error);
+    });
 };
 
 // event handlers
 const onClose = () => {
-    emit("close:closed");
+    emit('close:closed');
 };
 
 // hooks
 </script>
 
 <template>
-  <Dialog
-    :title="$t('selectionvector_applied')"
-    :wait
-    :active
-  >
-    <template #default>
-      <v-data-table
-        :headers="headers"
-        :items="items"
-        class="elevation-1"
-      />
-    </template>
+    <Dialog :visible="active" :header="t('SelectionVectorDialog.applied')" :modal="true" @update:visible="onClose">
+        <template #footer>
+            <Button :label="$t('close')" @click="onClose" />
+        </template>
 
-    <template #actions>
-      <v-spacer />
-      <v-btn
-        rounded
-        variant="text"
-        @click="onClose()"
-      >
-        {{ $t("close") }}
-      </v-btn>
-    </template>
-  </Dialog>
-  <!-- <Wait :wait /> -->
+        <DataTable :value="items" data-key="label" striped-rows scrollable scroll-height="400px" table-style="min-width: 50rem">
+            <template #loading>
+                {{ t('SelectionVectorDialog.loading') }}
+            </template>
 
-  <!--   <v-dialog
-    v-model="isActive"
-    max-width="75%"
-  >
-    <v-card elevation="2">
-      <v-card-title>{{ $t("selectionvector_applied") }}</v-card-title>
-      <v-card-text>
-        <v-data-table
-          :headers="headers"
-          :items="items"
-          class="elevation-1"
-        />
-      </v-card-text>
-      <v-card-actions>
-        <v-spacer />
-        <v-btn
-          rounded
-          variant="text"
-          @click="onClose()"
-        >
-          {{ $t("close") }}
-        </v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog> -->
+            <Column field="label" :header="t('SelectionVectorDialog.name')" />
+            <Column field="value" :header="t('SelectionVectorDialog.value')" />
+        </DataTable>
+    </Dialog>
 </template>
-
-<style scoped></style>

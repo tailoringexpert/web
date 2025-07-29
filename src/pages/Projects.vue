@@ -1,277 +1,188 @@
 <script setup>
-import { ref, reactive, computed, inject } from "vue";
-import { confirmDialog } from "vuetify3-dialog";
-import { useI18n } from "vue-i18n";
-import router from "@/router";
+import { ref, computed, inject, onBeforeMount } from 'vue';
+import { useI18n } from 'vue-i18n';
+import router from '@/plugins/router';
 
-import { useProjects } from "@/composables/Projects";
+import { FilterMatchMode } from '@primevue/core/api';
+import DataTable from 'primevue/datatable';
+import Column from 'primevue/column';
+import { useConfirm } from 'primevue/useconfirm';
+import { useToast } from 'primevue/usetoast';
 
-import {
-    mdiUpdate,
-    mdiPencil,
-    mdiPencilBoxOutline,
-    mdiDeleteAlert,
-    mdiAlertCircleOutline,
-} from "@mdi/js";
-
-import Wait from "@/components/wait/Wait";
+import { useProjects } from '@/composables/Projects';
 
 // provided interfaces
+const emit = defineEmits(['close:closed', 'success', 'error']);
 
 // injects
-const store = inject("store");
-const logger = inject("logger");
+const store = inject('store');
+const logger = inject('logger');
+
+const confirm = useConfirm();
+const toast = useToast();
 
 // internal
 const { state, mutations, actions } = useProjects();
 const { t } = useI18n();
 
-const waits = {
-    default: {
-        title: "Loading projects...",
-        icon: mdiUpdate,
-    },
-    state: {
-        title: "Changing project state...",
-        icon: mdiUpdate,
-    },
-    delete: {
-        title: "Deleting project...",
-        icon: mdiUpdate,
-    },
-};
-const wait = reactive({
-    active: false,
-    config: waits.default,
-});
-
-const _state = ref("ONGOING");
+const _state = ref('ONGOING');
 const states = computed(() => state.states);
+const filters = ref({ state: { value: null, matchMode: FilterMatchMode.EQUALS } });
 
-const headers = reactive([
-    {
-        title: t("name"),
-        value: "name",
-        sortable: true,
-        filterable: false,
-        align: "start",
-        width: "40%",
-    },
-    {
-        title: t("created_at"),
-        value: "creationTimestamp",
-        sortable: true,
-        width: "15%",
-    },
-    {
-        title: t("state"),
-        value: "state",
-        sortable: false,
-        width: "15%",
-    },
-    {
-        title: t("action", 2),
-        value: "actions",
-        sortable: false,
-        width: "30%",
-    },
-]);
 const projects = computed(() => state.projects);
 
-const created = () => {
-    wait.config = waits.default;
-    wait.active = true;
-
-    actions
-        .initialize()
-        .then(() => {
-            wait.active = false;
-        })
-        .catch(() => {
-            wait.active = false;
-        });
+const initialize = () => {
+    actions.initialize();
 };
 
-function byStateFilter(columnValue, filterValue, rowItem) {
-    return filterValue.trim() === "" || filterValue == rowItem.columns.state;
-}
-
 // event handlers
-function onNew() {
+const onNew = () => {
+    logger.debug('onNew');
     router.push({
-        name: "projectnew",
+        name: 'projectnew'
     });
-}
+};
 
-function onState(project) {
-    confirmDialog({
-        title: t("project_state.title"),
-        text: t("project_state.text"),
-        cancelText: t("no"),
-        cancelButtonOptions: {
-            active: true,
+const onState = (project) => {
+    confirm.require({
+        header: t('Projects.updateState.title'),
+        message: t('Projects.updateState.text'),
+        icon: 'pi pi-exclamation-triangle',
+        rejectProps: {
+            label: t('no'),
+            severity: 'secondary',
+            outlined: true
         },
-        confirmationText: t("yes"),
-        confirmButtonOptions: {
-            active: false,
+        acceptProps: {
+            label: t('yes'),
+            severity: 'danger'
         },
-        icon: mdiAlertCircleOutline,
-    }).then((confirmed) => {
-        if (confirmed) {
-            wait.config = waits.state;
-            wait.active = true;
+        accept: () => {
             actions
                 .updateState(project)
                 .then(() => {
-                    wait.active = false;
+                    onSuccess(t('Projects.updateState.state.title'), t('Projects.updateState.state.success'));
                 })
-                .catch(() => {
-                    wait.active = false;
+                .catch((error) => {
+                    onError(t('Projects.updateState.state,title'), t('Projects.updateState.state.error'));
                 });
         }
     });
-}
+};
 
-function onEdit(project) {
+const onEdit = (project) => {
     store.mutations.project(project);
     router.push({
-        name: "project",
+        name: 'project',
         params: {
-            id: project.name,
-        },
+            id: project.name
+        }
     });
-}
+};
 
-function onDelete(project) {
-    confirmDialog({
-        title: t("project_delete.title"),
-        text: t("project_delete.text"),
-        cancelText: "No",
-        cancelButtonOptions: {
-            active: true,
+const onDelete = (project) => {
+    logger.debug('onDelete');
+    confirm.require({
+        message: t('Projects.delete.text'),
+        header: t('Projects.delete.title'),
+        icon: 'pi pi-info-circle',
+        rejectLabel: 'Cancel',
+        rejectProps: {
+            label: t('no'),
+            severity: 'secondary',
+            outlined: true
         },
-        confirmationText: "Yes",
-        confirmButtonOptions: {
-            active: false,
+        acceptProps: {
+            label: t('yes'),
+            severity: 'danger'
         },
-        icon: mdiAlertCircleOutline,
-    }).then((confirmed) => {
-        if (confirmed) {
-            wait.config = waits.delete;
-            wait.active = true;
+        accept: () => {
             actions
                 .delete(project)
                 .then(() => {
-                    wait.active = false;
+                    onSuccess(t('Projects.delete.title'), t('Projects.delete.state.success'));
                 })
-                .catch(() => {
-                    wait.active = false;
+                .catch((error) => {
+                    console.log(error);
+                    onError(t('Projects.delete.title'), t('Projects.delete.state.success'));
                 });
         }
     });
-}
+};
+
+const onSuccess = (title, message) => {
+    emit('success', title, message);
+};
+
+const onError = (title, message) => {
+    emit('error', title, message);
+};
 
 // hooks
-store.mutations.breadcrumbs([
-    {
-        title: t("project", 2),
-        disabled: false,
-        exact: true,
-        to: { name: "projects" },
-    },
-]);
+onBeforeMount(() => {
+    logger.debug('onBeforeMount');
+    store.mutations.breadcrumbs([
+        {
+            label: t('Projects.project', 2),
+            disabled: false,
+            exact: true,
+            route: { name: 'projects' }
+        }
+    ]);
 
-created();
+    initialize();
+});
 </script>
 
 <template>
-  <Wait :wait />
-
-  <section class="view">
-    <v-card class="card-top">
-      <v-toolbar flat>
-        <v-toolbar-title>
-          {{ $t("project", 2) }}
-          <v-divider
-            class="mx-4"
-            inset
-            vertical
-          />
-          <v-btn
-            class="mb-2"
-            @click="onNew()"
-          >
-            {{ $t("project_new") }}
-          </v-btn>
-        </v-toolbar-title>
-      </v-toolbar>
-    </v-card>
-
-    <v-card class="table-container">
-      <v-data-table
-        :custom-filter="byStateFilter"
-        :search="_state"
-        :headers="headers"
-        :items="projects"
-        :items-per-page="20"
-        :loading="wait.active"
-        fixed-header
-        class="elevation-10 flex-table"
-      >
-        <template #loading>
-          <v-skeleton-loader type="table-row@5" />
-        </template>
-
-        <template #header.state>
-          <v-container>
-            <v-select
-              v-model="_state"
-              label="State"
-              :items="states"
-              density="compact"
-            />
-          </v-container>
-        </template>
-
-        <template #item.state="{ item }">
-          <span @click="onState(item)">{{ item.state }}
-            <v-icon
-              :icon="mdiPencilBoxOutline"
-              class="me-2"
-              size="small"
-            />
-          </span>
-        </template>
-
-        <template #item.actions="{ item }">
-          <v-tooltip location="bottom">
-            <template #activator="{ props }">
-              <v-icon
-                :icon="mdiPencil"
-                size="small"
-                class="mr-2"
-                v-bind="props"
-                @click="onEdit(item)"
-              />
+    <div class="card">
+        <DataTable
+            v-model:filters="filters"
+            :value="projects"
+            data-key="name"
+            :filters="filters"
+            filter-display="menu"
+            striped-rows
+            table-style="min-width: 50rem"
+            paginator
+            :rows="10"
+            :rows-per-page-options="[10, 15, 20, 25]"
+            paginator-template="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
+            current-page-report-template="{first} to {last} of {totalRecords}"
+        >
+            <template #empty> No Projects found. </template>
+            <template #loading>
+                {{ t('Projects.loading') }}
             </template>
-            <span>{{ $t("tooltip.project_edit") }}</span>
-          </v-tooltip>
-          <v-tooltip location="bottom">
-            <template #activator="{ props }">
-              <v-icon
-                :icon="mdiDeleteAlert"
-                class="me-2"
-                size="small"
-                v-bind="props"
-                @click="onDelete(item)"
-              />
+
+            <template #header>
+                <div class="flex flex-wrap items-center justify-between gap-2">
+                    <span class="text-xl font-bold">{{ $t('Projects.project') }}</span>
+                    <Button v-tooltip.bottom="t('Projects.tooltip.new')" icon="pi pi-plus" rounded raised @click="onNew()" />
+                </div>
             </template>
-            <span>{{ $t("tooltip.project_delete") }}</span>
-          </v-tooltip>
-        </template>
-      </v-data-table>
-    </v-card>
-  </section>
+
+            <Column field="name" :header="t('Projects.name')" />
+            <Column field="creationTimestamp" :header="t('Projects.createdAt')" />
+            <Column :header="t('Projects.state')">
+                <template #body="slotProps">
+                    <span @click="onState(slotProps.data)"
+                        >{{ slotProps.data.state }}
+                        <Button v-tooltip.bottom="t('Projects.tooltip.state')" icon="pi pi-pencil" variant="text" rounded @click="onState(slotProps.data)" />
+                    </span>
+                </template>
+                <template #filter="{ filterModel, filterCallback }">
+                    <Select v-model="filterModel.value" :options="states" placeholder="Select One" show-clear @change="filterCallback()" />
+                </template>
+            </Column>
+            <Column :header="t('Projects.action')">
+                <template #body="slotProps">
+                    <Button v-tooltip.bottom="t('Projects.tooltip.edit')" variant="text" icon="pi pi-pencil" severity="secondary" rounded @click="onEdit(slotProps.data)" />
+                    <Button v-tooltip.bottom="t('Projects.tooltip.delete')" variant="text" icon="pi pi-trash" severity="secondary" rounded @click="onDelete(slotProps.data)" />
+                </template>
+            </Column>
+        </DataTable>
+    </div>
 </template>
 
 <script></script>
