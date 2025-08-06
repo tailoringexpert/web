@@ -1,6 +1,5 @@
 import { reactive, readonly, toRef, toValue } from 'vue';
 import api from '@/plugins/api';
-
 import store from '@/plugins/store';
 
 export function useTailoringCatalog() {
@@ -41,7 +40,7 @@ export function useTailoringCatalog() {
         }
 
         return new Promise((resolve, reject) => {
-            axios
+            api
                 .put(
                     url,
                     { text: text },
@@ -66,7 +65,7 @@ export function useTailoringCatalog() {
             return Promise.resolve();
         }
 
-        axios
+        api
             .get(url)
             .then((response) => {
                 mutations.setChapterRequirements(toValue(state.chapter).key, response.data.data);

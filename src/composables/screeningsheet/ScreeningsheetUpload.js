@@ -1,6 +1,5 @@
 import { reactive, readonly, toRef, toValue } from 'vue';
 import api from '@/plugins/api';
-
 import store from '@/plugins/store';
 
 export function useScreeningsheetUpload() {
@@ -24,7 +23,7 @@ export function useScreeningsheetUpload() {
             data.append('file', toValue(file));
 
             return new Promise((resolve, reject) => {
-                axios
+                api
                     .post(url, data, {
                         headers: { 'Content-Type': 'multipart/form-data' }
                     })

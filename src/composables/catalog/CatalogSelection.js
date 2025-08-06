@@ -1,6 +1,5 @@
 import { reactive, readonly, toRef, toValue } from 'vue';
 import api from '@/plugins/api';
-
 import store from '@/plugins/store';
 
 export function useCatalogSelection() {
@@ -27,7 +26,7 @@ export function useCatalogSelection() {
             }
 
             return new Promise((resolve, reject) => {
-                axios
+                api
                     .get(url)
                     .then((response) => {
                         const _catalogs = [];

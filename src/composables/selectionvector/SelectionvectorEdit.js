@@ -1,12 +1,20 @@
 import { reactive, toValue, readonly, toRef } from 'vue';
 import { useI18n } from 'vue-i18n';
 import store from '@/plugins/store';
+import api from '@/plugins/api';
 
 export function useSelectionvectorEdit() {
+
+    api
+        .get(store.state.links['selectionvector'].href)
+        .then((response) => {
+            state.profiles = response.data._embedded.selectionVectorProfiles;
+        });
+
     const { t } = useI18n();
 
     const state = reactive({
-        profiles: store.state.selectionvectors,
+        profiles: [],
         selectionvector: null,
         levels: []
     });
