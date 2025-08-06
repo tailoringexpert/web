@@ -28,13 +28,15 @@ export function useLogin() {
                         }
                     })
                     .then((response) => {
+                        store.mutations.tenant(response.data.tenant);
+
                         const auth = {};
                         auth.userId = response.data.userId;
                         auth.accessToken = response.data.accessToken;
                         auth.refreshToken = response.data.refreshToken;
                         auth.refresh = response.data.links[0].href;
-
                         store.mutations.auth(auth);
+
                         resolve(store.state.auth);
                     })
                     .catch((error) => {

@@ -7,10 +7,8 @@ const state = reactive({
     loading: false,
     help: false,
     links: [],
-    catalogs: [],
     breadcrumbs: [],
     toast: null,
-    selectionvectors: [],
     project: null,
     tailoring: null,
     returnUrl: null,
@@ -24,25 +22,21 @@ const getters = {
 
 const mutations = {
     authRequired: (authRequired) => state.authRequired = authRequired,
-    auth: (auth) => {
-        state.auth = auth;
-    },
-    logout: () => (state.auth = null),
-    accessToken: (accessToken) => (state.auth.accessToken = accessToken),
+    auth: (auth) => state.auth = auth,
+    logout: () => state.auth = null,
+    accessToken: (accessToken) => state.auth.accessToken = accessToken,
     tenant: (tenant) => {
         state.tenant = tenant;
         localStorage.setItem('tenant', tenant);
     },
-    loading: (loading) => (state.loading = loading),
-    help: (help) => (state.help = help),
-    links: (links) => (state.links = links),
-    catalogs: (catalogs) => (state.catalogs = catalogs),
-    breadcrumbs: (breadcrumbs) => (state.breadcrumbs = breadcrumbs),
-    toast: (toast) => (state.toast = toast),
-    selectionvectors: (selectionvectors) => (state.selectionvectors = selectionvectors),
-    project: (project) => (state.project = project),
-    tailoring: (tailoring) => (state.tailoring = tailoring),
-    returnUrl: (returnUrl) => (state.returnUrl = returnUrl)
+    loading: (loading) => state.loading = loading,
+    help: (help) => state.help = help,
+    links: (links) => state.links = links,
+    breadcrumbs: (breadcrumbs) => state.breadcrumbs = breadcrumbs,
+    toast: (toast) => state.toast = toast,
+    project: (project) => state.project = project,
+    tailoring: (tailoring) => state.tailoring = tailoring,
+    returnUrl: (returnUrl) => state.returnUrl = returnUrl
 };
 
 const actions = {};

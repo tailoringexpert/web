@@ -5,8 +5,6 @@ import ConfirmationService from 'primevue/confirmationservice';
 import ToastService from 'primevue/toastservice';
 import VueLogger from 'vuejs3-logger';
 
-import { useMasterdata } from '@/composables/masterdata';
-
 import App from '@/App.vue';
 import router from '@/plugins/router';
 import store from '@/plugins/store';
@@ -57,6 +55,5 @@ app.use(ConfirmationService);
 const origin = window.location.origin + '/api/';
 api.get(origin).then((response) => {
     store.mutations.links(response.data._links);
-    useMasterdata().loadMasterdata();
     app.mount('#app');
 });
