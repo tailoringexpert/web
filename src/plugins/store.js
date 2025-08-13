@@ -1,7 +1,7 @@
 import { reactive, readonly } from 'vue';
 
 const state = reactive({
-    authRequired: window?.configs?.[AUTH_REQUIRED] || AUTH_REQUIRED,
+    authRequired: true,
     auth: null,
     tenant: window?.configs?.[APP_TENANT] || APP_TENANT,
     loading: false,

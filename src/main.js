@@ -32,6 +32,7 @@ app.provide('logger', app.config.globalProperties.$log);
 app.provide('store', store);
 store.mutations.tenant(window?.configs?.APP_TENANT || APP_TENANT);
 store.mutations.authRequired(window?.configs?.AUTH_REQUIRED || AUTH_REQUIRED);
+console.log(store.state.authRequired)
 
 // i18n
 app.use(i18n);
