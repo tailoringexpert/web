@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed, inject, onBeforeMount } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRoute } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import { useConfirm } from 'primevue/useconfirm';
 import { useToast } from 'primevue/usetoast';
 
@@ -13,7 +13,6 @@ import AttachmentsDialog from '@/components/tailoring/AttachmentsDialog.vue';
 import ImportDialog from '@/components/tailoring/ImportDialog.vue';
 import NotesDialog from '@/components/tailoring/NotesDialog.vue';
 
-import router from '@/plugins/router';
 import { useProject } from '@/composables/Project';
 
 // provided interfaces
@@ -26,11 +25,12 @@ const logger = inject('logger');
 // internal
 const { state, getters, actions } = useProject();
 const { t } = useI18n();
+const router = useRouter();
+const route = useRoute();
 
 const confirm = useConfirm();
 const toast = useToast();
 
-const route = useRoute();
 
 const project = computed(() => state.project);
 const dialog = ref('none');

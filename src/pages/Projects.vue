@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed, inject, onBeforeMount } from 'vue';
 import { useI18n } from 'vue-i18n';
-import router from '@/plugins/router';
+import { useRouter } from 'vue-router'
 
 import { FilterMatchMode } from '@primevue/core/api';
 import DataTable from 'primevue/datatable';
@@ -24,6 +24,7 @@ const toast = useToast();
 // internal
 const { state, mutations, actions } = useProjects();
 const { t } = useI18n();
+const router = useRouter();
 
 const _state = ref('ONGOING');
 const states = computed(() => state.states);

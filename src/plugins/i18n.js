@@ -1,3 +1,5 @@
+import { toValue } from 'vue';
+import { getToken, useKeycloak } from '@josempgon/vue-keycloak'
 import { createI18n } from 'vue-i18n';
 
 import api from '@/plugins/api';
@@ -33,7 +35,10 @@ const tenantDefaults = {
 };
 
 const get = (locales) => {
-    var tenant = window?.configs?.APP_TENANT || APP_TENANT;
+    const token = () => async (dispatch) => await getToken();
+    const { decodedToken } = useKeycloak();
+    const tenant = toValue(decodedToken).tenant;
+
     console.log('loading translations for ' + tenant);
 
     const messages = {};
@@ -61,13 +66,13 @@ const get = (locales) => {
 };
 
 const systemLocales = import.meta.glob('@/locales/*.json');
-const instance = createI18n({
-    locale: 'en',
-    legacy: false,
-    allowComposition: true,
-    fallbackLocale: 'en',
-    globalInjection: true,
-    messages: get(systemLocales)
-});
+const i18n = () => createI18n({
+     locale: 'en',
+     legacy: false,
+     allowComposition: true,
+     fallbackLocale: 'en',
+     globalInjection: true,
+     messages: get(systemLocales)
+ });
 
-export default instance;
+export { i18n };

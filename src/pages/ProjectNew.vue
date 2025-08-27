@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed, inject, toValue, onBeforeMount } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useRouter } from 'vue-router';
 
 import Stepper from 'primevue/stepper';
 import StepList from 'primevue/steplist';
@@ -14,7 +15,6 @@ import ScreeningsheetUpload from '@/components/screeningsheet/ScreeningsheetUplo
 import SelectionVectorEdit from '@/components/selectionvector/SelectionVectorEdit.vue';
 import SelectionVectorComparison from '@/components/selectionvector/SelectionVectorComparison.vue';
 
-import router from '@/plugins/router';
 import { useProjectNew } from '@/composables/ProjectNew';
 
 // provided interfaces
@@ -28,6 +28,7 @@ const logger = inject('logger');
 const { state, mutations, actions } = useProjectNew();
 const { t } = useI18n();
 const toast = useToast();
+const router = useRouter();
 
 const step = ref(1);
 

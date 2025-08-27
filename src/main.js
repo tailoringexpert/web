@@ -4,12 +4,13 @@ import PrimeVue from 'primevue/config';
 import ConfirmationService from 'primevue/confirmationservice';
 import ToastService from 'primevue/toastservice';
 import VueLogger from 'vuejs3-logger';
+import { vueKeycloak } from '@josempgon/vue-keycloak'
 
 import App from '@/App.vue';
 import router from '@/plugins/router';
 import store from '@/plugins/store';
 import api from '@/plugins/api';
-import i18n from '@/plugins/i18n';
+import { i18n } from '@/plugins/i18n';
 
 import '@/assets/styles/main.scss';
 import '@/assets/styles/main.css';
@@ -28,17 +29,21 @@ app.use(VueLogger, {
 });
 app.provide('logger', app.config.globalProperties.$log);
 
+await vueKeycloak.install(app, {
+     config: {
+           url: IDM_URL,
+           realm: IDM_REALM,
+           clientId: IDM_CLIENT
+       }
+});
+
+app.use(router);
+
 // store
 app.provide('store', store);
-store.mutations.tenant(window?.configs?.APP_TENANT || APP_TENANT);
-store.mutations.authRequired(window?.configs?.AUTH_REQUIRED || AUTH_REQUIRED);
-console.log(store.state.authRequired)
 
 // i18n
-app.use(i18n);
-
-// router
-app.use(router);
+app.use(i18n())
 
 // primevue
 app.use(PrimeVue, {
