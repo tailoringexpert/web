@@ -142,13 +142,6 @@ const onLogin = () => {
     });
 };
 
-const onLogout = () => {
-    console.log('onLogout');
-    store.mutations.logout();
-    onSuccess('Logout', 'Successfully logged out');
-    router.push({ name: 'projects' });
-};
-
 const webVersion = computed(() => WEB_VERSION);
 const onAbout = () => {
     confirm.require({

@@ -1,9 +1,9 @@
 <script setup>
 import { inject, ref, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useKeycloak } from '@josempgon/vue-keycloak';
 import AppConfigurator from '@/layout/AppConfigurator.vue';
 import { useLayout } from '@/layout/composables/layout';
-
 import Breadcrumb from 'primevue/breadcrumb';
 
 const emit = defineEmits(['help', 'login', 'logout']);
@@ -17,7 +17,8 @@ const home = ref({
     route: '/'
 });
 
-const authenticated = computed(() => store.state.auth != null);
+const { isAuthenticated, username, keycloak } = useKeycloak();
+
 </script>
 
 <template>
@@ -76,13 +77,7 @@ const authenticated = computed(() => store.state.auth != null);
                     <button type="button" class="layout-topbar-action" @click="emit('help')">
                         <i class="pi pi-question" />
                     </button>
-
-                    <button v-if="authenticated" type="button" class="layout-topbar-action" v-tooltip.bottom="t('AppTopbar.tooltip.logout')">
-                        <i class="pi pi-fw pi-sign-out" @click="emit('logout')" />
-                    </button>
-                    <button v-if="!authenticated" type="button" class="layout-topbar-action" v-tooltip.bottom="t('AppTopbar.tooltip.login')">
-                        <i class="pi pi-fw pi-sign-in" @click="emit('login')" />
-                    </button>
+                    <Button icon="pi pi-sign-out" rounded outlined  @click="keycloak.logout()"></Button>
                 </div>
             </div>
         </div>

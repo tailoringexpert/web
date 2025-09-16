@@ -16,7 +16,10 @@ export default ({ mode }) => {
             AUTH_REQUIRED: JSON.parse(`"${process.env.VITE_AUTH_REQUIRED}"`.toLowerCase()),
             APP_TENANT: `"${process.env.VITE_APP_TENANT}"`,
             WEB_NAME: JSON.stringify(packageJson.name),
-            WEB_VERSION: JSON.stringify(packageJson.version)
+            WEB_VERSION: JSON.stringify(packageJson.version),
+            IDM_URL: `"${process.env.VITE_IDM_URL}"`,
+            IDM_REALM: `"${process.env.VITE_IDM_REALM}"`,
+            IDM_CLIENT: `"${process.env.VITE_IDM_CLIENT}"`,
         },
         server: {
             port: 3000,
