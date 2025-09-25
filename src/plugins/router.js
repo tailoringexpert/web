@@ -51,4 +51,9 @@ const routes = [
 ];
 
 const instance = createRouter({ history, routes });
+instance.beforeEach((to, from) => {
+    if (to.hash?.length > 0) {
+        return { path: to.path, hash: '' };
+    }
+});
 export default instance;

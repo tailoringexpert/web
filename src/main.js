@@ -35,7 +35,7 @@ await vueKeycloak.install(app, {
         url:  window?.configs?.IDM_URL || IDM_URL,
         realm: window?.configs?.IDM_REALM || IDM_REALM,
         clientId: window?.configs?.IDM_CLIENT || IDM_CLIENT
-   }
+    }
 });
 
 app.use(router);
