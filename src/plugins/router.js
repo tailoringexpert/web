@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
+import store from '@/plugins/store';
 
 const history= createWebHistory();
 const routes = [
@@ -20,6 +21,13 @@ const routes = [
                        component: () => import('@/pages/Project.vue'),
                        props: true,
                        name: 'project',
+                       beforeEnter: (to, from) => {
+                            const project = store.state.project;
+                            if ( project == null) {
+                                console.log("loading " + to.params.id + " links")
+                            }
+                             return true;
+                       },
                    },
                    {
                        path: 'new',
