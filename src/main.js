@@ -38,7 +38,7 @@ await vueKeycloak.install(app, {
     }
 });
 
-app.use(router);
+
 
 // store
 app.provide('store', store);
@@ -62,5 +62,6 @@ app.use(ConfirmationService);
 const origin = window.location.origin + '/api/';
 api.get(origin).then((response) => {
     store.mutations.links(response.data._links);
+    app.use(router);
     app.mount('#app');
 });
