@@ -1,6 +1,6 @@
 import { toValue } from 'vue';
+import { getToken, useKeycloak } from '@josempgon/vue-keycloak'
 import api from '@/plugins/api';
-import store from '@/plugins/store';
 
 export function useHttp() {
     const download = (url) => {
@@ -18,7 +18,7 @@ export function useHttp() {
                     resolve(response.data);
                 })
                 .catch((error) => {
-                    reject(error.data);
+                    reject(new Error(error.data));
                 });
         });
     };
@@ -36,7 +36,10 @@ export function useHttp() {
     };
 
     const get = (path, file) => {
-        const url = window.location.origin + path + '/' + store.state.tenant + '/' + file;
+        const token = () => async (dispatch) => await getToken();
+        const { decodedToken } = useKeycloak();
+
+        const url = window.location.origin + path + '/' + toValue(decodedToken).tenant + '/' + file;
         if (url == null) {
             return Promise.resolve();
         }

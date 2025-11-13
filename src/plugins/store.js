@@ -1,48 +1,47 @@
 import { reactive, readonly } from 'vue';
 
+const breadcrumbs  = JSON.parse(localStorage.getItem('breadcrumbs') || '[]');
+const project = JSON.parse(localStorage.getItem('project') || null);
+const tailoring = JSON.parse(localStorage.getItem('tailoring') || null);
+const links = JSON.parse(localStorage.getItem('links') || '[]');
+
 const state = reactive({
-    authRequired: window?.configs?.[AUTH_REQUIRED] || AUTH_REQUIRED,
-    auth: null,
-    tenant: window?.configs?.[APP_TENANT] || APP_TENANT,
     loading: false,
     help: false,
-    links: [],
-    breadcrumbs: [],
     toast: null,
-    project: null,
-    tailoring: null,
-    returnUrl: null,
+    links: links,
+    breadcrumbs: breadcrumbs,
+    project: project,
+    tailoring: tailoring,
 
 });
 
-const getters = {
-    authenticated: () => state.auth != null,
-    accessToken: () => state.auth?.accessToken
-};
-
 const mutations = {
-    authRequired: (authRequired) => state.authRequired = authRequired,
-    auth: (auth) => state.auth = auth,
-    logout: () => state.auth = null,
-    accessToken: (accessToken) => state.auth.accessToken = accessToken,
-    tenant: (tenant) => {
-        state.tenant = tenant;
-        localStorage.setItem('tenant', tenant);
-    },
     loading: (loading) => state.loading = loading,
     help: (help) => state.help = help,
-    links: (links) => state.links = links,
-    breadcrumbs: (breadcrumbs) => state.breadcrumbs = breadcrumbs,
     toast: (toast) => state.toast = toast,
-    project: (project) => state.project = project,
-    tailoring: (tailoring) => state.tailoring = tailoring,
-    returnUrl: (returnUrl) => state.returnUrl = returnUrl
+    links: (links) => {
+        state.links = links;
+        localStorage.setItem('links', JSON.stringify(links));
+    },
+    breadcrumbs: (breadcrumbs) => {
+        state.breadcrumbs = breadcrumbs;
+        localStorage.setItem('breadcrumbs', JSON.stringify(breadcrumbs));
+    },
+    project: (project) => {
+        state.project = project;
+        localStorage.setItem('project', JSON.stringify(project));
+    },
+    tailoring: (tailoring) => {
+        state.tailoring = tailoring;
+        localStorage.setItem('tailoring', JSON.stringify(tailoring))
+    },
 };
 
 const actions = {};
+
 export default {
     state: readonly(state),
-    getters,
     mutations,
     actions
 };

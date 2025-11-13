@@ -20,7 +20,7 @@ export function useProjects() {
             return new Promise((resolve, reject) => {
                 const _projects = [];
                 return api
-                    .get(toValue(store.state).links.project.href)
+                    .get(toValue(store.state).links.projects.href)
                     .then((response) => {
                         if (response.data._embedded != undefined) {
                             for (const item of response.data._embedded.projects) {
