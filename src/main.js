@@ -58,10 +58,11 @@ app.use(PrimeVue, {
 app.use(ToastService);
 app.use(ConfirmationService);
 
+app.use(router);
+
 // initialize
 const origin = window.location.origin + '/api/';
 api.get(origin).then((response) => {
     store.mutations.links(response.data._links);
-    app.use(router);
     app.mount('#app');
 });
