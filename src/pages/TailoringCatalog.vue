@@ -171,7 +171,7 @@ const dummy = ref(
     <EditorDialog :active="edit" :model-value="requirementText" @success="onSuccess" @error="onError" @close:cancel="onCancel" @close:save="onSave" />
 
     <div class="card">
-        <Splitter unstyled="true">
+        <Splitter style="border: 0px">
             <SplitterPanel class="sidebar" :size="25">
                 <Tree
                     v-model:selection-keys="selectedKey"

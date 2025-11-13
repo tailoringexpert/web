@@ -38,7 +38,7 @@ await vueKeycloak.install(app, {
     }
 });
 
-app.use(router);
+
 
 // store
 app.provide('store', store);
@@ -57,6 +57,8 @@ app.use(PrimeVue, {
 });
 app.use(ToastService);
 app.use(ConfirmationService);
+
+app.use(router);
 
 // initialize
 const origin = window.location.origin + '/api/';
