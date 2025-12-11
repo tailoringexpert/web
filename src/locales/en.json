@@ -237,6 +237,13 @@
             "downloadZip": "Download documents"
         }
     },
+    "CompareDialog": {
+        "title": "Compare base catalogues",
+        "base": "Base version of catalogue",
+        "revised": "Revised version of catalogue",
+        "compare": "Compare"
+    },
+
     "Excel2JSONConverterDialog": {
         "title": "Convert Excel file to JSON catalog",
         "convert": "Convert",
