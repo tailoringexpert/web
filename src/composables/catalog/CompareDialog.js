@@ -3,14 +3,14 @@ import api from '@/plugins/api';
 
 import store from '@/plugins/store';
 import { useHttp } from '@/composables/http';
+import { useFile } from '@/composables/file';
 
 export function useCompareDialog() {
-    const { download } = useHttp();
+    const { download, provide } = useHttp();
+    const { readAsString } = useFile();
 
     const state = reactive({
         catalogs: [],
-        base: null,
-        revised: null
     });
 
     const mutations = {
@@ -45,13 +45,39 @@ export function useCompareDialog() {
                     });
             });
         },
-        compare: (base, revised) => {
-            const url = toValue(store.state).links.catalogdiff.href;
+        compareReleased: (base, revised) => {
+            const url = toValue(store.state).links.catalogcompare.href;
             if (url == null) {
                 return Promise.resolve();
             }
 
             return download(url.replace('{base}', toValue(base)).replace("{revised}", toValue(revised)));
+        },
+        comparePreview: (base, revised) => {
+            const url = toValue(store.state).links.catalogcomparepreview.href;
+            console.log(url.replace('{base}', toValue(base)))
+            if (url == null) {
+                return Promise.resolve();
+            }
+
+            return new Promise((resolve, reject) => {
+                readAsString(toValue(revised)).then((response) => {
+                    return api
+                        .post(url.replace('{base}', toValue(base)), response, {
+                            headers: {
+                                'Content-Type': 'application/json;charset=utf-8'
+                            },
+                            responseType: 'arraybuffer'
+                        })
+                        .then((response) => {
+                            provide(response);
+                            resolve(response.data);
+                        })
+                        .catch((error) => {
+                            reject(error.data);
+                        });
+                });
+            });
         }
     };
 
