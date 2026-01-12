@@ -3,11 +3,11 @@ import { ref, computed, inject, onBeforeMount } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useConfirm } from 'primevue/useconfirm';
 
+import CompareDialog from '@/components/catalog/CompareDialog.vue';
 import Excel2JSONConverterDialog from '@/components/catalog/Excel2JSONConverterDialog.vue';
 import JSON2PdfConverterDialog from '@/components/catalog/JSON2PdfConverterDialog.vue';
 
 import { useBaseCatalog } from '@/composables/BaseCatalog';
-// provided interfaces
 // provided interfaces
 const emit = defineEmits(['error']);
 
@@ -72,6 +72,11 @@ const onPreview = () => {
     dialog.value = 'json2pdf';
 };
 
+const onCompare = () => {
+    logger.debug('onCompare');
+    dialog.value = 'compare';
+}
+
 const onError = (title, message) => {
     emit('error', title, message);
 };
@@ -91,6 +96,8 @@ onBeforeMount(() => {
 </script>
 
 <template>
+    <CompareDialog :active="dialog === 'compare'" @success="onSuccess" @error="onError" @close:closed="dialog = 'none'" />
+
     <Excel2JSONConverterDialog :active="dialog === 'excel2Json'" @success="onSuccess" @error="onError" @close:closed="dialog = 'none'" />
 
     <JSON2PdfConverterDialog :active="dialog === 'json2pdf'" @success="onSuccess" @error="onError" @close:closed="dialog = 'none'" />
@@ -120,6 +127,7 @@ onBeforeMount(() => {
                     <div class="flex flex-wrap items-center justify-between gap-2">
                         <span class="text-xl font-bold">{{ t('BaseCatalog.catalog') }}</span>
                         <div class="flex flex-wrap items-end justify-between gap-2">
+                            <Button v-tooltip.bottom="t('BaseCatalog.compare')" icon="pi pi-arrow-right-arrow-left" rounded raised @click="onCompare" />
                             <Button v-tooltip.bottom="t('BaseCatalog.convert')" icon="pi pi-file-import" rounded raised @click="onConvert" />
                             <Button v-tooltip.bottom="t('BaseCatalog.preview')" icon="pi pi-file-export" rounded raised @click="onPreview" />
                         </div>
