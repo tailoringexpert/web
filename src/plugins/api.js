@@ -30,9 +30,7 @@ instance.interceptors.request.use(
 
 instance.interceptors.response.use(
     (response) => {
-        setTimeout((response) => {
-            store.mutations.loading(false);
-        }, 10);
+        store.mutations.loading(false);
         return response;
     },
     async (error) => {

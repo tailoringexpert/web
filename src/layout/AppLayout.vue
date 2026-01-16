@@ -170,9 +170,9 @@ const onAbout = () => {
         <app-footer @open="onOpen" />
     </div>
 
-    <BlockUI :blocked="blocked" full-screen>
+    <div v-if="blocked" class="z-[9999] p-blockui p-blockui-mask p-overlay-mask p-overlay-mask-enter-active p-blockui-mask-document">
         <ProgressSpinner v-if="blocked" fill="transparent" style="position: fixed; top: 50%; left: 50%; z-index: 10000" />
-    </BlockUI>
+    </div>
 
     <ConfirmDialog />
     <Toast />
