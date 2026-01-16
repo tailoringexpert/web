@@ -5,7 +5,7 @@
     <groupId>eu.tailoringexpert</groupId>
     <artifactId>tailoringexpert-web</artifactId>
     <name>${project.groupId}:${project.artifactId}</name>
-    <version>2.0.4-SNAPSHOT</version>
+    <version>2.0.4</version>
     <description>TailoringExpert Web Frontend</description>
     <packaging>jar</packaging>
 
