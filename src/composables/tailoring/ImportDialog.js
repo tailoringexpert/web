@@ -33,6 +33,24 @@ export function useImportDialog() {
                         reject(error.response.data);
                     });
             });
+        },
+
+        updateRequirements: () => {
+            const url = toValue(state.tailoring)._links.requirementsphase.href;
+            if (url == null) {
+                return Promise.resolve();
+            }
+
+            return new Promise((resolve, reject) => {
+                return api
+                    .put(url)
+                    .then(() => {
+                        resolve('Accepted');
+                    })
+                    .catch((error) => {
+                        reject(error.response.data);
+                    });
+            });
         }
     };
 

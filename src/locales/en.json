@@ -321,8 +321,11 @@
     },
     "ImportDialog": {
         "title": "Import tailored requirements",
-        "files": "Drag and drop Excel file to here to update requirements.",
+        "importText": "Import requirement states and update text from an existing Excel file.",
+        "files": "Select Excel file to update requirements.",
         "upload": "Import",
+        "unselectText": "Unselect all requirements not belonging to tailoring phases.",
+        "unselect": "Unselect",
         "state": {
             "success": "Requirements changed",
             "error": "Requirements could not be imported"

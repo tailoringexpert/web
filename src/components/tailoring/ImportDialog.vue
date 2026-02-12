@@ -63,6 +63,22 @@ const onUpload = () => {
         });
 };
 
+const onUpdateRequirements = () => {
+    logger.debug("onUpdateRequirements")
+
+    actions
+            .updateRequirements()
+            .then(() => {
+                emit('close:closed');
+                onSuccess(t('ImportDialog.title'), t('ImportDialog.state.success'));
+            })
+            .catch((error) => {
+                console.error(error);
+                onSuccess(t('ImportDialog.title'), t('ImportDialog.state.error'));
+            });
+
+}
+
 const onSuccess = (title, message) => {
     emit('success', title, message);
 };
@@ -79,17 +95,40 @@ const onClose = () => {
 </script>
 
 <template>
-    <Dialog :visible="active" :header="t('ImportDialog.title')" :modal="true" @update:visible="onClose">
+    <Dialog :visible="active" :header="t('ImportDialog.title')" :modal="true" @update:visible="onClose" :style="{ width: '50vw' }">
         <template #footer>
             <Button :label="$t('close')" @click="onClose" />
         </template>
 
-        <div v-if="active" class="flex flex-col gap-1">
-            <FileUpload mode="advanced" custom-upload="true" :upload-label="t('ImportDialog.upload')" multiple="false" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" @select="onSelect" @uploader="onUpload">
-                <template #empty>
-                    <span>{{ t('ImportDialog.files') }}</span>
-                </template>
-            </FileUpload>
+         <div class="card">
+            <div class="flex flex-col md:flex-row ">
+                <div class="w-full md:w-5/12 flex flex-col items-center justify-top gap-3 py-5" >
+                    <p class="leading-normal">
+                            {{ t('ImportDialog.importText') }}
+                    </p>
+                    <div class="flex flex-col gap-2">
+                        <FileUpload mode="advanced" custom-upload="true" :upload-label="t('ImportDialog.upload')" multiple="false" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" @select="onSelect" @uploader="onUpload">
+                            <template #empty>
+                                <span>{{ t('ImportDialog.files') }}</span>
+                            </template>
+                        </FileUpload>
+                    </div>
+                </div>
+
+                <div class="w-full md:w-2/12">
+                    <Divider layout="vertical" class="hidden! md:flex!"><b>OR</b></Divider>
+                    <Divider layout="horizontal" class="flex! md:hidden!" align="center"><b>OR</b></Divider>
+                </div>
+
+                <div class="w-full md:w-5/12 flex flex-col items-center justify-top gap-3 py-5">
+                    <p class="leading-normal">
+                        {{ t('ImportDialog.unselectText') }}
+                    </p>
+                    <p>
+                        <Button :label="$t('ImportDialog.unselect')" @click="onUpdateRequirements" class="w-full max-w-[17.35rem] mx-auto"></Button>
+                    </p>
+                </div>
+            </div>
         </div>
     </Dialog>
 </template>
