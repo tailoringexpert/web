@@ -297,9 +297,12 @@
         }
     },
     "ImportDialog": {
-        "title": "Importier getailorte Anforderungen",
-        "files": "Drag and drop Excel file to here to update requirements.",
+        "title": "Importiert getailorter Anforderungen",
+        "importText": "Excel-Datei mit zu aktualisierenden Anforderungen hier ablegen.",
+        "files": "Excel-Datei hier ablegen.",
         "upload": "Import",
+        "unselectText": ".",
+        "unselect": "Unselect",
         "state": {
             "success": "Anforderungen aktualisiert",
             "error": "Anforderungen konnten nicht aktualisiert werden"
