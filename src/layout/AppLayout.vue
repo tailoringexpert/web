@@ -1,6 +1,7 @@
 <script setup>
 import { useRoute, useRouter } from 'vue-router';
-import { inject, computed, ref, reactive, watch } from 'vue';
+import { inject, computed, ref, reactive, watch, toValue } from 'vue';
+import { getToken, useKeycloak } from '@josempgon/vue-keycloak'
 
 import AppFooter from '@/layout/AppFooter.vue';
 import AppSidebar from '@/layout/AppSidebar.vue';
@@ -156,28 +157,70 @@ const onAbout = () => {
         }
     });
 };
+
+const onScreeningsheet =  () => {
+    console.log("onScreeningsheet")
+
+    const { decodedToken } = useKeycloak();
+    const tenant = toValue(decodedToken).tenant;
+
+    const link = document.createElement('a');
+    link.href =  globalThis.location.origin + '/static/' + tenant + '/screeningsheet.pdf';
+    link.target = '_blank';
+    link.download = 'screeningsheet.pdf';
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+
+};
 </script>
 
 <template>
-    <div class="layout-wrapper" :class="containerClass">
-        <app-topbar @help="onHelp" @open="onOpen" @logout="onLogout" @login="onLogin" />
-        <app-sidebar @help="onHelp" @about="onAbout" />
-        <div class="layout-main-container">
-            <div class="layout-main">
-                <router-view @success="onSuccess" @error="onError" />
-            </div>
-        </div>
-        <app-footer @open="onOpen" />
+  <div
+    class="layout-wrapper"
+    :class="containerClass"
+  >
+    <app-topbar
+      @help="onHelp"
+      @open="onOpen"
+      @logout="onLogout"
+      @login="onLogin"
+    />
+    <app-sidebar
+      @help="onHelp"
+      @about="onAbout"
+      @screeningsheet="onScreeningsheet"
+    />
+    <div class="layout-main-container">
+      <div class="layout-main">
+        <router-view
+          @success="onSuccess"
+          @error="onError"
+        />
+      </div>
     </div>
+    <app-footer @open="onOpen" />
+  </div>
 
-    <div v-if="blocked" class="z-[9999] p-blockui p-blockui-mask p-overlay-mask p-overlay-mask-enter-active p-blockui-mask-document">
-        <ProgressSpinner v-if="blocked" fill="transparent" style="position: fixed; top: 50%; left: 50%; z-index: 10000" />
-    </div>
+  <div
+    v-if="blocked"
+    class="z-[9999] p-blockui p-blockui-mask p-overlay-mask p-overlay-mask-enter-active p-blockui-mask-document"
+  >
+    <ProgressSpinner
+      v-if="blocked"
+      fill="transparent"
+      style="position: fixed; top: 50%; left: 50%; z-index: 10000"
+    />
+  </div>
 
-    <ConfirmDialog />
-    <Toast />
+  <ConfirmDialog />
+  <Toast />
 
-    <Drawer v-model:visible="help.state" position="bottom" style="height: auto">
-        <p v-html="help.text" />
-    </Drawer>
+  <Drawer
+    v-model:visible="help.state"
+    position="bottom"
+    style="height: auto"
+  >
+    <p v-html="help.text" />
+  </Drawer>
 </template>

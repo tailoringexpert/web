@@ -2,7 +2,7 @@
     "name": "TailoringeXpert",
     "version": "2.0.5-SNAPSHOT",
     "scripts": {
-        "dev": "vite",
+        "dev": "vite --host",
         "build": "vite build",
         "build.prod": "vite build",
         "build.dev": "vite build  --mode development",
