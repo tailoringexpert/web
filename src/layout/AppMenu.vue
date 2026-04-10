@@ -10,6 +10,7 @@ const model = ref([
         items: [
             { label: 'Projects', icon: 'pi pi-fw pi-list', to: '/project' },
             { label: 'Catalogs', icon: 'pi pi-fw pi-book', to: '/catalog' },
+            { label: 'Matrices', icon: 'pi pi-fw pi-th-large', to: '/matrix' },
             { label: 'Screeningsheet', icon: 'pi pi pi-id-card', command: () => emit('screeningsheet') }
         ]
     },

@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>eu.tailoringexpert</groupId>
@@ -45,13 +47,15 @@
 
     <distributionManagement>
         <snapshotRepository>
-            <id>tailoringexpert-snapshots</id>
-            <!--suppress UnresolvedMavenProperty -->
+            <id>${server.snapshot}</id>
+            <!--suppress
+                    UnresolvedMavenProperty -->
             <url>${tailoringexpert-snapshots.repository}</url>
         </snapshotRepository>
         <repository>
-            <id>tailoringexpert-releases</id>
-            <!--suppress UnresolvedMavenProperty -->
+            <id>${server.release}</id>
+            <!--suppress
+                    UnresolvedMavenProperty -->
             <url>${tailoringexpert-releases.repository}</url>
         </repository>
     </distributionManagement>
@@ -93,7 +97,6 @@
                 <configuration>
                     <descriptors>
                         <descriptor>distribution.xml</descriptor>
-                        <descriptor>docker.xml</descriptor>
                     </descriptors>
                 </configuration>
                 <executions>

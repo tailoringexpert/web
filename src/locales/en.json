@@ -219,6 +219,44 @@
             }
         }
     },
+    "Matrix": {
+        "loading": "Loading matrix files. Please wait.",
+        "empty": "No matrix files found",
+        "matrices": "Matrix | Matrices",
+        "name": "Name",
+        "description": "Description",
+        "catalogueVersion": "Based on catalogue",
+        "hash": "Hash",
+        "creationTimestamp": "Createad at",
+        "new": "New matrix",
+        "action": "Actions",
+        "delete": {
+            "title": "Delete matrix file",
+            "text": "Do you really want to delete the matrix file?",
+            "state": {
+                "success": "Matrix file deleted",
+                "error": "Matrix file could not be deleted"
+            }
+        },
+        "tooltip": {
+            "download": "Dowload",
+            "delete": "Delete"
+        }
+    },
+    "MatrixFileDialog": {
+        "title": "New matrix",
+        "file": "Matrix file",
+        "catalogue": "Based on catalogue",
+        "cataloguePlaceholder": "Matrix file created with this base catalogue version",
+        "description": "Description",
+        "error": {
+            "nofile": "No matrix file!"
+        },
+        "state": {
+            "success": "Name Matrix file successfully created",
+            "error": "Matrix file could not be created"
+        }
+    },
     "BaseCatalog": {
         "loading": "Loading basecatalogs. Please wait.",
         "empty": "No basecatalogs found",
