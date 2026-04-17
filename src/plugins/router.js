@@ -79,7 +79,12 @@ const routes = [
                path: '/catalog',
                component: () => import('@/pages/BaseCatalog.vue'),
                name: 'basecatalog',
-           }
+           },
+           {
+               path: '/matrix',
+               component: () => import('@/pages/Matrix.vue'),
+               name: 'matrix',
+           },
        ]
    }
 

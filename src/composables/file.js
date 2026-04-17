@@ -7,7 +7,17 @@ export function useFile() {
             reader.onerror = (error) => reject(error);
         });
 
+    const readAsBinary = (file) =>
+        new Promise((resolve, reject) => {
+            const reader = new FileReader();
+
+            reader.onload = () => resolve(reader.result.split(',')[1]);
+            reader.onerror = (error) => reject(error);
+            reader.readAsDataURL(file);
+        });
+
     return {
-        readAsString
+        readAsString,
+        readAsBinary
     };
 }
