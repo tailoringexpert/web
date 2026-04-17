@@ -30,7 +30,6 @@ pipeline {
         GIT_CREDENTIALS = credentials('TAILORINGEXPERT_GITHUB_CREDENTIALS')
         GPG_SIGNKEY = credentials('GITHUB_GPG_SIGNKEY')
         NEXUS_CREDENTIALS = credentials('NEXUS_CREDENTIALS')
-        MAVEN_CUSTOM_CREDENTIALS = credentials('MAVEN_CUSTOM_CREDENTIALS')
         SONAR_TOKEN = credentials('TAILORINGEXPERT_SONAR_TOKEN')
         GIT_REPOSITORY = 'tailoringexpert/web.git'
         
@@ -46,7 +45,7 @@ pipeline {
 
     agent {
         docker {
-            image 'tailoringexpert/maven:3.9-eclipse-23'
+            image 'tailoringexpert/maven:3.9-eclipse-25'
             args '''  
                 -u 501:1000
                 -v $GPG_VOLUME:/.gnupg \
@@ -62,10 +61,6 @@ pipeline {
                 -e NEXUS_RELEASEURL=$NEXUS_RELEASEURL \
                 -e NEXUS_CREDENTIALS_USR=$NEXUS_CREDENTIALS_USR \
                 -e NEXUS_CREDENTIALS_PSW=$NEXUS_CREDENTIALS_PSW \
-                -e MAVEN_CUSTOM_CREDENTIALS_USR=$MAVEN_CUSTOM_CREDENTIALS_USR \
-                -e MAVEN_CUSTOM_CREDENTIALS_PSW=$MAVEN_CUSTOM_CREDENTIALS_PSW \
-                -e MAVEN_CUSTOM_SNAPSHOTURL=$MAVEN_CUSTOM_SNAPSHOTURL \
-                -e MAVEN_CUSTOM_RELEASEURL=$MAVEN_CUSTOM_RELEASEURL \
                 -e GPG_SIGNKEY=$GPG_SIGNKEY \
                 -e SONAR_TOKEN=$SONAR_TOKEN 
             '''
@@ -110,7 +105,7 @@ pipeline {
                 sh('git config commit.gpgsign true')
                 sh('git config user.signingkey $GPG_SIGNKEY')
                 
-                sh "mvn --settings .jenkins/settings.xml -Dmaven.repo.local=${M2_VOLUME}/repository -B -Dresume=false -DargLine='-DprocessAllModules --settings .jenkins/settings.xml -Dmaven.repo.local=/home/maven/.m2 --settings .jenkins/settings.xml' -DskipTestProject=true  -DgpgSignTag=true -DgpgSignCommit=true -DpostReleaseGoals=deploy gitflow:release"
+                sh "mvn --settings .jenkins/settings.xml -Dmaven.repo.local=${M2_VOLUME}/repository -B -Dresume=false -DargLine='-DprocessAllModules --settings .jenkins/settings.xml -Dmaven.repo.local=/home/maven/.m2 --settings .jenkins/settings.xml' -DskipTestProject=true  -DgpgSignTag=true -DgpgSignCommit=true gitflow:release"
 
                 // remove credentials
                 sh('git remote set-url origin $GIT_URL')
@@ -124,14 +119,21 @@ pipeline {
                     expression { params.DEPLOY }
                 }
             }
-                    
+
             steps {
                 script {
-                    if (params.DEPLOY) {
+                    if (params.RELEASE_BUILD) {
+                        git branch: "main", url: env.GIT_URL, credentialsId: GIT_CREDENTIALS_ID
+                    }
+
+                    if (params.DEPLOY || params.RELEASE_BUILD) {
+                        // Standard-Deploy
                         sh "mvn --settings .jenkins/settings.xml -Dmaven.repo.local=${M2_VOLUME}/repository -DskipTests deploy -P tailoringexpert-maven"
+
+                        // Optionaler Deploy in ein weiteres Repository via Profil
                         if (params.DEPLOY_TO_CUSTOM_REPOSITORY) {
                             sh "mvn --settings .jenkins/settings.xml -Dmaven.repo.local=${M2_VOLUME}/repository -DskipTests deploy -P custom-maven"
-                        }                        
+                        }
                     } else {
                         sh 'exit 0'
                     }
