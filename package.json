@@ -1,6 +1,6 @@
 {
     "name": "TailoringeXpert",
-    "version": "2.0.5-SNAPSHOT",
+    "version": "2.0.7-SNAPSHOT",
     "scripts": {
         "dev": "vite --host",
         "devcontainer": "vite --mode devcontainer --host",
