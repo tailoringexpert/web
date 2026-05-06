@@ -131,6 +131,13 @@
             "state": {
                 "success": "Level updated"
             }
+        },
+        "loadMatrix": {
+            "title": "Matrix",
+            "state": {
+                "success": "Matrix loaded",
+                "removed": "Matrix removed"
+            }
         }
     },
     "CatalogSelection": {
@@ -149,6 +156,7 @@
         "empty": "No parameters found",
         "project": "Project",
         "profilePlaceholder": "Choose a profile",
+        "matrixPlaceholder": "Choose a matrix",
         "name": "Name",
         "value": "Value",
         "parameterdialog": {
@@ -216,6 +224,13 @@
             "title": "Parameter",
             "state": {
                 "success": "Level updated"
+            }
+        },
+        "loadMatrix": {
+            "title": "Matrix",
+            "state": {
+                "success": "Matrix loaded",
+                "removed": "Matrix removed"
             }
         }
     },

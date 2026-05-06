@@ -1,7 +1,7 @@
-import { reactive, toValue, readonly, toRef } from 'vue';
-import { useI18n } from 'vue-i18n';
-import store from '@/plugins/store';
 import api from '@/plugins/api';
+import store from '@/plugins/store';
+import { reactive, readonly, toRef, toValue } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 export function useSelectionvectorEdit() {
 
@@ -11,17 +11,37 @@ export function useSelectionvectorEdit() {
             state.profiles = response.data._embedded.selectionVectorProfiles;
         });
 
+    api
+        .get(store.state.links['matrix'].href)
+        .then((response) => {
+            state.matrices = response.data._embedded.matrices;
+
+            const _matrices = [];
+            for (const item of response.data._embedded.matrices) {
+                const links = item._links;
+
+                _matrices.push({
+                    name: item.name,
+                    file: links.self.href
+                });
+            }
+            mutations.matrices(_matrices);
+        });
+
+
     const { t } = useI18n();
 
     const state = reactive({
         profiles: [],
         selectionvector: null,
-        levels: []
+        levels: [],
+        matrices: []
     });
 
     const mutations = {
         selectionvector: (selectionvector) => (state.selectionvector = toRef(selectionvector)),
-        levels: (levels) => (state.levels = toRef(levels))
+        levels: (levels) => (state.levels = toRef(levels)),
+        matrices: (matrices) => (state.matrices = toRef(matrices))
     };
 
     const actions = {
@@ -55,12 +75,29 @@ export function useSelectionvectorEdit() {
                 });
                 resolve(data);
             });
-        }
-    };
+        },
+        loadMatrix: (matrix) => {
+            const url = toValue(matrix.file);
+            if (url == null) {
+                return Promise.resolve(null);
+            }
 
+            return new Promise((resolve, reject) => {
+            return api
+                .get(url, { responseType: 'arraybuffer' })
+                .then((response) => {
+                    const bytes = new Uint8Array(response.data);
+                    resolve(bytes.toBase64());
+                })
+                .catch((error) => {
+                    reject(new Error(error.data));
+                });
+        });
+        }
+    }
     return {
         state: readonly(state),
-        mutations,
-        actions
+            mutations,
+            actions
     };
 }

@@ -1,8 +1,9 @@
 <script setup>
-import { ref, watch, computed, inject } from 'vue';
-import { useI18n } from 'vue-i18n';
 import { useToast } from 'primevue/usetoast';
+import { computed, inject, ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 
+import { useFile } from '@/composables/file';
 import { useSelectionvectorEdit } from '@/composables/selectionvector/SelectionvectorEdit';
 
 // provided interfaces
@@ -18,13 +19,14 @@ const props = defineProps({
         }
     }
 });
-const emit = defineEmits(['selectionvector-modified']);
+const emit = defineEmits(['selectionvector-modified', "matrix-loaded"]);
 
 // injects
 const logger = inject('logger');
 
 // internal
 const { state, mutations, actions } = useSelectionvectorEdit();
+const { readAsBinary } = useFile();
 const { t } = useI18n();
 const toast = useToast();
 
@@ -32,6 +34,9 @@ const active = ref(false);
 
 const profiles = computed(() => state.profiles);
 const profile = ref();
+
+const matrices = computed(() => state.matrices);
+const matrix = ref();
 
 const items = computed(() => state.levels);
 const editItem = ref();
@@ -47,11 +52,24 @@ watch(
 watch(profile, (newValue) => {
     logger.debug('profile changed');
     mutations.selectionvector(newValue);
+
     actions.initialize();
 
     emit('selectionvector-modified', {
         selectionVector: { levels: newValue.levels }
     });
+});
+
+watch(matrix, (newValue) => {
+    if (newValue == null) {
+        emit('matrix-loaded', null );
+        return;
+    }
+    actions.loadMatrix(newValue)
+    .then((response) => {
+        emit('matrix-loaded', response );
+    });
+
 });
 
 // event handlers
@@ -89,53 +107,108 @@ const onCancel = () => {
 </script>
 
 <template>
-    <Dialog v-model:visible="active" :style="{ width: '450px' }" :header="t('SelectionVectorEdit.parameterdialog.title')" :modal="true">
-        <div class="flex flex-col gap-6">
-            <div>
-                <label for="value" class="block font-bold mb-3">{{ editItem.label }}</label>
-                <InputText id="value" v-model.trim="editItem.value" required="true" autofocus :invalid="submitted && !editItem.value" fluid />
-                <small v-if="submitted && !editItem.value" class="text-red-500">{{ t('SelectionVectorEdit.parameterdialog.required.value') }}</small>
-            </div>
-        </div>
+  <Dialog
+    v-model:visible="active"
+    :style="{ width: '450px' }"
+    :header="t('SelectionVectorEdit.parameterdialog.title')"
+    :modal="true"
+  >
+    <div class="flex flex-col gap-6">
+      <div>
+        <label
+          for="value"
+          class="block font-bold mb-3"
+        >{{ editItem.label }}</label>
+        <InputText
+          id="value"
+          v-model.trim="editItem.value"
+          required="true"
+          autofocus
+          :invalid="submitted && !editItem.value"
+          fluid
+        />
+        <small
+          v-if="submitted && !editItem.value"
+          class="text-red-500"
+        >{{ t('SelectionVectorEdit.parameterdialog.required.value') }}</small>
+      </div>
+    </div>
 
-        <template #footer>
-            <Button :label="t('cancel')" icon="pi pi-times" text @click="OnCancel" />
-            <Button :label="t('save')" icon="pi pi-check" @click="onSave" />
+    <template #footer>
+      <Button
+        :label="t('cancel')"
+        icon="pi pi-times"
+        text
+        @click="OnCancel"
+      />
+      <Button
+        :label="t('save')"
+        icon="pi pi-check"
+        @click="onSave"
+      />
+    </template>
+  </Dialog>
+
+  <Card>
+    <template #title>
+      <div class="flex items-center justify-left mb-0">
+        <span>{{ t('SelectionVectorEdit.project') }}: &nbsp;</span><span>{{ project }}</span>
+      </div>
+    </template>
+
+    <template #content>
+      <DataTable
+        :value="items"
+        data-key="label"
+        striped-rows
+        scrollable
+        scroll-height="400px"
+        table-style="min-width: 50rem"
+        class="col-span-full"
+      >
+        <template #empty>
+          {{ t('SelectionVectorEdit.empty') }}
         </template>
-    </Dialog>
-
-    <Card>
-        <template #title>
-            <div class="flex items-center justify-left mb-0">
-                <span>{{ t('SelectionVectorEdit.project') }}: &nbsp;</span><span>{{ project }}</span>
-            </div>
+        <template #loading>
+          {{ t('SelectionVectorEdit.loading') }}
         </template>
 
-        <template #content>
-            <DataTable :value="items" data-key="label" striped-rows scrollable scroll-height="400px" table-style="min-width: 50rem" class="col-span-full">
-                <template #empty>
-                    {{ t('SelectionVectorEdit.empty') }}
-                </template>
-                <template #loading>
-                    {{ t('SelectionVectorEdit.loading') }}
-                </template>
+        <template #header>
+          <div class="flex flex-wrap items-end justify-end gap-2">
+            <Select
+              v-model="profile"
+              :options="profiles"
+              option-label="name"
+              :placeholder="t('SelectionVectorEdit.profilePlaceholder')"
+            />
 
-                <template #header>
-                    <div class="flex flex-wrap items-end justify-end gap-2">
-                        <Select v-model="profile" :options="profiles" option-label="name" :placeholder="t('SelectionVectorEdit.profilePlaceholder')" />
-                    </div>
-                </template>
-
-                <Column field="label" :header="t('SelectionVectorEdit.name')" />
-                <Column :header="t('SelectionVectorEdit.value')">
-                    <template #body="slotProps">
-                        <span @click="onEdit(slotProps.data)"
-                            >{{ slotProps.data.value }}
-                            <Button icon="pi pi-pencil" variant="text" rounded @click="onEdit(slotProps.data)" />
-                        </span>
-                    </template>
-                </Column>
-            </DataTable>
+            <Select
+              v-model="matrix"
+              :options="matrices"
+              option-label="name"
+              :placeholder="t('SelectionVectorEdit.matrixPlaceholder')"
+              show-clear
+            />
+          </div>
         </template>
-    </Card>
+
+        <Column
+          field="label"
+          :header="t('SelectionVectorEdit.name')"
+        />
+        <Column :header="t('SelectionVectorEdit.value')">
+          <template #body="slotProps">
+            <span @click="onEdit(slotProps.data)">{{ slotProps.data.value }}
+              <Button
+                icon="pi pi-pencil"
+                variant="text"
+                rounded
+                @click="onEdit(slotProps.data)"
+              />
+            </span>
+          </template>
+        </Column>
+      </DataTable>
+    </template>
+  </Card>
 </template>
