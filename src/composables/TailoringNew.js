@@ -1,5 +1,5 @@
-import { reactive, readonly, toRef, toValue } from 'vue';
 import api from '@/plugins/api';
+import { reactive, readonly, toRef, toValue } from 'vue';
 
 import store from '@/plugins/store';
 
@@ -9,7 +9,8 @@ export function useTailoringNew() {
         note: null,
         project: null,
         screeningsheet: { levels: {} },
-        selectionvector: null
+        selectionvector: null,
+        matrix: null
     });
 
     const mutations = {
@@ -17,7 +18,8 @@ export function useTailoringNew() {
         note: (note) => (state.note = toRef(note)),
         project: (project) => (state.project = toRef(project)),
         screeningsheet: (screeningsheet) => (state.screeningsheet = toRef(screeningsheet)),
-        selectionvector: (selectionvector) => (state.selectionvector = toRef(selectionvector))
+        selectionvector: (selectionvector) => (state.selectionvector = toRef(selectionvector)),
+        matrix: (matrix) => (state.matrix = toRef(matrix))
     };
 
     const actions = {
@@ -26,7 +28,8 @@ export function useTailoringNew() {
                 catalog: toValue(state.catalog).version,
                 note: toValue(state.note),
                 screeningSheet: toValue(state.screeningsheet),
-                selectionVector: toValue(state.selectionvector)
+                selectionVector: toValue(state.selectionvector),
+                matrix: toValue(state.matrix)
             };
 
             return new Promise((resolve, reject) => {

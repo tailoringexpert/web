@@ -47,9 +47,12 @@ export default ({ mode }) => {
             proxy: {
                 '^/api': {
                     target: process.env.VITE_API_TARGET
+                },
+                '^/auth': {
+                    target: process.env.VITE_IDM_TARGET,
                 }
             },
-             sourcemap: true,
+            sourcemap: true,
         },
 
         plugins: [
@@ -63,6 +66,7 @@ export default ({ mode }) => {
                 name: 'native-static-file-server',
                 configureServer(server) {
                     Object.entries(localProxies).forEach(([urlPath, systemPath]) => {
+                        console.log("urlPath: " + urlPath + ", systemPath: " + systemPath);
                         server.middlewares.use(urlPath, (req, res, next) => {
                             const baseDir = path.resolve(process.cwd(), systemPath);
                             const relativeFilePath = req.url.split('?')[0];
