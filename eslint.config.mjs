@@ -1,9 +1,10 @@
+import { FlatCompat } from '@eslint/eslintrc';
+import js from '@eslint/js';
+import vuePrettierConfig from '@vue/eslint-config-prettier';
+import pluginVue from 'eslint-plugin-vue';
 import globals from 'globals';
-import parser from 'vue-eslint-parser';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import js from '@eslint/js';
-import { FlatCompat } from '@eslint/eslintrc';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -14,7 +15,10 @@ const compat = new FlatCompat({
 });
 
 export default [
+    ...pluginVue.configs['flat/recommended'],
     ...compat.extends('plugin:vue/vue3-recommended'),
+    vuePrettierConfig,
+
     {
         languageOptions: {
             globals: {

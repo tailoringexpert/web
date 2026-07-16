@@ -90,6 +90,7 @@
             "editRequirements": "Edit requirements",
             "downloadDocuments": "Download documents",
             "compareTailoring": "Show tailoring diffs",
+            "diffTailorings": "Compare to other tailoring",
             "openSelectionvector": "Open selectionvector",
             "openAttachments": "Open attachments",
             "importRequirements": "Import tailored requirements",
@@ -387,5 +388,13 @@
     "NotesDialog": {
         "title": "Notes",
         "add": "Add"
+    },
+    "TailoringsDiffDialog": {
+        "title": "Create taillorings diff",
+        "diff": "Diff",
+        "state": {
+            "success": "Requirements diff document created",
+            "error": "Requirements diff document could not be created"
+        }
     }
 }
