@@ -1,18 +1,18 @@
 <script setup>
-import { ref, computed, inject, onBeforeMount } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { useRouter, useRoute } from 'vue-router';
 import { useConfirm } from 'primevue/useconfirm';
 import { useToast } from 'primevue/usetoast';
+import { computed, inject, onBeforeMount, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useRoute, useRouter } from 'vue-router';
 
-import TailoringNameDialog from '@/components/tailoring/TailoringNameDialog.vue';
-import DownloadDialog from '@/components/tailoring/DownloadDialog.vue';
 import ScreeningsheetDialog from '@/components/screeningsheet/ScreeningsheetDialog.vue';
 import SelectionVectorDialog from '@/components/selectionvector/SelectionVectorDialog.vue';
 import AttachmentsDialog from '@/components/tailoring/AttachmentsDialog.vue';
+import DownloadDialog from '@/components/tailoring/DownloadDialog.vue';
 import ImportDialog from '@/components/tailoring/ImportDialog.vue';
 import NotesDialog from '@/components/tailoring/NotesDialog.vue';
-
+import TailoringNameDialog from '@/components/tailoring/TailoringNameDialog.vue';
+import TailoringsDiffDialog from '@/components/tailoring/TailoringsDiffDialog.vue';
 import { useProject } from '@/composables/Project';
 
 // provided interfaces
@@ -30,7 +30,6 @@ const route = useRoute();
 
 const confirm = useConfirm();
 const toast = useToast();
-
 
 const project = computed(() => state.project);
 const dialog = ref('none');
@@ -168,6 +167,11 @@ const onImport = (tailoring) => {
     onDialog('import', tailoring);
 };
 
+const onDiff = (tailoring) => {
+    console.log(tailoring);
+    onDialog('diff', tailoring);
+};
+
 const onDialog = (name, tailoring) => {
     dialog.value = name;
     data.value = tailoring;
@@ -208,41 +212,47 @@ const onUpdatedName = (name) => {
 </script>
 
 <template>
-    <TailoringNameDialog :tailoring="data" :active="dialog === 'name'" @success="onSuccess" @error="onError" @close:cancel="dialog = 'none'" @close:close="initialize" />
+    <TailoringNameDialog :tailoring="data" :active="dialog === 'name'" @success="onSuccess" @error="onError"
+        @close:cancel="dialog = 'none'" @close:close="initialize" />
 
-    <DownloadDialog :tailoring="data" :active="dialog === 'download'" @success="onSuccess" @error="onError" @close:closed="dialog = 'none'" />
+    <DownloadDialog :tailoring="data" :active="dialog === 'download'" @success="onSuccess" @error="onError"
+        @close:closed="dialog = 'none'" />
 
-    <ScreeningsheetDialog :screeningsheet="data" :active="dialog === 'screeningsheet'" @success="onSuccess" @error="onError" @close:closed="dialog = 'none'" />
+    <ScreeningsheetDialog :screeningsheet="data" :active="dialog === 'screeningsheet'" @success="onSuccess"
+        @error="onError" @close:closed="dialog = 'none'" />
 
-    <SelectionVectorDialog :tailoring="data" :active="dialog === 'selectionvector'" @success="onSuccess" @error="onError" @close:closed="dialog = 'none'" />
+    <SelectionVectorDialog :tailoring="data" :active="dialog === 'selectionvector'" @success="onSuccess"
+        @error="onError" @close:closed="dialog = 'none'" />
 
-    <AttachmentsDialog :tailoring="data" :active="dialog === 'attachments'" @success="onSuccess" @error="onError" @close:closed="dialog = 'none'" />
-    <ImportDialog :tailoring="data" :active="dialog === 'import'" @success="onSuccess" @error="onError" @close:closed="dialog = 'none'" />
+    <AttachmentsDialog :tailoring="data" :active="dialog === 'attachments'" @success="onSuccess" @error="onError"
+        @close:closed="dialog = 'none'" />
 
-    <NotesDialog :tailoring="data" :active="dialog === 'notes'" @success="onSuccess" @error="onError" @close:closed="dialog = 'none'" />
+    <ImportDialog :tailoring="data" :active="dialog === 'import'" @success="onSuccess" @error="onError"
+        @close:closed="dialog = 'none'" />
+
+    <NotesDialog :tailoring="data" :active="dialog === 'notes'" @success="onSuccess" @error="onError"
+        @close:closed="dialog = 'none'" />
+
+    <TailoringsDiffDialog :tailoring="data" :project="project.name" :active="dialog === 'diff'" @success="onSuccess"
+        @error="onError" @close:closed="dialog = 'none'" />
 
     <Card>
         <template #title>
             <div class="flex items-center justify-left mb-0">
                 <span>{{ t('Project.project', 1) }}: &nbsp;</span><span>{{ project.name }}</span>
-                <Button v-tooltip.bottom="t('Project.tooltip.openScreeningsheet')" variant="text" icon="pi pi-id-card" severity="secondary" rounded @click="onScreeningsheet(project)" />
+                <Button v-tooltip.bottom="t('Project.tooltip.openScreeningsheet')" variant="text" icon="pi pi-id-card"
+                    severity="secondary" rounded @click="onScreeningsheet(project)" />
             </div>
         </template>
 
         <template #content>
-            <DataTable
-                :value="project.tailorings"
-                data-key="name"
-                striped-rows
-                table-style="min-width: 50rem"
-                class="col-span-full"
-                paginator
-                :rows="10"
-                :rows-per-page-options="[10, 15, 20, 25]"
+            <DataTable :value="project.tailorings" data-key="name" striped-rows table-style="min-width: 50rem"
+                class="col-span-full" paginator :rows="10" :rows-per-page-options="[10, 15, 20, 25]"
                 paginator-template="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
-                current-page-report-template="{first} to {last} of {totalRecords}"
-            >
-                <template #empty> No tailoring found. </template>
+                current-page-report-template="{first} to {last} of {totalRecords}">
+                <template #empty>
+                    No tailoring found.
+                </template>
                 <template #loading>
                     {{ $t('Project.loading') }}
                 </template>
@@ -250,15 +260,16 @@ const onUpdatedName = (name) => {
                 <template #header>
                     <div class="flex flex-wrap items-center justify-between gap-2">
                         <span class="text-xl font-bold">{{ $t('Project.tailoring') }}</span>
-                        <Button v-tooltip.bottom="t('Project.tooltip.newTailoring')" icon="pi pi-plus" rounded raised @click="onNew()" />
+                        <Button v-tooltip.bottom="t('Project.tooltip.newTailoring')" icon="pi pi-plus" rounded raised
+                            @click="onNew()" />
                     </div>
                 </template>
 
                 <Column :header="t('Project.name')">
                     <template #body="slotProps">
-                        <span @click="onName(slotProps.data)"
-                            >{{ slotProps.data.name }}
-                            <Button v-tooltip.bottom="t('Project.tooltip.changeName')" icon="pi pi-pencil" variant="text" rounded @click="onName(slotProps.data)" />
+                        <span @click="onName(slotProps.data)">{{ slotProps.data.name }}
+                            <Button v-tooltip.bottom="t('Project.tooltip.changeName')" icon="pi pi-pencil"
+                                variant="text" rounded @click="onName(slotProps.data)" />
                         </span>
                     </template>
                 </Column>
@@ -269,31 +280,49 @@ const onUpdatedName = (name) => {
                 </Column>
                 <Column :header="t('Project.state')">
                     <template #body="slotProps">
-                        <span @click="onState(slotProps.data)"
-                            >{{ slotProps.data.state }}
-                            <Button v-tooltip.bottom="t('Project.tooltip.updateState')" icon="pi pi-pencil" variant="text" rounded @click="onState(slotProps.data)" />
+                        <span @click="onState(slotProps.data)">{{ slotProps.data.state }}
+                            <Button v-tooltip.bottom="t('Project.tooltip.updateState')" icon="pi pi-pencil"
+                                variant="text" rounded @click="onState(slotProps.data)" />
                         </span>
                     </template>
                 </Column>
                 <Column field="catalogVersion" :header="t('Project.catalog')">
                     <template #body="slotProps">
-                        <span @click="onBaseCatalog(slotProps.data)"
-                            >{{ slotProps.data.catalogVersion }}
-                            <Button v-tooltip.bottom="t('Project.tooltip.downloadBasecatalog')" icon="pi pi-pencil" variant="text" rounded @click="onBaseCatalog(slotProps.data)" />
+                        <span @click="onBaseCatalog(slotProps.data)">{{ slotProps.data.catalogVersion }}
+                            <Button v-tooltip.bottom="t('Project.tooltip.downloadBasecatalog')" icon="pi pi-pencil"
+                                variant="text" rounded @click="onBaseCatalog(slotProps.data)" />
                         </span>
                     </template>
                 </Column>
                 <Column :header="t('Project.action')">
                     <template #body="slotProps">
-                        <Button v-tooltip.bottom="t('Project.tooltip.editRequirements')" :disabled="!isTailoringEditable(slotProps.data)" variant="text" icon="pi pi-pen-to-square" severity="secondary" rounded @click="onEdit(slotProps.data)" />
-                        <Button v-tooltip.bottom="t('Project.tooltip.downloadDocuments')" variant="text" icon="pi pi-download" severity="secondary" rounded @click="onDownload(slotProps.data)" />
-                        <Button v-tooltip.bottom="t('Project.tooltip.compareTailoring')" :disabled="!isTailoringEditable(slotProps.data)" variant="text" icon="pi pi-verified" severity="secondary" rounded @click="onCompare(slotProps.data)" />
-                        <Button v-tooltip.bottom="t('Project.tooltip.openScreeningsheet')" variant="text" icon="pi pi-id-card" severity="secondary" rounded @click="onScreeningsheet(slotProps.data)" />
-                        <Button v-tooltip.bottom="t('Project.tooltip.openSelectionvector')" variant="text" icon="pi pi-lightbulb" severity="secondary" rounded @click="onSelectionvector(slotProps.data)" />
-                        <Button v-tooltip.bottom="t('Project.tooltip.openAttachments')" variant="text" icon="pi pi-paperclip" severity="secondary" rounded @click="onAttachments(slotProps.data)" />
-                        <Button v-tooltip.bottom="t('Project.tooltip.importRequirements')" variant="text" :disabled="!isTailoringEditable(slotProps.data)" icon="pi pi-file-excel" severity="secondary" rounded @click="onImport(slotProps.data)" />
-                        <Button v-tooltip.bottom="t('Project.tooltip.openNotes')" variant="text" icon="pi pi-comments" severity="secondary" rounded @click="onNotes(slotProps.data)" />
-                        <Button v-tooltip.bottom="t('Project.tooltip.deleteTailoring')" :disabled="!isTailoringDeletable(slotProps.data)" variant="text" icon="pi pi-trash" severity="secondary" rounded @click="onDelete(slotProps.data)" />
+                        <Button v-tooltip.bottom="t('Project.tooltip.editRequirements')"
+                            :disabled="!isTailoringEditable(slotProps.data)" variant="text" icon="pi pi-pen-to-square"
+                            severity="secondary" rounded @click="onEdit(slotProps.data)" />
+                        <Button v-tooltip.bottom="t('Project.tooltip.downloadDocuments')" variant="text"
+                            icon="pi pi-download" severity="secondary" rounded @click="onDownload(slotProps.data)" />
+                        <Button v-tooltip.bottom="t('Project.tooltip.compareTailoring')"
+                            :disabled="!isTailoringEditable(slotProps.data)" variant="text" icon="pi pi-verified"
+                            severity="secondary" rounded @click="onCompare(slotProps.data)" />
+                        <Button v-tooltip.bottom="t('Project.tooltip.diffTailorings')" variant="text"
+                            icon="pi pi-equals" severity="secondary" rounded @click="onDiff(slotProps.data)" />
+                        <Button v-tooltip.bottom="t('Project.tooltip.openScreeningsheet')" variant="text"
+                            icon="pi pi-id-card" severity="secondary" rounded
+                            @click="onScreeningsheet(slotProps.data)" />
+                        <Button v-tooltip.bottom="t('Project.tooltip.openSelectionvector')" variant="text"
+                            icon="pi pi-lightbulb" severity="secondary" rounded
+                            @click="onSelectionvector(slotProps.data)" />
+                        <Button v-tooltip.bottom="t('Project.tooltip.openAttachments')" variant="text"
+                            icon="pi pi-paperclip" severity="secondary" rounded
+                            @click="onAttachments(slotProps.data)" />
+                        <Button v-tooltip.bottom="t('Project.tooltip.importRequirements')" variant="text"
+                            :disabled="!isTailoringEditable(slotProps.data)" icon="pi pi-file-excel"
+                            severity="secondary" rounded @click="onImport(slotProps.data)" />
+                        <Button v-tooltip.bottom="t('Project.tooltip.openNotes')" variant="text" icon="pi pi-comments"
+                            severity="secondary" rounded @click="onNotes(slotProps.data)" />
+                        <Button v-tooltip.bottom="t('Project.tooltip.deleteTailoring')"
+                            :disabled="!isTailoringDeletable(slotProps.data)" variant="text" icon="pi pi-trash"
+                            severity="secondary" rounded @click="onDelete(slotProps.data)" />
                     </template>
                 </Column>
             </DataTable>
