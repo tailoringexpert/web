@@ -35,6 +35,7 @@ export default ({ mode }) => {
         define: {
             WEB_NAME: JSON.stringify(packageJson.name),
             WEB_VERSION: JSON.stringify(packageJson.version),
+            BACKEND_VERSION: JSON.stringify(packageJson.backend),
             IDM_URL: `"${process.env.VITE_IDM_URL}"`,
             IDM_REALM: `"${process.env.VITE_IDM_REALM}"`,
             IDM_CLIENT: `"${process.env.VITE_IDM_CLIENT}"`
