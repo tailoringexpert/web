@@ -1,13 +1,14 @@
-import { toValue } from 'vue';
-import axios from 'axios';
 import store from '@/plugins/store';
-import { useKeycloak, getToken } from '@josempgon/vue-keycloak'
+import { getToken, useKeycloak } from '@josempgon/vue-keycloak';
+import axios from 'axios';
+import { toValue } from 'vue';
 
 const instance = axios.create({
     headers: {
         'Content-Type': 'application/json;charset=utf-8'
     }
 });
+
 
 const { decodedToken } = useKeycloak()
 
@@ -19,6 +20,10 @@ instance.interceptors.request.use(
     const token = await getToken()
     config.headers['Authorization'] = `Bearer ${token}`
     config.headers['X-TENANT'] = toValue(decodedToken).tenant;
+
+    console.log(toValue(decodedToken));
+    store.mutations.token(toValue(decodedToken))
+
 
     return config
   },

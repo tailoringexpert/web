@@ -1,23 +1,27 @@
 <script setup>
-import { inject, ref, computed } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { useKeycloak } from '@josempgon/vue-keycloak';
 import AppConfigurator from '@/layout/AppConfigurator.vue';
 import { useLayout } from '@/layout/composables/layout';
+import { useKeycloak } from '@josempgon/vue-keycloak';
 import Breadcrumb from 'primevue/breadcrumb';
-
+import { computed, inject, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 const emit = defineEmits(['help', 'login', 'logout']);
 
 const { toggleMenu, toggleDarkMode, isDarkTheme } = useLayout();
 
 const store = inject('store');
 const { t } = useI18n();
+
 const home = ref({
     icon: 'pi pi-home',
     route: '/'
 });
 
+const remainingTime = computed(() => store.getters.remainingTime);
+
 const { isAuthenticated, username, keycloak } = useKeycloak();
+
+
 
 </script>
 
@@ -55,9 +59,7 @@ const { isAuthenticated, username, keycloak } = useKeycloak();
                 <div class="relative">
                     <button
                         v-styleclass="{ selector: '@next', enterFromClass: 'hidden', enterActiveClass: 'animate-scalein', leaveToClass: 'hidden', leaveActiveClass: 'animate-fadeout', hideOnOutsideClick: true }"
-                        type="button"
-                        class="layout-topbar-action layout-topbar-action-highlight"
-                    >
+                        type="button" class="layout-topbar-action layout-topbar-action-highlight">
                         <i class="pi pi-palette" />
                     </button>
                     <AppConfigurator />
@@ -66,18 +68,18 @@ const { isAuthenticated, username, keycloak } = useKeycloak();
 
             <button
                 v-styleclass="{ selector: '@next', enterFromClass: 'hidden', enterActiveClass: 'animate-scalein', leaveToClass: 'hidden', leaveActiveClass: 'animate-fadeout', hideOnOutsideClick: true }"
-                class="layout-topbar-menu-button layout-topbar-action"
-            >
+                class="layout-topbar-menu-button layout-topbar-action">
                 <i class="pi pi-ellipsis-v" />
             </button>
 
+            <Message severity="secondary">{{ remainingTime }}</Message>
             <div class="layout-topbar-menu hidden lg:block">
                 <div class="layout-topbar-menu-content">
                     <Select v-model="$i18n.locale" :options="$i18n.availableLocales"> </Select>
                     <button type="button" class="layout-topbar-action" @click="emit('help')">
                         <i class="pi pi-question" />
                     </button>
-                    <Button icon="pi pi-sign-out" rounded outlined  @click="keycloak.logout()"></Button>
+                    <Button icon="pi pi-sign-out" rounded outlined @click="keycloak.logout()"></Button>
                 </div>
             </div>
         </div>

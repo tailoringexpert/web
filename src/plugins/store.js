@@ -1,9 +1,15 @@
-import { reactive, readonly } from 'vue';
+import { useTokenTimer } from '@/plugins/timer';
+import { computed, reactive, readonly } from 'vue';
 
 const breadcrumbs  = JSON.parse(localStorage.getItem('breadcrumbs') || '[]');
 const project = JSON.parse(localStorage.getItem('project') || null);
 const tailoring = JSON.parse(localStorage.getItem('tailoring') || null);
 const links = JSON.parse(localStorage.getItem('links') || '[]');
+
+const token = reactive({
+    content: null
+});
+const timer = useTokenTimer(() => token.content);
 
 const state = reactive({
     loading: false,
@@ -13,8 +19,9 @@ const state = reactive({
     breadcrumbs: breadcrumbs,
     project: project,
     tailoring: tailoring,
-
+    token: null
 });
+
 
 const mutations = {
     loading: (loading) => state.loading = loading,
@@ -36,12 +43,18 @@ const mutations = {
         state.tailoring = tailoring;
         localStorage.setItem('tailoring', JSON.stringify(tailoring))
     },
+    token: (newToken) => token.content = newToken,
+};
+
+const getters = {
+    remainingTime: computed(() => timer.formattedTime.value)
 };
 
 const actions = {};
 
 export default {
     state: readonly(state),
+    getters,
     mutations,
     actions
 };
