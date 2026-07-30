@@ -58,6 +58,7 @@
         "project": "Project | Projects",
         "tailoring": "Tailoring",
         "name": "Name",
+        "issue": "Issue",
         "phases": "Phases",
         "state": "State",
         "catalog": "Catalog",
@@ -85,6 +86,7 @@
             "openScreeningsheet": "Open screeningsheet",
             "newTailoring": "Create new tailoring",
             "changeName": "Change tailoring name",
+            "changeIssue": "Change tailoring issue",
             "updateState": "Update tailoring state",
             "downloadBasecatalog": "Download basecatalog",
             "editRequirements": "Edit requirements",
@@ -343,6 +345,14 @@
         "state": {
             "success": "Name updated",
             "error": "Name could not be updated"
+        }
+    },
+    "TailoringIssueDialog": {
+        "title": "Edit tailoring issue",
+        "name": "Issue",
+        "state": {
+            "success": "Issue updated",
+            "error": "Issue could not be updated"
         }
     },
     "AttachmentsDialog": {
