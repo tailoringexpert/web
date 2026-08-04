@@ -1,15 +1,15 @@
 <script setup>
-import { ref, computed, onBeforeMount, inject } from 'vue';
-import { useI18n } from 'vue-i18n';
-import sanitizeHtml from 'sanitize-html';
 import Breadcrumb from 'primevue/breadcrumb';
-import DataView from 'primevue/dataview';
 import Card from 'primevue/card';
-import ToggleSwitch from 'primevue/toggleswitch';
-import ScrollTop from 'primevue/scrolltop';
 import ContextMenu from 'primevue/contextmenu';
-import { useToast } from 'primevue/usetoast';
+import DataView from 'primevue/dataview';
+import ScrollTop from 'primevue/scrolltop';
+import ToggleSwitch from 'primevue/toggleswitch';
 import { useConfirm } from 'primevue/useconfirm';
+import { useToast } from 'primevue/usetoast';
+import sanitizeHtml from 'sanitize-html';
+import { computed, inject, onBeforeMount, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 import EditorDialog from '@/components/editor/EditorDialog.vue';
 
@@ -147,7 +147,7 @@ const onError = (title, message) => {
 onBeforeMount(() => {
     store.mutations.breadcrumbs([
         {
-            label: t('TailoringCatalog.project', 2),
+            label: t('Breadcrumbs.project', 2),
             disabled: false,
             exact: true,
             route: { name: 'projects' }
@@ -168,22 +168,16 @@ const dummy = ref(
 </script>
 
 <template>
-    <EditorDialog :active="edit" :model-value="requirementText" @success="onSuccess" @error="onError" @close:cancel="onCancel" @close:save="onSave" />
+    <EditorDialog :active="edit" :model-value="requirementText" @success="onSuccess" @error="onError"
+        @close:cancel="onCancel" @close:save="onSave" />
 
     <div class="card">
         <Splitter style="border: 0px">
             <SplitterPanel class="sidebar" :size="25">
-                <Tree
-                    v-model:selection-keys="selectedKey"
-                    :value="catalog.toc.children"
-                    :filter="true"
-                    filter-mode="lenient"
-                    :filter-placeholder="t('TailoringCatalog.search')"
-                    selection-mode="single"
-                    class="w-full md:w-[25rem]"
-                    @node-select="onSelectChapter"
-                    @contextmenu="onRightClickChapter($event)"
-                />
+                <Tree v-model:selection-keys="selectedKey" :value="catalog.toc.children" :filter="true"
+                    filter-mode="lenient" :filter-placeholder="t('TailoringCatalog.search')" selection-mode="single"
+                    class="w-full md:w-[25rem]" @node-select="onSelectChapter"
+                    @contextmenu="onRightClickChapter($event)" />
                 <ContextMenu ref="chapterContextMenu" :model="chapterContextMenuItems" @hide="chapter = null" />
             </SplitterPanel>
 
@@ -192,8 +186,10 @@ const dummy = ref(
                     <div class="flex pt-10 justify-between">
                         <Breadcrumb :model="breadcrumbs" />
                         <div v-if="chapter">
-                            <Button v-tooltip.bottom="t('TailoringCatalog.tooltip.setRequirementsApplicable')" icon="pi pi-check" rounded text @click="onStates(true)" />
-                            <Button v-tooltip.bottom="t('TailoringCatalog.tooltip.unsetRequirementsApplicable')" icon="pi pi-times" rounded text @click="onStates(false)" />
+                            <Button v-tooltip.bottom="t('TailoringCatalog.tooltip.setRequirementsApplicable')"
+                                icon="pi pi-check" rounded text @click="onStates(true)" />
+                            <Button v-tooltip.bottom="t('TailoringCatalog.tooltip.unsetRequirementsApplicable')"
+                                icon="pi pi-times" rounded text @click="onStates(false)" />
                         </div>
                     </div>
                 </div>
@@ -201,7 +197,8 @@ const dummy = ref(
                 <DataView :value="requirements">
                     <template #empty> &nbsp; </template>
                     <template #list="slotProps">
-                        <div v-for="(item, index) in slotProps.items" :key="index" class="text-left p-3 border-round-sm v-full">
+                        <div v-for="(item, index) in slotProps.items" :key="index"
+                            class="text-left p-3 border-round-sm v-full">
                             <Card>
                                 <template #title>
                                     <div class="flex items-center justify-between mb-0">
@@ -216,12 +213,15 @@ const dummy = ref(
                                     <span v-if="item.reference != null">{{ item.reference }}</span>
                                 </template>
                                 <template #content>
-                                    <p class="m-0 text-xl font-semibold requirement-card" v-html="sanitizeHtml(item.text)" />
+                                    <p class="m-0 text-xl font-semibold requirement-card"
+                                        v-html="sanitizeHtml(item.text)" />
                                 </template>
                                 <template #footer>
                                     <div class="flex justify-end mb-0">
-                                        <Button v-tooltip.bottom="t('TailoringCatalog.tooltip.editRequirement')" variant="text" icon="pi pi-pencil" @click="onEdit(item)" />
-                                        <Button v-tooltip.bottom="t('TailoringCatalog.tooltip.createRequirement')" variant="text" icon="pi pi-plus" @click="onNew(item)" />
+                                        <Button v-tooltip.bottom="t('TailoringCatalog.tooltip.editRequirement')"
+                                            variant="text" icon="pi pi-pencil" @click="onEdit(item)" />
+                                        <Button v-tooltip.bottom="t('TailoringCatalog.tooltip.createRequirement')"
+                                            variant="text" icon="pi pi-plus" @click="onNew(item)" />
                                     </div>
                                 </template>
                             </Card>
@@ -230,7 +230,8 @@ const dummy = ref(
                 </DataView>
             </SplitterPanel>
         </Splitter>
-        <ScrollTop :threshold="100" icon="pi pi-arrow-up" :button-props="{ severity: 'contrast', raised: true, rounded: true }" />
+        <ScrollTop :threshold="100" icon="pi pi-arrow-up"
+            :button-props="{ severity: 'contrast', raised: true, rounded: true }" />
     </div>
 </template>
 

@@ -6,6 +6,10 @@
     "close": "Close",
     "save": "Save",
 
+    "Breadcrumbs": {
+        "project": "Project | Projects"
+    },
+
     "AppTopbar": {
         "tooltip": {
             "login": "login to use TailoringeXpert",
@@ -119,6 +123,7 @@
     },
     "ProjectNew": {
         "title": "Create project",
+
         "catalog": "Catalog",
         "screeningsheet": "Screeningsheet",
         "selectionvector": "Selectionvector",
@@ -212,6 +217,7 @@
         "title": "Edit requirement"
     },
     "TailoringNew": {
+        "project": "Project | Projects",
         "title": "Create tailoring",
         "catalog": "Catalog",
         "screeningsheet": "Screeningsheet",

@@ -194,7 +194,7 @@ const onError = (title, message) => {
 onBeforeMount(() => {
     store.mutations.breadcrumbs([
         {
-            label: t('Project.project', 2),
+            label: t('Breadcrumbs.project', 2),
             disabled: false,
             exact: true,
             route: { name: 'projects' }
