@@ -6,6 +6,10 @@
     "close": "Close",
     "save": "Save",
 
+    "Breadcrumbs": {
+        "project": "Project | Projects"
+    },
+
     "AppTopbar": {
         "tooltip": {
             "login": "login to use TailoringeXpert",
@@ -58,6 +62,7 @@
         "project": "Project | Projects",
         "tailoring": "Tailoring",
         "name": "Name",
+        "issue": "Issue",
         "phases": "Phases",
         "state": "State",
         "catalog": "Catalog",
@@ -85,6 +90,7 @@
             "openScreeningsheet": "Open screeningsheet",
             "newTailoring": "Create new tailoring",
             "changeName": "Change tailoring name",
+            "changeIssue": "Change tailoring issue",
             "updateState": "Update tailoring state",
             "downloadBasecatalog": "Download basecatalog",
             "editRequirements": "Edit requirements",
@@ -117,6 +123,7 @@
     },
     "ProjectNew": {
         "title": "Create project",
+
         "catalog": "Catalog",
         "screeningsheet": "Screeningsheet",
         "selectionvector": "Selectionvector",
@@ -210,6 +217,7 @@
         "title": "Edit requirement"
     },
     "TailoringNew": {
+        "project": "Project | Projects",
         "title": "Create tailoring",
         "catalog": "Catalog",
         "screeningsheet": "Screeningsheet",
@@ -343,6 +351,14 @@
         "state": {
             "success": "Name updated",
             "error": "Name could not be updated"
+        }
+    },
+    "TailoringIssueDialog": {
+        "title": "Edit tailoring issue",
+        "name": "Issue",
+        "state": {
+            "success": "Issue updated",
+            "error": "Issue could not be updated"
         }
     },
     "AttachmentsDialog": {

@@ -11,6 +11,7 @@ import AttachmentsDialog from '@/components/tailoring/AttachmentsDialog.vue';
 import DownloadDialog from '@/components/tailoring/DownloadDialog.vue';
 import ImportDialog from '@/components/tailoring/ImportDialog.vue';
 import NotesDialog from '@/components/tailoring/NotesDialog.vue';
+import TailoringIssueDialog from '@/components/tailoring/TailoringIssueDialog.vue';
 import TailoringNameDialog from '@/components/tailoring/TailoringNameDialog.vue';
 import TailoringsDiffDialog from '@/components/tailoring/TailoringsDiffDialog.vue';
 import { useProject } from '@/composables/Project';
@@ -151,6 +152,10 @@ const onName = (tailoring) => {
     onDialog('name', tailoring);
 };
 
+const onIssue = (tailoring) => {
+    onDialog('issue', tailoring);
+}
+
 const onDownload = (tailoring) => {
     onDialog('download', tailoring);
 };
@@ -189,7 +194,7 @@ const onError = (title, message) => {
 onBeforeMount(() => {
     store.mutations.breadcrumbs([
         {
-            label: t('Project.project', 2),
+            label: t('Breadcrumbs.project', 2),
             disabled: false,
             exact: true,
             route: { name: 'projects' }
@@ -213,6 +218,9 @@ const onUpdatedName = (name) => {
 
 <template>
     <TailoringNameDialog :tailoring="data" :active="dialog === 'name'" @success="onSuccess" @error="onError"
+        @close:cancel="dialog = 'none'" @close:close="initialize" />
+
+    <TailoringIssueDialog :tailoring="data" :active="dialog === 'issue'" @success="onSuccess" @error="onError"
         @close:cancel="dialog = 'none'" @close:close="initialize" />
 
     <DownloadDialog :tailoring="data" :active="dialog === 'download'" @success="onSuccess" @error="onError"
@@ -270,6 +278,14 @@ const onUpdatedName = (name) => {
                         <span @click="onName(slotProps.data)">{{ slotProps.data.name }}
                             <Button v-tooltip.bottom="t('Project.tooltip.changeName')" icon="pi pi-pencil"
                                 variant="text" rounded @click="onName(slotProps.data)" />
+                        </span>
+                    </template>
+                </Column>
+                <Column :header="t('Project.issue')">
+                    <template #body="slotProps">
+                        <span @click="onIssue(slotProps.data)">{{ slotProps.data.issue }}
+                            <Button v-tooltip.bottom="t('Project.tooltip.changeIssue')" icon="pi pi-pencil"
+                                variant="text" rounded @click="onIssue(slotProps.data)" />
                         </span>
                     </template>
                 </Column>

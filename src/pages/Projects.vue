@@ -1,11 +1,11 @@
 <script setup>
-import { ref, computed, inject, onBeforeMount } from 'vue';
+import { computed, inject, onBeforeMount, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRouter } from 'vue-router'
+import { useRouter } from 'vue-router';
 
 import { FilterMatchMode } from '@primevue/core/api';
-import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
+import DataTable from 'primevue/datatable';
 import { useConfirm } from 'primevue/useconfirm';
 import { useToast } from 'primevue/usetoast';
 
@@ -124,7 +124,7 @@ onBeforeMount(() => {
     logger.debug('onBeforeMount');
     store.mutations.breadcrumbs([
         {
-            label: t('Projects.project', 2),
+            label: t('Breadcrumbs.project', 2),
             disabled: false,
             exact: true,
             route: { name: 'projects' }
@@ -137,20 +137,10 @@ onBeforeMount(() => {
 
 <template>
     <div class="card">
-        <DataTable
-            v-model:filters="filters"
-            :value="projects"
-            data-key="name"
-            :filters="filters"
-            filter-display="menu"
-            striped-rows
-            table-style="min-width: 50rem"
-            paginator
-            :rows="10"
-            :rows-per-page-options="[10, 15, 20, 25]"
+        <DataTable v-model:filters="filters" :value="projects" data-key="name" :filters="filters" filter-display="menu"
+            striped-rows table-style="min-width: 50rem" paginator :rows="10" :rows-per-page-options="[10, 15, 20, 25]"
             paginator-template="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
-            current-page-report-template="{first} to {last} of {totalRecords}"
-        >
+            current-page-report-template="{first} to {last} of {totalRecords}">
             <template #empty> No Projects found. </template>
             <template #loading>
                 {{ t('Projects.loading') }}
@@ -159,7 +149,8 @@ onBeforeMount(() => {
             <template #header>
                 <div class="flex flex-wrap items-center justify-between gap-2">
                     <span class="text-xl font-bold">{{ $t('Projects.project') }}</span>
-                    <Button v-tooltip.bottom="t('Projects.tooltip.new')" icon="pi pi-plus" rounded raised @click="onNew()" />
+                    <Button v-tooltip.bottom="t('Projects.tooltip.new')" icon="pi pi-plus" rounded raised
+                        @click="onNew()" />
                 </div>
             </template>
 
@@ -167,19 +158,22 @@ onBeforeMount(() => {
             <Column field="creationTimestamp" :header="t('Projects.createdAt')" />
             <Column :header="t('Projects.state')">
                 <template #body="slotProps">
-                    <span @click="onState(slotProps.data)"
-                        >{{ slotProps.data.state }}
-                        <Button v-tooltip.bottom="t('Projects.tooltip.state')" icon="pi pi-pencil" variant="text" rounded @click="onState(slotProps.data)" />
+                    <span @click="onState(slotProps.data)">{{ slotProps.data.state }}
+                        <Button v-tooltip.bottom="t('Projects.tooltip.state')" icon="pi pi-pencil" variant="text"
+                            rounded @click="onState(slotProps.data)" />
                     </span>
                 </template>
                 <template #filter="{ filterModel, filterCallback }">
-                    <Select v-model="filterModel.value" :options="states" placeholder="Select One" show-clear @change="filterCallback()" />
+                    <Select v-model="filterModel.value" :options="states" placeholder="Select One" show-clear
+                        @change="filterCallback()" />
                 </template>
             </Column>
             <Column :header="t('Projects.action')">
                 <template #body="slotProps">
-                    <Button v-tooltip.bottom="t('Projects.tooltip.edit')" variant="text" icon="pi pi-pencil" severity="secondary" rounded @click="onEdit(slotProps.data)" />
-                    <Button v-tooltip.bottom="t('Projects.tooltip.delete')" variant="text" icon="pi pi-trash" severity="secondary" rounded @click="onDelete(slotProps.data)" />
+                    <Button v-tooltip.bottom="t('Projects.tooltip.edit')" variant="text" icon="pi pi-pencil"
+                        severity="secondary" rounded @click="onEdit(slotProps.data)" />
+                    <Button v-tooltip.bottom="t('Projects.tooltip.delete')" variant="text" icon="pi pi-trash"
+                        severity="secondary" rounded @click="onDelete(slotProps.data)" />
                 </template>
             </Column>
         </DataTable>
