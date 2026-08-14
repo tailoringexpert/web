@@ -1,7 +1,7 @@
-import { toValue } from 'vue';
-import axios from 'axios';
 import store from '@/plugins/store';
-import { useKeycloak, getToken } from '@josempgon/vue-keycloak'
+import { getToken, useKeycloak } from '@josempgon/vue-keycloak';
+import axios from 'axios';
+import { toValue } from 'vue';
 
 const instance = axios.create({
     headers: {
@@ -14,7 +14,11 @@ const { decodedToken } = useKeycloak()
 // Request interceptor for API calls
 instance.interceptors.request.use(
   async config => {
-    store.mutations.loading(true);
+    if (!config.headers['X-Skip-Loading']) {
+        store.mutations.loading(true);
+    } else {
+        delete config.headers['X-Skip-Loading'];
+    }
 
     const token = await getToken()
     config.headers['Authorization'] = `Bearer ${token}`
