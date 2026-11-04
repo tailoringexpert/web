@@ -43,24 +43,10 @@
         <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
         <maven-release-plugin.version>3.0.0</maven-release-plugin.version>
         <maven-release-plugin.goal>install</maven-release-plugin.goal>
+        <central-publishing-maven-plugin.version>0.12.0</central-publishing-maven-plugin.version>
 
         <skipFeatureVersion>true</skipFeatureVersion>
     </properties>
-
-    <distributionManagement>
-        <snapshotRepository>
-            <id>${server.snapshot}</id>
-            <!--suppress
-                    UnresolvedMavenProperty -->
-            <url>${tailoringexpert-snapshots.repository}</url>
-        </snapshotRepository>
-        <repository>
-            <id>${server.release}</id>
-            <!--suppress
-                    UnresolvedMavenProperty -->
-            <url>${tailoringexpert-releases.repository}</url>
-        </repository>
-    </distributionManagement>
 
     <build>
         <plugins>
@@ -193,6 +179,17 @@
                     <nodeVersion>v${node.version}</nodeVersion>
                 </configuration>
 
+            </plugin>
+            <plugin>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+                <version>${central-publishing-maven-plugin.version}</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <publishingServerId>central</publishingServerId>
+                    <autoPublish>true</autoPublish>
+                    <waitUntil>published</waitUntil>
+                </configuration>
             </plugin>
         </plugins>
     </build>
