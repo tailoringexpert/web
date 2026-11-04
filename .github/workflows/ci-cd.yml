@@ -1,0 +1,86 @@
+name: CI/CD Pipeline
+
+on:
+  workflow_dispatch:
+    inputs:
+      RELEASE_BUILD:
+        description: "Create a release"
+        type: boolean
+        default: false
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  GIT_COMMITTER_NAME: ${{ vars.GIT_COMMITTER_NAME }}
+  GIT_COMMITTER_EMAIL: ${{ secrets.GIT_COMMITTER_EMAIL }}
+  GIT_GPG_SIGNKEY: ${{ secrets.GIT_GPG_SIGNKEY }}
+
+  M2_REPO_PATH: ${{ github.workspace }}/.m2/repository
+  MAVEN_CREDENTIALS_USR: ${{ secrets.MAVEN_CREDENTIALS_USR }}
+  MAVEN_CREDENTIALS_PSW: ${{ secrets.MAVEN_CREDENTIALS_PSW }}
+  MAVEN_GPG_SIGNKEY: ${{ secrets.MAVEN_GPG_SIGNKEY }}
+  MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+
+jobs:
+  pipeline:
+    runs-on: ubuntu-latest
+
+    environment: central
+
+    permissions:
+      contents: read
+      packages: write
+
+    container:
+      image: ${{ vars.CONTAINER_IMAGE }}
+      env:
+        GIT_COMMITTER_NAME: ${{ env.GIT_COMMITTER_NAME }}
+        GIT_COMMITTER_EMAIL: ${{ env.GIT_COMMITTER_EMAIL }}
+        MAVEN_CREDENTIALS_USR: ${{ env.MAVEN_CREDENTIALS_USR }}
+        MAVEN_CREDENTIALS_PSW: ${{ env.MAVEN_CREDENTIALS_PSW }}
+        MAVEN_GPG_SIGNKEY: ${{ env.MAVEN_GPG_SIGNKEY }}
+        MAVEN_GPG_PASSPHRASE: ${{ env.MAVEN_GPG_PASSPHRASE }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.inputs.RELEASE_BUILD == 'true' && 'develop' ||  github.ref_name }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Cache maven packages
+        uses: actions/cache@v6
+        with:
+          path: ${{ env.M2_REPO_PATH }}
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Install
+        run: |
+          mvn --settings .github/settings.xml \
+              -Dmaven.repo.local=${{ env.M2_REPO_PATH }} \
+              -DskipTests \
+            clean install
+
+      - name: Release
+        if: ${{ github.event.inputs.RELEASE_BUILD == 'true' }}
+        run: |
+          setup-git.sh
+          mvn --settings .github/settings.xml \
+              -Dmaven.repo.local=${{ env.M2_REPO_PATH }} -B -Dresume=false -DpushChanges=false \
+              -DargLine='-DprocessAllModules --settings .github/settings.xml -Dmaven.repo.local=/home/maven/.m2' \
+              -DskipTestProject=true -DgpgSignTag=true -DgpgSignCommit=true \
+            gitflow:release
+
+      - name: Deploy
+        run: |
+          setup-maven-gpg.sh
+          mvn --settings .github/settings.xml \
+              -Dmaven.repo.local=${{ env.M2_REPO_PATH }} \
+              -DskipTests \
+              -Dgpg.arguments="--pinentry-mode loopback" \
+            deploy
