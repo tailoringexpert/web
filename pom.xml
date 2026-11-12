@@ -53,7 +53,7 @@
         <npm.mode>development</npm.mode>
 
         <gitflow-maven-plugin.version>1.21.0</gitflow-maven-plugin.version>
-        <frontend-maven-plugin.verion>2.0.0</frontend-maven-plugin.verion>
+        <frontend-maven-plugin.verion>2.0.2</frontend-maven-plugin.verion>
         <node.version>24.13.0</node.version>
         <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
         <maven-release-plugin.version>3.0.0</maven-release-plugin.version>
